@@ -1,65 +1,91 @@
-import Image from "next/image";
+'use client'
+import { useState, useRef, useEffect } from 'react'
 
 export default function Home() {
+  const [messages, setMessages] = useState<{role:string, text:string}[]>([])
+  const [input, setInput] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [used, setUsed] = useState(0)
+  const FREE_LIMIT = 5
+  const remaining = FREE_LIMIT - used
+  const endRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    endRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [messages, loading])
+
+  const send = async () => {
+    if (!input.trim() || loading || remaining <= 0) return
+    const text = input.trim()
+    setInput('')
+    setMessages(p => [...p, { role: 'user', text }])
+    setLoading(true)
+    setUsed(u => u + 1)
+    try {
+      const res = await fetch('/api/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: text })
+      })
+      const data = await res.json()
+      setMessages(p => [...p, { role: 'ai', text: data.reply || 'Eroare.' }])
+    } catch {
+      setMessages(p => [...p, { role: 'ai', text: 'Eroare de conexiune.' }])
+    }
+    setLoading(false)
+  }
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div style={{ minHeight: '100vh', background: '#050d1a', color: 'white', fontFamily: 'sans-serif', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '40px 20px' }}>
+      <h1 style={{ fontSize: 36, fontWeight: 800, marginBottom: 8 }}>
+        <span style={{ color: '#0ea5e9' }}>e</span>Verify
+      </h1>
+      <p style={{ color: 'rgba(255,255,255,0.4)', marginBottom: 32 }}>Verifică orice mesaj suspect cu AI</p>
+      
+      <div style={{ width: '100%', maxWidth: 680, background: 'rgba(15,23,42,0.9)', border: '1px solid rgba(14,165,233,0.2)', borderRadius: 16, overflow: 'hidden' }}>
+        <div style={{ padding: '10px 16px', borderBottom: '1px solid rgba(14,165,233,0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <span style={{ fontSize: 12, color: 'rgba(14,165,233,0.7)', fontFamily: 'monospace' }}>EVERIFY AI</span>
+          <span style={{ fontSize: 12, color: remaining <= 1 ? '#ef4444' : 'rgba(255,255,255,0.4)' }}>{remaining}/{FREE_LIMIT} verificări rămase</span>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+        
+        <div style={{ height: 360, overflowY: 'auto', padding: 16 }}>
+          {messages.length === 0 && (
+            <div style={{ textAlign: 'center', padding: '60px 20px', color: 'rgba(255,255,255,0.3)' }}>
+              <div style={{ fontSize: 48, marginBottom: 12 }}>🔍</div>
+              <p>Descrie mesajul suspect sau situația care te îngrijorează</p>
+            </div>
+          )}
+          {messages.map((m, i) => (
+            <div key={i} style={{ display: 'flex', justifyContent: m.role === 'user' ? 'flex-end' : 'flex-start', marginBottom: 12 }}>
+              <div style={{ maxWidth: '80%', padding: '10px 14px', borderRadius: m.role === 'user' ? '16px 16px 4px 16px' : '4px 16px 16px 16px', background: m.role === 'user' ? 'rgba(14,165,233,0.2)' : 'rgba(255,255,255,0.05)', border: '1px solid', borderColor: m.role === 'user' ? 'rgba(14,165,233,0.3)' : 'rgba(255,255,255,0.1)', fontSize: 14, lineHeight: 1.7, whiteSpace: 'pre-wrap' }}>
+                {m.text}
+              </div>
+            </div>
+          ))}
+          {loading && (
+            <div style={{ display: 'flex', gap: 6, padding: 8 }}>
+              {[0,1,2].map(i => <div key={i} style={{ width: 8, height: 8, borderRadius: '50%', background: '#0ea5e9', animation: 'pulse 1s infinite', animationDelay: `${i*0.2}s` }} />)}
+            </div>
+          )}
+          <div ref={endRef} />
         </div>
-      </main>
+        
+        <div style={{ borderTop: '1px solid rgba(14,165,233,0.1)', padding: 12, display: 'flex', gap: 10 }}>
+          <textarea
+            value={input}
+            onChange={e => setInput(e.target.value)}
+            onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send() } }}
+            placeholder="Descrie situația suspectă..."
+            rows={2}
+            style={{ flex: 1, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(14,165,233,0.2)', borderRadius: 10, padding: '8px 12px', color: 'white', fontSize: 14, resize: 'none', outline: 'none', fontFamily: 'sans-serif' }}
+          />
+          <button
+            onClick={send}
+            disabled={!input.trim() || loading || remaining <= 0}
+            style={{ width: 44, height: 44, borderRadius: 10, border: 'none', background: input.trim() && !loading ? 'linear-gradient(135deg,#0ea5e9,#6366f1)' : 'rgba(255,255,255,0.1)', color: 'white', fontSize: 20, cursor: 'pointer', alignSelf: 'flex-end' }}
+          >→</button>
+        </div>
+      </div>
     </div>
-  );
+  )
 }
