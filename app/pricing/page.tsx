@@ -89,14 +89,13 @@ export default function PricingPage() {
                 </span>
               )}
               <h2 className="text-xl font-bold mb-1">{pkg.name}</h2>
-              <p className="text-5xl font-black text-white mb-2">{pkg.credits}</p>
-<p className="text-gray-400 text-sm mb-4">verificări</p>
+              <p className="text-gray-400 text-sm mb-4">{pkg.description}</p>
               <p className="text-4xl font-bold mb-6">
                 €{pkg.price}
                 <span className="text-sm text-gray-400 font-normal"> / one-time</span>
               </p>
               <ul className="text-sm text-gray-300 mb-6 space-y-2 flex-1">
-                <li>✅ {pkg.credits} verificări</li>
+                <li className="text-lg font-bold text-white">✅ {pkg.credits} verificări</li>
                 <li>✅ Rezultate instant</li>
                 <li>✅ Istoric analize</li>
                 <li>✅ Fără abonament</li>
