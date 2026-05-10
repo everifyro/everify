@@ -39,8 +39,18 @@ export async function POST(request) {
     console.log('Anthropic response:', JSON.stringify(data))
     const reply = data.content?.map(b => b.text || '').join('\n') || 'Eroare.'
     if (userId) {
-      await supabase.from('profiles').update({ credits: supabase.raw('credits - 1') }).eq('id', userId)
-      await supabase.from('analyses').insert({ user_id: userId, question: message, answer: reply })
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('credits')
+        .eq('id', userId)
+        .single()
+      await supabase
+        .from('profiles')
+        .update({ credits: (profile?.credits || 1) - 1 })
+        .eq('id', userId)
+      await supabase
+        .from('analyses')
+        .insert({ user_id: userId, question: message, answer: reply })
     }
     return Response.json({ reply })
   } catch (error) {

@@ -1,18 +1,40 @@
 'use client'
 import { useState, useRef, useEffect } from 'react'
+import { supabase } from '@/lib/supabase'
 
 export default function Home() {
   const [messages, setMessages] = useState<{role:string, text:string}[]>([])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
   const [used, setUsed] = useState(0)
+  const [userId, setUserId] = useState<string|null>(null)
+  const [credits, setCredits] = useState<number|null>(null)
   const FREE_LIMIT = 5
-  const remaining = FREE_LIMIT - used
   const endRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages, loading])
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        setUserId(session.user.id)
+        fetchCredits(session.user.id)
+      }
+    })
+  }, [])
+
+  const fetchCredits = async (uid: string) => {
+    const { data } = await supabase
+      .from('profiles')
+      .select('credits')
+      .eq('id', uid)
+      .single()
+    if (data) setCredits(data.credits)
+  }
+
+  const remaining = userId ? (credits ?? 0) : FREE_LIMIT - used
 
   const send = async () => {
     if (!input.trim() || loading || remaining <= 0) return
@@ -20,15 +42,20 @@ export default function Home() {
     setInput('')
     setMessages(p => [...p, { role: 'user', text }])
     setLoading(true)
-    setUsed(u => u + 1)
+    if (!userId) setUsed(u => u + 1)
     try {
       const res = await fetch('/api/analyze', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: text })
+        body: JSON.stringify({ message: text, userId })
       })
       const data = await res.json()
-      setMessages(p => [...p, { role: 'ai', text: data.reply || 'Eroare.' }])
+      if (data.error === 'Nu mai ai credite') {
+        setMessages(p => [...p, { role: 'ai', text: 'Nu mai ai credite. Te rugăm să achiziționezi un pachet.' }])
+      } else {
+        setMessages(p => [...p, { role: 'ai', text: data.reply || 'Eroare.' }])
+        if (userId) fetchCredits(userId)
+      }
     } catch {
       setMessages(p => [...p, { role: 'ai', text: 'Eroare de conexiune.' }])
     }
@@ -41,13 +68,15 @@ export default function Home() {
         <span style={{ color: '#0ea5e9' }}>e</span>Verify
       </h1>
       <p style={{ color: 'rgba(255,255,255,0.4)', marginBottom: 32 }}>Verifică orice mesaj suspect cu AI</p>
-      
+
       <div style={{ width: '100%', maxWidth: 680, background: 'rgba(15,23,42,0.9)', border: '1px solid rgba(14,165,233,0.2)', borderRadius: 16, overflow: 'hidden' }}>
         <div style={{ padding: '10px 16px', borderBottom: '1px solid rgba(14,165,233,0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <span style={{ fontSize: 12, color: 'rgba(14,165,233,0.7)', fontFamily: 'monospace' }}>EVERIFY AI</span>
-          <span style={{ fontSize: 12, color: remaining <= 1 ? '#ef4444' : 'rgba(255,255,255,0.4)' }}>{remaining}/{FREE_LIMIT} verificări rămase</span>
+          <span style={{ fontSize: 12, color: remaining <= 1 ? '#ef4444' : 'rgba(255,255,255,0.4)' }}>
+            {remaining}/{userId ? (credits ?? 0) : FREE_LIMIT} verificări rămase
+          </span>
         </div>
-        
+
         <div style={{ height: 360, overflowY: 'auto', padding: 16 }}>
           {messages.length === 0 && (
             <div style={{ textAlign: 'center', padding: '60px 20px', color: 'rgba(255,255,255,0.3)' }}>
@@ -69,7 +98,7 @@ export default function Home() {
           )}
           <div ref={endRef} />
         </div>
-        
+
         <div style={{ borderTop: '1px solid rgba(14,165,233,0.1)', padding: 12, display: 'flex', gap: 10 }}>
           <textarea
             value={input}
@@ -86,6 +115,16 @@ export default function Home() {
           >→</button>
         </div>
       </div>
+
+      {userId ? (
+        <p style={{ marginTop: 16, fontSize: 13, color: 'rgba(255,255,255,0.3)' }}>
+          <a href="/dashboard" style={{ color: '#0ea5e9' }}>Dashboard</a> · {credits} credite rămase
+        </p>
+      ) : (
+        <p style={{ marginTop: 16, fontSize: 13, color: 'rgba(255,255,255,0.3)' }}>
+          <a href="/login" style={{ color: '#0ea5e9' }}>Loghează-te</a> pentru a-ți salva creditele
+        </p>
+      )}
     </div>
   )
 }
