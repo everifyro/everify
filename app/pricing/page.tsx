@@ -89,7 +89,6 @@ export default function PricingPage() {
                 </span>
               )}
               <h2 className="text-xl font-bold mb-1">{pkg.name}</h2>
-              <p className="text-gray-400 text-sm mb-4">{pkg.description}</p>
               <p className="text-4xl font-bold mb-6">
                 €{pkg.price}
                 <span className="text-sm text-gray-400 font-normal"> / one-time</span>
