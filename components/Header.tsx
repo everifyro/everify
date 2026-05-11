@@ -65,16 +65,19 @@ export default function Header() {
       </a>
 
       <nav style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
-        <a href="/prices" style={{ color: 'rgba(255,255,255,0.6)', fontSize: 14, textDecoration: 'none' }}>
-          Prețuri
-        </a>
+        <a href="/prices" style={{ color: 'white', fontSize: 14, textDecoration: 'none' }}>
+  Prețuri
+</a>
+<a href="/contact" style={{ color: 'white', fontSize: 14, textDecoration: 'none' }}>
+  Contact
+</a>
 
         {userId ? (
           <>
             <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: 13 }}>
               {credits ?? 0} credite
             </span>
-            <a href="/dashboard" style={{ color: 'rgba(255,255,255,0.6)', fontSize: 14, textDecoration: 'none' }}>
+            <a href="/dashboard" style={{ color: 'white', fontSize: 14, textDecoration: 'none' }}>
               Dashboard
             </a>
             <button
@@ -86,7 +89,7 @@ export default function Header() {
           </>
         ) : (
           <>
-            <a href="/login" style={{ color: 'rgba(255,255,255,0.6)', fontSize: 14, textDecoration: 'none' }}>
+            <a href="/login" style={{ color: 'white', fontSize: 14, textDecoration: 'none' }}>
               Login
             </a>
             <a href="/register" style={{ background: 'linear-gradient(135deg,#0ea5e9,#6366f1)', color: 'white', padding: '7px 16px', borderRadius: 8, fontSize: 13, textDecoration: 'none', fontWeight: 600 }}>
