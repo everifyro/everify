@@ -5,11 +5,16 @@ import { useRouter } from 'next/navigation'
 
 export default function Prices() {
   const [userId, setUserId] = useState<string|null>(null)
+  const [userEmail, setUserEmail] = useState<string|null>(null)
+  const [loadingPlan, setLoadingPlan] = useState<string|null>(null)
   const router = useRouter()
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session?.user) setUserId(session.user.id)
+      if (session?.user) {
+        setUserId(session.user.id)
+        setUserEmail(session.user.email ?? null)
+      }
     })
   }, [])
 
@@ -53,7 +58,6 @@ export default function Prices() {
     <div style={{ minHeight: '100vh', background: '#050d1a', color: 'white', fontFamily: 'sans-serif', padding: '60px 20px' }}>
       <div style={{ maxWidth: 1100, margin: '0 auto' }}>
 
-        {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: 60 }}>
           <h1 style={{ fontSize: 40, fontWeight: 800, marginBottom: 12 }}>
             Alege planul <span style={{ color: '#0ea5e9' }}>potrivit</span>
@@ -63,7 +67,6 @@ export default function Prices() {
           </p>
         </div>
 
-        {/* Planuri */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 20, marginBottom: 60 }}>
           {plans.map((plan) => (
             <div key={plan.name} style={{
@@ -88,56 +91,54 @@ export default function Prices() {
               <div style={{ fontSize: 36, fontWeight: 800, marginBottom: 4 }}>{plan.price}</div>
               <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', marginBottom: 16 }}>{plan.perVerification}/verificare</div>
 
-              {/* Număr verificări — mare și vizibil */}
               <div style={{ marginBottom: 20 }}>
-  <span style={{ fontSize: 22, fontWeight: 800, color: plan.color }}>{plan.credits} verificări</span>
-</div>
+                <span style={{ fontSize: 22, fontWeight: 800, color: plan.color }}>{plan.credits} verificări</span>
+              </div>
+
               <ul style={{ listStyle: 'none', padding: 0, marginBottom: 24 }}>
                 {plan.features.map((f, i) => (
                   <li key={i} style={{ fontSize: 14, color: 'rgba(255,255,255,0.7)', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 8 }}>
-  <span style={{ color: plan.color }}>✓</span>
-  <span style={{ whiteSpace: 'pre-line' }}>{f}</span>
-</li>
+                    <span style={{ color: plan.color }}>✓</span>
+                    <span style={{ whiteSpace: 'pre-line' }}>{f}</span>
+                  </li>
                 ))}
               </ul>
 
               <button
-                onClick={() => userId ? router.push('/checkout?plan=' + plan.name.toLowerCase()) : router.push('/login')}
+                onClick={async () => {
+                  if (!userId) { router.push('/login'); return }
+                  setLoadingPlan(plan.name)
+                  const res = await fetch('/api/stripe/checkout', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ plan: plan.name.toLowerCase(), userId, userEmail })
+                  })
+                  const data = await res.json()
+                  if (data.url) window.location.href = data.url
+                  setLoadingPlan(null)
+                }}
                 style={{
                   width: '100%', padding: '11px', borderRadius: 10, border: 'none',
                   background: `linear-gradient(135deg, ${plan.color}, #6366f1)`,
                   color: 'white', fontSize: 14, fontWeight: 600, cursor: 'pointer'
                 }}
               >
-                {userId ? 'Cumpără acum' : 'Înregistrează-te'}
+                {loadingPlan === plan.name ? 'Se încarcă...' : userId ? 'Cumpără acum' : 'Înregistrează-te'}
               </button>
             </div>
           ))}
         </div>
 
-        {/* Pentru companii */}
-        <div style={{
-          textAlign: 'center', padding: '36px 20px',
-          background: 'rgba(14,165,233,0.04)',
-          border: '1px solid rgba(14,165,233,0.12)',
-          borderRadius: 16, marginBottom: 60
-        }}>
+        <div style={{ textAlign: 'center', padding: '36px 20px', background: 'rgba(14,165,233,0.04)', border: '1px solid rgba(14,165,233,0.12)', borderRadius: 16, marginBottom: 60 }}>
           <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>🏢 Pentru companii</h3>
           <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: 14, maxWidth: 560, margin: '0 auto 16px' }}>
             Integrează eVerify în compania ta. Punem la dispoziție un sistem online dedicat, configurat pentru nevoile și dimensiunea echipei tale.
           </p>
-          <a href="/contact" style={{
-            display: 'inline-block',
-            background: 'linear-gradient(135deg,#0ea5e9,#6366f1)',
-            color: 'white', padding: '10px 24px',
-            borderRadius: 8, fontSize: 14, fontWeight: 600,
-            textDecoration: 'none'
-          }}>
+          <a href="/contact" style={{ display: 'inline-block', background: 'linear-gradient(135deg,#0ea5e9,#6366f1)', color: 'white', padding: '10px 24px', borderRadius: 8, fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>
             Contactează-ne →
           </a>
         </div>
 
-        {/* FAQ */}
         <div style={{ padding: '40px 20px', background: 'rgba(14,165,233,0.05)', border: '1px solid rgba(14,165,233,0.15)', borderRadius: 16 }}>
           <h3 style={{ fontSize: 20, fontWeight: 700, marginBottom: 20, textAlign: 'center' }}>Întrebări frecvente</h3>
           <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: 14, maxWidth: 600, margin: '0 auto 12px' }}>
