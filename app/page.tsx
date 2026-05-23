@@ -1,6 +1,7 @@
 'use client'
 import { useState, useRef, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
+import { useRouter } from 'next/navigation'
 
 export default function Home() {
   const [messages, setMessages] = useState<{role:string, text:string}[]>([])
@@ -11,6 +12,7 @@ export default function Home() {
   const [credits, setCredits] = useState<number|null>(null)
   const FREE_LIMIT = 5
   const endRef = useRef<HTMLDivElement>(null)
+  const router = useRouter()
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -51,7 +53,8 @@ export default function Home() {
       })
       const data = await res.json()
       if (data.error === 'Nu mai ai credite') {
-        setMessages(p => [...p, { role: 'ai', text: 'Nu mai ai credite. Te rugăm să achiziționezi un pachet.' }])
+        setMessages(p => [...p, { role: 'ai', text: 'Nu mai ai credite. Vei fi redirecționat către pagina de prețuri...' }])
+        setTimeout(() => router.push('/prices'), 2000)
       } else {
         setMessages(p => [...p, { role: 'ai', text: data.reply || 'Eroare.' }])
         if (userId) fetchCredits(userId)
