@@ -46,7 +46,6 @@ export default function CheckUrl() {
         setError(data.error)
       } else {
         setResult(data)
-        // Scade 1 credit
         await supabase
           .from('profiles')
           .update({ credits: (profile.credits || 1) - 1 })
@@ -138,11 +137,9 @@ export default function CheckUrl() {
             {/* Verdict */}
             <div style={{ background: `${getScoreColor(result.trustScore)}15`, border: `1px solid ${getScoreColor(result.trustScore)}44`, borderRadius: 12, padding: '14px 18px', marginBottom: 24, display: 'flex', alignItems: 'center', gap: 12 }}>
               <span style={{ fontSize: 24 }}>{getScoreEmoji(result.trustScore)}</span>
-              <div>
-                <p style={{ fontSize: 16, fontWeight: 700, color: getScoreColor(result.trustScore), margin: 0 }}>
-                  VERDICT: {result.verdict}
-                </p>
-              </div>
+              <p style={{ fontSize: 16, fontWeight: 700, color: getScoreColor(result.trustScore), margin: 0 }}>
+                VERDICT: {result.verdict}
+              </p>
             </div>
 
             {/* Checks detaliate */}
@@ -159,9 +156,28 @@ export default function CheckUrl() {
               {/* Google Safe Browsing */}
               <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10, padding: '14px 16px' }}>
                 <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 1 }}>Google Safe Browsing</p>
-                <p style={{ fontSize: 15, fontWeight: 700, color: result.checks.safeBrowsing?.safe ? '#22c55e' : '#ef4444', margin: 0 }}>
-                  {result.checks.safeBrowsing?.safe === null ? '⚠️ Indisponibil' : result.checks.safeBrowsing?.safe ? '✅ Sigur' : '🔴 Periculos'}
+                <p style={{ fontSize: 15, fontWeight: 700, color: result.checks.safeBrowsing?.safe === false ? '#ef4444' : '#22c55e', margin: 0 }}>
+                  {result.checks.safeBrowsing?.safe === null ? '⚠️ Indisponibil' : result.checks.safeBrowsing?.safe === false ? '🔴 Periculos' : '✅ Sigur'}
                 </p>
+                <p style={{ fontSize: 10, color: 'rgba(255,255,255,0.3)', margin: '4px 0 0', lineHeight: 1.4 }}>Baza de date Google</p>
+              </div>
+
+              {/* URLhaus */}
+              <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10, padding: '14px 16px' }}>
+                <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 1 }}>URLhaus — abuse.ch</p>
+                <p style={{ fontSize: 15, fontWeight: 700, color: result.checks.urlhaus?.safe === false ? '#ef4444' : result.checks.urlhaus?.safe === null ? '#f59e0b' : '#22c55e', margin: 0 }}>
+                  {result.checks.urlhaus?.error ? '⚠️ Indisponibil' : result.checks.urlhaus?.safe === false ? '🔴 Periculos' : '✅ Sigur'}
+                </p>
+                <p style={{ fontSize: 10, color: 'rgba(255,255,255,0.3)', margin: '4px 0 0', lineHeight: 1.4 }}>Partener Interpol/Europol</p>
+              </div>
+
+              {/* URLhaus Domain */}
+              <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10, padding: '14px 16px' }}>
+                <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 1 }}>Reputație domeniu</p>
+                <p style={{ fontSize: 15, fontWeight: 700, color: result.checks.urlhausDomain?.safe === false ? '#ef4444' : '#22c55e', margin: 0 }}>
+                  {result.checks.urlhausDomain?.error ? '⚠️ Indisponibil' : result.checks.urlhausDomain?.safe === false ? `🔴 ${result.checks.urlhausDomain?.urlsCount} URL-uri malițioase` : '✅ Fără istoric negativ'}
+                </p>
+                <p style={{ fontSize: 10, color: 'rgba(255,255,255,0.3)', margin: '4px 0 0', lineHeight: 1.4 }}>Istoric domeniu</p>
               </div>
 
               {/* Varsta domeniu */}
@@ -170,6 +186,7 @@ export default function CheckUrl() {
                 <p style={{ fontSize: 15, fontWeight: 700, color: result.checks.domain?.ageMonths >= 12 ? '#22c55e' : result.checks.domain?.ageMonths >= 3 ? '#f59e0b' : '#ef4444', margin: 0 }}>
                   {result.checks.domain?.ageMonths ? `${result.checks.domain.ageMonths} luni` : '⚠️ Necunoscut'}
                 </p>
+                <p style={{ fontSize: 10, color: 'rgba(255,255,255,0.3)', margin: '4px 0 0', lineHeight: 1.4 }}>Sub 3 luni = risc ridicat</p>
               </div>
 
             </div>
@@ -186,6 +203,14 @@ export default function CheckUrl() {
               </div>
             )}
 
+            {/* Surse verificare */}
+            <div style={{ background: 'rgba(14,165,233,0.05)', border: '1px solid rgba(14,165,233,0.1)', borderRadius: 10, padding: '12px 16px', marginBottom: 16 }}>
+              <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', margin: '0 0 6px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1 }}>Surse de verificare utilizate</p>
+              <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', margin: 0, lineHeight: 1.8 }}>
+                🔵 Google Safe Browsing &nbsp;|&nbsp; 🔵 URLhaus — abuse.ch (partener Interpol/Europol) &nbsp;|&nbsp; 🔵 Analiză pattern URL &nbsp;|&nbsp; 🔵 Detectare typosquatting
+              </p>
+            </div>
+
             {/* Disclaimer */}
             <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10, padding: '12px 16px' }}>
               <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', margin: 0, lineHeight: 1.6 }}>
@@ -200,10 +225,11 @@ export default function CheckUrl() {
         {!result && (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 16, marginTop: 8 }}>
             {[
-              { icon: '🛡️', title: 'Google Safe Browsing', desc: 'Verificare în baza de date Google cu milioane de site-uri periculoase' },
+              { icon: '🛡️', title: 'Google Safe Browsing', desc: 'Verificare în baza de date Google cu miliarde de site-uri analizate' },
+              { icon: '🌐', title: 'URLhaus — abuse.ch', desc: 'Partener oficial Interpol/Europol — bază de date cu URL-uri malițioase active' },
               { icon: '🔒', title: 'Verificare HTTPS', desc: 'Confirmă dacă site-ul folosește o conexiune securizată și criptată' },
               { icon: '📅', title: 'Vârstă domeniu', desc: 'Site-urile noi (sub 3 luni) sunt frecvent asociate cu fraude online' },
-              { icon: '🔍', title: 'Analiză URL', desc: 'Detectează pattern-uri suspecte în structura adresei web' },
+              { icon: '🔍', title: 'Analiză URL', desc: 'Detectează pattern-uri suspecte și tentative de typosquatting' },
             ].map((item, i) => (
               <div key={i} style={{ background: 'rgba(15,23,42,0.9)', border: '1px solid rgba(14,165,233,0.1)', borderRadius: 12, padding: '16px 18px' }}>
                 <div style={{ fontSize: 24, marginBottom: 8 }}>{item.icon}</div>
