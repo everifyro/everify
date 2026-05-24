@@ -66,11 +66,17 @@ export default function Header() {
 
       <nav style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
         <a href="/prices" style={{ color: 'white', fontSize: 14, textDecoration: 'none' }}>
-  Prețuri
-</a>
-<a href="/contact" style={{ color: 'white', fontSize: 14, textDecoration: 'none' }}>
-  Contact
-</a>
+          Prețuri
+        </a>
+        <a href="/check-url" style={{ color: 'white', fontSize: 14, textDecoration: 'none' }}>
+          Verifică Site
+        </a>
+        <a href="/scam-types" style={{ color: 'white', fontSize: 14, textDecoration: 'none' }}>
+          Tipuri Scam
+        </a>
+        <a href="/contact" style={{ color: 'white', fontSize: 14, textDecoration: 'none' }}>
+          Contact
+        </a>
 
         {userId ? (
           <>
