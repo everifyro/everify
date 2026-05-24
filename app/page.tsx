@@ -84,7 +84,7 @@ export default function Home() {
           {messages.length === 0 && (
             <div style={{ textAlign: 'center', padding: '60px 20px', color: 'rgba(255,255,255,0.3)' }}>
               <div style={{ fontSize: 48, marginBottom: 12 }}>🔍</div>
-              <p>Descrie mesajul suspect sau situația care te îngrijorează</p>
+              <p>Descrie mesajul suspect, situația care te îngrijorează sau introdu adresa site-ului pe care vrei să îl verificăm</p>
             </div>
           )}
           {messages.map((m, i) => (
@@ -107,7 +107,7 @@ export default function Home() {
             value={input}
             onChange={e => setInput(e.target.value)}
             onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send() } }}
-            placeholder="Descrie situația suspectă..."
+            placeholder="Descrie situația suspectă sau introdu adresa site-ului pe care vrei să îl verificăm..."
             rows={2}
             style={{ flex: 1, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(14,165,233,0.2)', borderRadius: 10, padding: '8px 12px', color: 'white', fontSize: 14, resize: 'none', outline: 'none', fontFamily: 'sans-serif' }}
           />
