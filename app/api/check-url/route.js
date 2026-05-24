@@ -17,6 +17,14 @@ export async function POST(request) {
       checks: {}
     }
 
+    // Extragere domeniu
+    let domain = ''
+    try {
+      domain = new URL(normalizedUrl).hostname
+    } catch (e) {
+      return Response.json({ error: 'URL invalid' }, { status: 400 })
+    }
+
     // 1. Google Safe Browsing
     try {
       const safeBrowsingResponse = await fetch(
@@ -38,26 +46,54 @@ export async function POST(request) {
       const safeBrowsingData = await safeBrowsingResponse.json()
       results.checks.safeBrowsing = {
         safe: !safeBrowsingData.matches || safeBrowsingData.matches.length === 0,
-        threats: safeBrowsingData.matches || []
+        threats: safeBrowsingData.matches || [],
+        source: 'Google Safe Browsing'
       }
     } catch (e) {
-      results.checks.safeBrowsing = { safe: null, error: true }
+      results.checks.safeBrowsing = { safe: null, error: true, source: 'Google Safe Browsing' }
     }
 
-    // 2. HTTPS check
-    results.checks.https = {
-      secure: normalizedUrl.startsWith('https://'),
-    }
-
-    // 3. Domain extraction si analiza
-    let domain = ''
+    // 2. URLhaus (abuse.ch) - partener Interpol/Europol
     try {
-      domain = new URL(normalizedUrl).hostname
+      const urlhausResponse = await fetch('https://urlhaus-api.abuse.ch/v1/url/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `url=${encodeURIComponent(normalizedUrl)}`
+      })
+      const urlhausData = await urlhausResponse.json()
+      results.checks.urlhaus = {
+        safe: urlhausData.query_status === 'no_results',
+        status: urlhausData.query_status,
+        threat: urlhausData.threat || null,
+        source: 'URLhaus — abuse.ch (partener Interpol/Europol)'
+      }
     } catch (e) {
-      return Response.json({ error: 'URL invalid' }, { status: 400 })
+      results.checks.urlhaus = { safe: null, error: true, source: 'URLhaus — abuse.ch' }
     }
 
-    // 4. Whois / Domain age via API
+    // 3. URLhaus Domain check
+    try {
+      const domainhausResponse = await fetch('https://urlhaus-api.abuse.ch/v1/host/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `host=${encodeURIComponent(domain)}`
+      })
+      const domainhausData = await domainhausResponse.json()
+      results.checks.urlhausDomain = {
+        safe: domainhausData.query_status === 'no_results',
+        urlsCount: domainhausData.urls_count || 0,
+        source: 'URLhaus Domain Check'
+      }
+    } catch (e) {
+      results.checks.urlhausDomain = { safe: null, error: true }
+    }
+
+    // 4. HTTPS check
+    results.checks.https = {
+      secure: normalizedUrl.startsWith('https://')
+    }
+
+    // 5. Whois / Domain age
     try {
       const whoisResponse = await fetch(`https://api.whoisfreaks.com/v1.0/whois?apiKey=free&whois=live&domainName=${domain}`)
       const whoisData = await whoisResponse.json()
@@ -70,19 +106,32 @@ export async function POST(request) {
       results.checks.domain = { name: domain, createdDate: null, registrar: null }
     }
 
-    // 5. Pattern analysis - semne de alarma
-    // Excludem domeniile cunoscute din verificarea de cuvinte cheie
-    const knownSafeDomains = ['google.com', 'microsoft.com', 'apple.com', 'amazon.com', 'paypal.com', 'facebook.com', 'instagram.com', 'tiktok.com', 'youtube.com', 'linkedin.com']
+    // 6. Pattern analysis
+    const knownSafeDomains = ['google.com', 'microsoft.com', 'apple.com', 'amazon.com', 'paypal.com', 'facebook.com', 'instagram.com', 'tiktok.com', 'youtube.com', 'linkedin.com', 'olx.ro', 'emag.ro', 'bcr.ro', 'brd.ro', 'ingbank.ro', 'raiffeisen.ro', 'bancatransilvania.ro', 'revolut.com', 'netflix.com', 'spotify.com']
     const isKnownSafe = knownSafeDomains.some(d => domain === d || domain.endsWith('.' + d))
 
     const suspiciousPatterns = [
       { pattern: /(\d{1,3}\.){3}\d{1,3}/, reason: 'Adresă IP în loc de domeniu' },
-      { pattern: /[а-яА-Я]/, reason: 'Caractere chirilice în URL' },
-      { pattern: /(secure|login|verify|update|confirm|account|banking|paypal|apple|google|microsoft|amazon)/i, reason: 'Cuvânt cheie suspect în URL', skipIfKnownSafe: true },
-      { pattern: /\.(tk|ml|ga|cf|gq|xyz|top|click|link|online|site|web|info)$/i, reason: 'Extensie de domeniu asociată cu scam-uri' },
-      { pattern: /-{2,}/, reason: 'Multiple cratime în domeniu' },
-      { pattern: /\d{4,}/, reason: 'Șir lung de cifre în domeniu' },
+      { pattern: /[а-яА-Я\u0400-\u04FF]/, reason: 'Caractere chirilice sau Unicode suspect în URL (posibil atac homograph)' },
+      { pattern: /(secure|login|verify|update|confirm|account|banking|paypal|apple|google|microsoft|amazon|signin|webscr)/i, reason: 'Cuvânt cheie suspect în URL', skipIfKnownSafe: true },
+      { pattern: /\.(tk|ml|ga|cf|gq|xyz|top|click|link|online|site|web|info|buzz|rest|zip|mov)$/i, reason: 'Extensie de domeniu frecvent asociată cu fraude online' },
+      { pattern: /-{2,}/, reason: 'Multiple cratime în domeniu (pattern suspect)' },
+      { pattern: /\d{5,}/, reason: 'Șir lung de cifre în domeniu (pattern suspect)' },
+      { pattern: /(.)\1{4,}/, reason: 'Caractere repetate suspect în domeniu' },
     ]
+
+    // Typosquatting detection pentru branduri românești și internaționale
+    const knownBrands = ['paypal', 'google', 'microsoft', 'apple', 'amazon', 'facebook', 'instagram', 'netflix', 'olx', 'emag', 'bcr', 'brd', 'raiffeisen', 'revolut']
+    const typosquattingWarnings = []
+
+    if (!isKnownSafe) {
+      knownBrands.forEach(brand => {
+        // Verifica daca domeniul contine brand-ul dar nu e domeniul oficial
+        if (domain.includes(brand) && !knownSafeDomains.some(d => domain === d || domain.endsWith('.' + d))) {
+          typosquattingWarnings.push(`Posibil site fals care imită "${brand}" (typosquatting)`)
+        }
+      })
+    }
 
     const warnings = []
     suspiciousPatterns.forEach(({ pattern, reason, skipIfKnownSafe }) => {
@@ -92,27 +141,30 @@ export async function POST(request) {
       }
     })
 
-    results.checks.patterns = { warnings }
+    const allWarnings = [...warnings, ...typosquattingWarnings]
+    results.checks.patterns = { warnings: allWarnings }
 
-    // 6. Calculare Trust Score
+    // 7. Calculare Trust Score
     let score = 100
 
-    // Penalizari majore
+    // Penalizari blacklist-uri
+    if (results.checks.safeBrowsing?.safe === false) score -= 60
+    if (results.checks.urlhaus?.safe === false) score -= 50
+    if (results.checks.urlhausDomain?.safe === false) score -= 30
+
+    // Penalizare HTTPS
     if (!results.checks.https.secure) score -= 30
-    if (results.checks.safeBrowsing?.safe === false) score -= 50
 
-    // Penalizari pentru avertismente
-    if (warnings.length >= 3) score -= warnings.length * 20
-    else if (warnings.length === 2) score -= warnings.length * 15
-    else if (warnings.length === 1) score -= 10
+    // Penalizari pattern-uri suspecte
+    if (allWarnings.length >= 3) score -= allWarnings.length * 20
+    else if (allWarnings.length === 2) score -= allWarnings.length * 15
+    else if (allWarnings.length === 1) score -= 15
 
-    // Bonus pentru domenii cunoscute sigure
+    // Bonus domenii cunoscute sigure
     if (isKnownSafe) score = Math.max(score, 90)
 
-    if (score < 0) score = 0
-
     // Verificare varsta domeniu
-    if (results.checks.domain.createdDate) {
+    if (results.checks.domain?.createdDate) {
       const created = new Date(results.checks.domain.createdDate)
       const ageMonths = (Date.now() - created.getTime()) / (1000 * 60 * 60 * 24 * 30)
       if (ageMonths < 3) score -= 25
@@ -123,20 +175,18 @@ export async function POST(request) {
     if (score < 0) score = 0
 
     let verdict = ''
-    let verdictColor = ''
-    if (score >= 75) { verdict = 'PROBABIL SIGUR'; verdictColor = 'green' }
-    else if (score >= 50) { verdict = 'RISC MODERAT'; verdictColor = 'yellow' }
-    else if (score >= 25) { verdict = 'RISC RIDICAT'; verdictColor = 'orange' }
-    else { verdict = 'PERICULOS'; verdictColor = 'red' }
+    if (score >= 75) verdict = 'PROBABIL SIGUR'
+    else if (score >= 50) verdict = 'RISC MODERAT'
+    else if (score >= 25) verdict = 'RISC RIDICAT'
+    else verdict = 'PERICULOS — NU ACCESAȚI'
 
     return Response.json({
       url: normalizedUrl,
       domain,
       trustScore: score,
       verdict,
-      verdictColor,
       checks: results.checks,
-      warnings,
+      warnings: allWarnings,
       isKnownSafe
     })
 
