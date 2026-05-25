@@ -65,6 +65,9 @@ export default function Header() {
       </a>
 
       <nav style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+        <a href="/de-ce-everify" style={{ color: 'white', fontSize: 14, textDecoration: 'none' }}>
+          De ce eVerify?
+        </a>
         <a href="/prices" style={{ color: 'white', fontSize: 14, textDecoration: 'none' }}>
           Prețuri
         </a>
