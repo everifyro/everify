@@ -43,7 +43,7 @@ export default function RootLayout({
         <Header />
         {children}
 
-        {/* Footer Disclaimer Global */}
+        {/* Footer */}
         <footer style={{
           background: 'rgba(5,13,26,0.98)',
           borderTop: '1px solid rgba(255,255,255,0.06)',
@@ -58,6 +58,8 @@ export default function RootLayout({
                 <a href="/check-url" style={{ color: 'rgba(255,255,255,0.4)', fontSize: 12, textDecoration: 'none' }}>Verificare site</a>
                 <a href="/prices" style={{ color: 'rgba(255,255,255,0.4)', fontSize: 12, textDecoration: 'none' }}>Prețuri</a>
                 <a href="/contact" style={{ color: 'rgba(255,255,255,0.4)', fontSize: 12, textDecoration: 'none' }}>Contact</a>
+                <a href="/privacy" style={{ color: 'rgba(255,255,255,0.4)', fontSize: 12, textDecoration: 'none' }}>Confidențialitate</a>
+                <a href="/terms" style={{ color: 'rgba(255,255,255,0.4)', fontSize: 12, textDecoration: 'none' }}>Termeni și Condiții</a>
               </div>
               <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)' }}>
                 © {new Date().getFullYear()} eVerify. Toate drepturile rezervate.
