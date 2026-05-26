@@ -10,6 +10,9 @@ export default function Home() {
   const [used, setUsed] = useState(0)
   const [userId, setUserId] = useState<string|null>(null)
   const [credits, setCredits] = useState<number|null>(null)
+  const [newsletterEmail, setNewsletterEmail] = useState('')
+  const [newsletterStatus, setNewsletterStatus] = useState<'idle'|'loading'|'success'|'error'>('idle')
+  const [newsletterMessage, setNewsletterMessage] = useState('')
   const FREE_LIMIT = 5
   const endRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
@@ -63,6 +66,30 @@ export default function Home() {
       setMessages(p => [...p, { role: 'ai', text: 'Eroare de conexiune.' }])
     }
     setLoading(false)
+  }
+
+  const subscribeNewsletter = async () => {
+    if (!newsletterEmail.trim() || !newsletterEmail.includes('@')) return
+    setNewsletterStatus('loading')
+    try {
+      const res = await fetch('/api/newsletter', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: newsletterEmail })
+      })
+      const data = await res.json()
+      if (data.success) {
+        setNewsletterStatus('success')
+        setNewsletterMessage(data.message || 'Abonare reușită!')
+        setNewsletterEmail('')
+      } else {
+        setNewsletterStatus('error')
+        setNewsletterMessage('Eroare la abonare. Încercați din nou.')
+      }
+    } catch {
+      setNewsletterStatus('error')
+      setNewsletterMessage('Eroare de conexiune.')
+    }
   }
 
   return (
@@ -128,6 +155,49 @@ export default function Home() {
           <a href="/login" style={{ color: '#0ea5e9' }}>Loghează-te</a> pentru a-ți salva creditele
         </p>
       )}
+
+      {/* Newsletter */}
+      <div style={{ width: '100%', maxWidth: 680, marginTop: 32, background: 'rgba(14,165,233,0.06)', border: '1px solid rgba(14,165,233,0.15)', borderRadius: 16, padding: '24px 28px' }}>
+        <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>
+          🔔 Fiți informați despre cele mai noi fraude
+        </h3>
+        <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', marginBottom: 16, lineHeight: 1.6 }}>
+          Abonați-vă la newsletterul săptămânal eVerify și primiți alerte despre cele mai recente tipuri de fraude identificate în România. Gratuit, fără spam.
+        </p>
+
+        {newsletterStatus === 'success' ? (
+          <div style={{ background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.3)', borderRadius: 10, padding: '12px 16px', color: '#22c55e', fontSize: 14 }}>
+            ✅ {newsletterMessage}
+          </div>
+        ) : (
+          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+            <input
+              type="email"
+              value={newsletterEmail}
+              onChange={e => setNewsletterEmail(e.target.value)}
+              onKeyDown={e => { if (e.key === 'Enter') subscribeNewsletter() }}
+              placeholder="adresa@email.ro"
+              style={{ flex: 1, minWidth: 200, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(14,165,233,0.2)', borderRadius: 10, padding: '10px 14px', color: 'white', fontSize: 14, outline: 'none' }}
+            />
+            <button
+              onClick={subscribeNewsletter}
+              disabled={newsletterStatus === 'loading' || !newsletterEmail.trim()}
+              style={{ background: newsletterEmail.trim() ? 'linear-gradient(135deg,#0ea5e9,#6366f1)' : 'rgba(255,255,255,0.1)', border: 'none', color: 'white', padding: '10px 20px', borderRadius: 10, fontSize: 14, fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap' }}
+            >
+              {newsletterStatus === 'loading' ? 'Se procesează...' : 'Abonați-vă →'}
+            </button>
+          </div>
+        )}
+
+        {newsletterStatus === 'error' && (
+          <p style={{ fontSize: 12, color: '#ef4444', marginTop: 8 }}>{newsletterMessage}</p>
+        )}
+
+        <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)', marginTop: 12, margin: '12px 0 0' }}>
+          Prin abonare, acceptați <a href="/privacy" style={{ color: 'rgba(14,165,233,0.6)' }}>Politica de Confidențialitate</a>. Vă puteți dezabona oricând.
+        </p>
+      </div>
+
     </div>
   )
 }
