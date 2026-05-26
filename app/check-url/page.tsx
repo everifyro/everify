@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
 
@@ -8,7 +8,19 @@ export default function CheckUrl() {
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState<any>(null)
   const [error, setError] = useState('')
+  const [credits, setCredits] = useState<number|null>(null)
+  const [userId, setUserId] = useState<string|null>(null)
   const router = useRouter()
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        setUserId(session.user.id)
+        supabase.from('profiles').select('credits').eq('id', session.user.id).single()
+          .then(({ data }) => { if (data) setCredits(data.credits) })
+      }
+    })
+  }, [])
 
   const check = async () => {
     if (!url.trim()) return
@@ -46,10 +58,12 @@ export default function CheckUrl() {
         setError(data.error)
       } else {
         setResult(data)
+        const newCredits = (profile.credits || 1) - 1
         await supabase
           .from('profiles')
-          .update({ credits: (profile.credits || 1) - 1 })
+          .update({ credits: newCredits })
           .eq('id', session.user.id)
+        setCredits(newCredits)
       }
     } catch {
       setError('Eroare de conexiune. Încercați din nou.')
@@ -76,7 +90,6 @@ export default function CheckUrl() {
     <div style={{ minHeight: '100vh', background: '#050d1a', color: 'white', fontFamily: 'sans-serif', padding: '60px 20px' }}>
       <div style={{ maxWidth: 720, margin: '0 auto' }}>
 
-        {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: 48 }}>
           <div style={{ fontSize: 48, marginBottom: 16 }}>🌐</div>
           <h1 style={{ fontSize: 32, fontWeight: 800, marginBottom: 12 }}>
@@ -85,9 +98,13 @@ export default function CheckUrl() {
           <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: 15, maxWidth: 500, margin: '0 auto' }}>
             Verificați dacă un site web este sigur înainte de a introduce date personale sau de a efectua o plată. Serviciul consumă 1 verificare din contul dumneavoastră.
           </p>
+          {userId && (
+            <p style={{ marginTop: 12, fontSize: 13, color: 'rgba(255,255,255,0.3)' }}>
+              <a href="/dashboard" style={{ color: '#0ea5e9' }}>Dashboard</a> · {credits ?? 0} credite rămase
+            </p>
+          )}
         </div>
 
-        {/* Input */}
         <div style={{ background: 'rgba(15,23,42,0.9)', border: '1px solid rgba(14,165,233,0.2)', borderRadius: 16, padding: 28, marginBottom: 24 }}>
           <label style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', display: 'block', marginBottom: 8, letterSpacing: 1, textTransform: 'uppercase' }}>
             Adresa site-ului de verificat
@@ -116,11 +133,9 @@ export default function CheckUrl() {
           )}
         </div>
 
-        {/* Rezultat */}
         {result && (
           <div style={{ background: 'rgba(15,23,42,0.9)', border: `1px solid ${getScoreColor(result.trustScore)}44`, borderRadius: 16, padding: 28 }}>
 
-            {/* Trust Score */}
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24, flexWrap: 'wrap', gap: 16 }}>
               <div>
                 <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', marginBottom: 4, letterSpacing: 1, textTransform: 'uppercase' }}>Site analizat</p>
@@ -134,7 +149,6 @@ export default function CheckUrl() {
               </div>
             </div>
 
-            {/* Verdict */}
             <div style={{ background: `${getScoreColor(result.trustScore)}15`, border: `1px solid ${getScoreColor(result.trustScore)}44`, borderRadius: 12, padding: '14px 18px', marginBottom: 24, display: 'flex', alignItems: 'center', gap: 12 }}>
               <span style={{ fontSize: 24 }}>{getScoreEmoji(result.trustScore)}</span>
               <p style={{ fontSize: 16, fontWeight: 700, color: getScoreColor(result.trustScore), margin: 0 }}>
@@ -142,10 +156,8 @@ export default function CheckUrl() {
               </p>
             </div>
 
-            {/* Checks detaliate */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 12, marginBottom: 24 }}>
 
-              {/* HTTPS */}
               <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10, padding: '14px 16px' }}>
                 <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 1 }}>Conexiune securizată</p>
                 <p style={{ fontSize: 15, fontWeight: 700, color: result.checks.https.secure ? '#22c55e' : '#ef4444', margin: 0 }}>
@@ -153,7 +165,6 @@ export default function CheckUrl() {
                 </p>
               </div>
 
-              {/* Google Safe Browsing */}
               <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10, padding: '14px 16px' }}>
                 <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 1 }}>Google Safe Browsing</p>
                 <p style={{ fontSize: 15, fontWeight: 700, color: result.checks.safeBrowsing?.safe === false ? '#ef4444' : '#22c55e', margin: 0 }}>
@@ -162,7 +173,6 @@ export default function CheckUrl() {
                 <p style={{ fontSize: 10, color: 'rgba(255,255,255,0.3)', margin: '4px 0 0', lineHeight: 1.4 }}>Baza de date Google</p>
               </div>
 
-              {/* URLhaus */}
               <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10, padding: '14px 16px' }}>
                 <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 1 }}>URLhaus — abuse.ch</p>
                 <p style={{ fontSize: 15, fontWeight: 700, color: result.checks.urlhaus?.safe === false ? '#ef4444' : result.checks.urlhaus?.safe === null ? '#f59e0b' : '#22c55e', margin: 0 }}>
@@ -171,7 +181,6 @@ export default function CheckUrl() {
                 <p style={{ fontSize: 10, color: 'rgba(255,255,255,0.3)', margin: '4px 0 0', lineHeight: 1.4 }}>Partener Interpol/Europol</p>
               </div>
 
-              {/* URLhaus Domain */}
               <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10, padding: '14px 16px' }}>
                 <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 1 }}>Reputație domeniu</p>
                 <p style={{ fontSize: 15, fontWeight: 700, color: result.checks.urlhausDomain?.safe === false ? '#ef4444' : '#22c55e', margin: 0 }}>
@@ -180,7 +189,6 @@ export default function CheckUrl() {
                 <p style={{ fontSize: 10, color: 'rgba(255,255,255,0.3)', margin: '4px 0 0', lineHeight: 1.4 }}>Istoric domeniu</p>
               </div>
 
-              {/* Varsta domeniu */}
               <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10, padding: '14px 16px' }}>
                 <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 1 }}>Vârstă domeniu</p>
                 <p style={{ fontSize: 15, fontWeight: 700, color: result.checks.domain?.ageMonths >= 12 ? '#22c55e' : result.checks.domain?.ageMonths >= 3 ? '#f59e0b' : '#ef4444', margin: 0 }}>
@@ -191,7 +199,6 @@ export default function CheckUrl() {
 
             </div>
 
-            {/* Avertismente */}
             {result.warnings && result.warnings.length > 0 && (
               <div style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 12, padding: '16px 18px', marginBottom: 24 }}>
                 <p style={{ fontSize: 13, fontWeight: 700, color: '#ef4444', marginBottom: 10 }}>⚠️ Semne de alarmă identificate:</p>
@@ -203,7 +210,6 @@ export default function CheckUrl() {
               </div>
             )}
 
-            {/* Surse verificare */}
             <div style={{ background: 'rgba(14,165,233,0.05)', border: '1px solid rgba(14,165,233,0.1)', borderRadius: 10, padding: '12px 16px', marginBottom: 16 }}>
               <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', margin: '0 0 6px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1 }}>Surse de verificare utilizate</p>
               <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', margin: 0, lineHeight: 1.8 }}>
@@ -211,7 +217,6 @@ export default function CheckUrl() {
               </p>
             </div>
 
-            {/* Disclaimer */}
             <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10, padding: '12px 16px' }}>
               <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', margin: 0, lineHeight: 1.6 }}>
                 <strong style={{ color: 'rgba(255,255,255,0.5)' }}>Notă importantă:</strong> Rezultatele acestei verificări sunt generate automat și au caracter exclusiv informativ. Acestea nu constituie o garanție absolută a siguranței sau nesiguranței site-ului verificat și nu pot fi utilizate ca probă în niciun proces juridic sau administrativ. Exercitați întotdeauna prudență.
@@ -221,7 +226,6 @@ export default function CheckUrl() {
           </div>
         )}
 
-        {/* Info boxes */}
         {!result && (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 16, marginTop: 8 }}>
             {[

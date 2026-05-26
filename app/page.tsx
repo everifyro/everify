@@ -3,6 +3,15 @@ import { useState, useRef, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
 
+const placeholders = [
+  'Descrie situația suspectă sau introdu adresa site-ului pe care vrei să îl verificăm...',
+  'Ai primit un mesaj ciudat pe WhatsApp? Descrie-l aici...',
+  'Cineva îți cere date bancare? Verifică acum...',
+  'Vrei să cumperi de pe un site nou? Introdu adresa lui...',
+  'Ai primit un email de la ANAF? Verifică dacă e real...',
+  'Produsul pare prea ieftin? Verifică dacă e real site-ul de pe care cumperi...',
+]
+
 export default function Home() {
   const [messages, setMessages] = useState<{role:string, text:string}[]>([])
   const [input, setInput] = useState('')
@@ -13,9 +22,36 @@ export default function Home() {
   const [newsletterEmail, setNewsletterEmail] = useState('')
   const [newsletterStatus, setNewsletterStatus] = useState<'idle'|'loading'|'success'|'error'>('idle')
   const [newsletterMessage, setNewsletterMessage] = useState('')
+  const [placeholder, setPlaceholder] = useState(placeholders[0])
+  const [placeholderIndex, setPlaceholderIndex] = useState(0)
+  const [isDeleting, setIsDeleting] = useState(false)
+  const [displayText, setDisplayText] = useState('')
   const FREE_LIMIT = 5
   const endRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
+
+  // Typewriter effect
+  useEffect(() => {
+    const target = placeholders[placeholderIndex]
+    let timeout: NodeJS.Timeout
+
+    if (!isDeleting && displayText.length < target.length) {
+      timeout = setTimeout(() => {
+        setDisplayText(target.slice(0, displayText.length + 1))
+      }, 40)
+    } else if (!isDeleting && displayText.length === target.length) {
+      timeout = setTimeout(() => setIsDeleting(true), 2000)
+    } else if (isDeleting && displayText.length > 0) {
+      timeout = setTimeout(() => {
+        setDisplayText(displayText.slice(0, -1))
+      }, 20)
+    } else if (isDeleting && displayText.length === 0) {
+      setIsDeleting(false)
+      setPlaceholderIndex((i) => (i + 1) % placeholders.length)
+    }
+
+    return () => clearTimeout(timeout)
+  }, [displayText, isDeleting, placeholderIndex])
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -134,7 +170,7 @@ export default function Home() {
             value={input}
             onChange={e => setInput(e.target.value)}
             onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send() } }}
-            placeholder="Descrie situația suspectă sau introdu adresa site-ului pe care vrei să îl verificăm..."
+            placeholder={displayText + '|'}
             rows={2}
             style={{ flex: 1, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(14,165,233,0.2)', borderRadius: 10, padding: '8px 12px', color: 'white', fontSize: 14, resize: 'none', outline: 'none', fontFamily: 'sans-serif' }}
           />
