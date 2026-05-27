@@ -135,7 +135,7 @@ export default function Prices() {
           <p style={{ color: 'rgba(30,41,59,0.65)', fontSize: 14, maxWidth: 560, margin: '0 auto 16px' }}>
             Integrează eVerify în compania ta. Punem la dispoziție un sistem online dedicat, configurat pentru nevoile și dimensiunea echipei tale.
           </p>
-          <a href="/contact" style={{ display: 'inline-block', background: 'linear-gradient(135deg,#0ea5e9,#6366f1)', color: 'white', padding: '10px 24px', borderRadius: 8, fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>
+          <a href="/contact" className="btn-pulse" style={{ display: 'inline-block', background: 'linear-gradient(135deg,#0ea5e9,#6366f1)', color: 'white', padding: '10px 24px', borderRadius: 8, fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>
             Contactează-ne →
           </a>
         </div>

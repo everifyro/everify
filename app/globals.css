@@ -56,6 +56,30 @@ header {
   -webkit-transform: translateZ(0);
 }
 
+/* Soft 3D fade below the header so it lifts off the page */
+header::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -20px;
+  height: 20px;
+  background: linear-gradient(to bottom, rgba(15,23,42,0.10), rgba(15,23,42,0));
+  pointer-events: none;
+}
+
+/* Soft 3D fade above the footer so it blends into the white page above */
+footer::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -28px;
+  height: 28px;
+  background: linear-gradient(to bottom, rgba(30,41,59,0) 0%, rgba(30,41,59,0.12) 100%);
+  pointer-events: none;
+}
+
 @keyframes pulse {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.3; }
@@ -65,4 +89,20 @@ header {
   0% { box-shadow: 0 0 0 0 rgba(220,38,38,0.7); }
   70% { box-shadow: 0 0 0 12px rgba(220,38,38,0); }
   100% { box-shadow: 0 0 0 0 rgba(220,38,38,0); }
+}
+
+/* Blue/indigo ring pulse for CTA arrow buttons */
+@keyframes pulse-blue {
+  0%   { box-shadow: 0 0 0 0   rgba(14,165,233,0.5),  0 6px 18px -6px rgba(14,165,233,0.45); }
+  70%  { box-shadow: 0 0 0 14px rgba(14,165,233,0),   0 6px 18px -6px rgba(14,165,233,0.45); }
+  100% { box-shadow: 0 0 0 0   rgba(14,165,233,0),    0 6px 18px -6px rgba(14,165,233,0.45); }
+}
+
+.btn-pulse {
+  animation: pulse-blue 2.4s infinite;
+  transition: transform 0.15s ease;
+}
+
+.btn-pulse:hover {
+  transform: translateY(-1px);
 }

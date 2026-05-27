@@ -39,9 +39,9 @@ export default function RootLayout({
         {/* Footer */}
         <footer style={{
           background: '#1e293b',
-          borderTop: '1px solid rgba(30,58,95,0.2)',
           padding: '24px 24px',
-          marginTop: 'auto'
+          marginTop: 'auto',
+          position: 'relative'
         }}>
           <div style={{ maxWidth: 1100, margin: '0 auto' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16, marginBottom: 12 }}>

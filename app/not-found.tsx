@@ -22,6 +22,7 @@ export default function NotFound() {
       <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', justifyContent: 'center' }}>
         <button
           onClick={() => router.push('/')}
+          className="btn-pulse"
           style={{ background: 'linear-gradient(135deg,#0ea5e9,#6366f1)', border: 'none', color: 'white', padding: '13px 28px', borderRadius: 10, fontSize: 15, fontWeight: 600, cursor: 'pointer' }}
         >
           Pagina principală →

@@ -237,7 +237,7 @@ export default function ScamTypes() {
           <p style={{ color: 'rgba(30,41,59,0.65)', fontSize: 14, marginBottom: 20 }}>
             Utilizați sistemul de analiză AI eVerify pentru un verdict imediat. Primele 5 verificări sunt gratuite.
           </p>
-          <a href="/" style={{ display: 'inline-block', background: 'linear-gradient(135deg,#0ea5e9,#6366f1)', color: 'white', padding: '12px 28px', borderRadius: 10, fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>
+          <a href="/" className="btn-pulse" style={{ display: 'inline-block', background: 'linear-gradient(135deg,#0ea5e9,#6366f1)', color: 'white', padding: '12px 28px', borderRadius: 10, fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>
             Verificați acum →
           </a>
         </div>

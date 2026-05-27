@@ -145,6 +145,7 @@ export default function Contact() {
             <button
               onClick={handleSubmit}
               disabled={!name || !email || !message}
+              className={name && email && message ? 'btn-pulse' : ''}
               style={{
                 width: '100%', padding: '13px', borderRadius: 10, border: 'none',
                 background: name && email && message ? 'linear-gradient(135deg,#0ea5e9,#6366f1)' : 'rgba(30,41,59,0.1)',

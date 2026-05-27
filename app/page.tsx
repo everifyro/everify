@@ -129,71 +129,96 @@ export default function Home() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'sans-serif', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '40px 20px' }}>
-      <h1 style={{ fontSize: 36, fontWeight: 800, marginBottom: 8 }}>
-        <span style={{ color: '#0ea5e9' }}>e</span>Verify
-      </h1>
-      <p style={{ color: 'rgba(30,41,59,0.6)', marginBottom: 32 }}>Verifică orice mesaj suspect cu AI</p>
+    <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'sans-serif', display: 'flex', flexDirection: 'column' }}>
 
-      <div style={{ width: '100%', maxWidth: 680, background: '#ffffff', border: '1px solid rgba(14,165,233,0.2)', borderRadius: 16, overflow: 'hidden', boxShadow: '0 4px 24px rgba(15,23,42,0.06)' }}>
-        <div style={{ padding: '10px 16px', borderBottom: '1px solid rgba(14,165,233,0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <span style={{ fontSize: 12, color: 'rgba(14,165,233,0.7)', fontFamily: 'monospace' }}>EVERIFY AI</span>
-          <span style={{ fontSize: 12, color: remaining <= 1 ? '#ef4444' : 'rgba(30,41,59,0.6)' }}>
+      {/* HERO full-width */}
+      <section style={{
+        width: '100%',
+        minHeight: 520,
+        backgroundImage: 'linear-gradient(rgba(15,23,42,0.50), rgba(15,23,42,0.50)), url(/hero-bg.jpg)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '64px 20px'
+      }}>
+        <h1 style={{ fontSize: 48, fontWeight: 800, marginBottom: 12, color: '#ffffff', textAlign: 'center', textShadow: '0 2px 12px rgba(15,23,42,0.5)' }}>
+          <span style={{ color: '#0ea5e9' }}>e</span>Verify
+        </h1>
+        <p style={{ color: 'rgba(255,255,255,0.9)', fontSize: 18, marginBottom: 36, textAlign: 'center', textShadow: '0 1px 8px rgba(15,23,42,0.4)' }}>
+          Verifică orice mesaj suspect cu AI
+        </p>
+
+        <div style={{
+        width: '100%',
+        maxWidth: 600,
+        background: 'rgba(255,255,255,0.97)',
+        border: '2px solid rgba(14,165,233,0.5)',
+        borderRadius: 20,
+        overflow: 'hidden',
+        boxShadow: '0 24px 64px -16px rgba(15,23,42,0.45), 0 8px 24px rgba(15,23,42,0.2)'
+      }}>
+        <div style={{ padding: '12px 18px', background: 'rgba(14,165,233,0.15)', borderBottom: '1px solid rgba(14,165,233,0.2)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <span style={{ fontSize: 14, color: '#0ea5e9', fontWeight: 700, letterSpacing: 0.3 }}>eVerify AI</span>
+          <span style={{ fontSize: 12, color: remaining <= 1 ? '#ef4444' : 'rgba(30,41,59,0.7)', fontWeight: 500 }}>
             {remaining}/{userId ? (credits ?? 0) : FREE_LIMIT} verificări rămase
           </span>
         </div>
 
-        <div style={{ height: 360, overflowY: 'auto', padding: 16 }}>
-          {messages.length === 0 && (
-            <div style={{ textAlign: 'center', padding: '60px 20px', color: 'rgba(30,41,59,0.5)' }}>
-              <div style={{ fontSize: 48, marginBottom: 12 }}>🔍</div>
-              <p>Descrie mesajul suspect, situația care te îngrijorează sau introdu adresa site-ului pe care vrei să îl verificăm</p>
-            </div>
-          )}
-          {messages.map((m, i) => (
-            <div key={i} style={{ display: 'flex', justifyContent: m.role === 'user' ? 'flex-end' : 'flex-start', marginBottom: 12 }}>
-              <div style={{ maxWidth: '80%', padding: '10px 14px', borderRadius: m.role === 'user' ? '16px 16px 4px 16px' : '4px 16px 16px 16px', background: m.role === 'user' ? 'rgba(14,165,233,0.15)' : 'rgba(30,41,59,0.05)', border: '1px solid', borderColor: m.role === 'user' ? 'rgba(14,165,233,0.3)' : 'rgba(30,41,59,0.1)', fontSize: 14, lineHeight: 1.7, whiteSpace: 'pre-wrap' }}>
-                {m.text}
+        {(messages.length > 0 || loading) && (
+          <div style={{ maxHeight: 320, overflowY: 'auto', padding: 16, borderBottom: '1px solid rgba(14,165,233,0.1)' }}>
+            {messages.map((m, i) => (
+              <div key={i} style={{ display: 'flex', justifyContent: m.role === 'user' ? 'flex-end' : 'flex-start', marginBottom: 12 }}>
+                <div style={{ maxWidth: '80%', padding: '10px 14px', borderRadius: m.role === 'user' ? '16px 16px 4px 16px' : '4px 16px 16px 16px', background: m.role === 'user' ? 'rgba(14,165,233,0.15)' : 'rgba(30,41,59,0.05)', border: '1px solid', borderColor: m.role === 'user' ? 'rgba(14,165,233,0.3)' : 'rgba(30,41,59,0.1)', fontSize: 14, lineHeight: 1.7, whiteSpace: 'pre-wrap' }}>
+                  {m.text}
+                </div>
               </div>
-            </div>
-          ))}
-          {loading && (
-            <div style={{ display: 'flex', gap: 6, padding: 8 }}>
-              {[0,1,2].map(i => <div key={i} style={{ width: 8, height: 8, borderRadius: '50%', background: '#0ea5e9', animation: 'pulse 1s infinite', animationDelay: `${i*0.2}s` }} />)}
-            </div>
-          )}
-          <div ref={endRef} />
-        </div>
+            ))}
+            {loading && (
+              <div style={{ display: 'flex', gap: 6, padding: 8 }}>
+                {[0,1,2].map(i => <div key={i} style={{ width: 8, height: 8, borderRadius: '50%', background: '#0ea5e9', animation: 'pulse 1s infinite', animationDelay: `${i*0.2}s` }} />)}
+              </div>
+            )}
+            <div ref={endRef} />
+          </div>
+        )}
 
-        <div style={{ borderTop: '1px solid rgba(14,165,233,0.1)', padding: 12, display: 'flex', gap: 10 }}>
+        <div style={{ padding: 12, display: 'flex', gap: 10, alignItems: 'stretch' }}>
           <textarea
             value={input}
             onChange={e => setInput(e.target.value)}
             onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send() } }}
             placeholder={displayText + '|'}
             rows={2}
-            style={{ flex: 1, background: 'rgba(30,41,59,0.04)', border: '1px solid rgba(14,165,233,0.2)', borderRadius: 10, padding: '8px 12px', color: '#1e293b', fontSize: 14, resize: 'none', outline: 'none', fontFamily: 'sans-serif' }}
+            style={{ flex: 1, background: 'rgba(255,255,255,0.95)', border: '2px solid rgba(14,165,233,0.4)', borderRadius: 10, padding: '10px 14px', color: '#1e293b', fontSize: 14, resize: 'none', outline: 'none', fontFamily: 'sans-serif', boxSizing: 'border-box' }}
           />
           <button
             onClick={send}
             disabled={!input.trim() || loading || remaining <= 0}
-            style={{ width: 44, height: 44, borderRadius: 10, border: 'none', background: input.trim() && !loading ? 'linear-gradient(135deg,#0ea5e9,#6366f1)' : 'rgba(30,41,59,0.1)', color: 'white', fontSize: 20, cursor: 'pointer', alignSelf: 'flex-end' }}
-          >→</button>
+            className="btn-pulse"
+            style={{ alignSelf: 'stretch', padding: '0 24px', borderRadius: 10, border: 'none', background: 'linear-gradient(135deg,#0ea5e9,#6366f1)', color: 'white', fontSize: 15, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap' }}
+          >Verifică →</button>
         </div>
       </div>
+      </section>
+
+      {/* Below-hero content */}
+      <div style={{ width: '100%', maxWidth: 1100, margin: '0 auto', padding: '40px 20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
 
       {userId ? (
-        <p style={{ marginTop: 16, fontSize: 13, color: 'rgba(30,41,59,0.55)' }}>
+        <p style={{ fontSize: 13, color: 'rgba(30,41,59,0.55)' }}>
           <a href="/dashboard" style={{ color: '#0ea5e9' }}>Dashboard</a> · {credits} credite rămase
         </p>
       ) : (
-        <p style={{ marginTop: 16, fontSize: 13, color: 'rgba(30,41,59,0.55)' }}>
+        <p style={{ fontSize: 13, color: 'rgba(30,41,59,0.55)' }}>
           <a href="/login" style={{ color: '#0ea5e9' }}>Loghează-te</a> pentru a-ți salva creditele
         </p>
       )}
 
       {/* Newsletter */}
-      <div style={{ width: '100%', maxWidth: 680, marginTop: 32, background: 'rgba(14,165,233,0.06)', border: '1px solid rgba(14,165,233,0.15)', borderRadius: 16, padding: '24px 28px' }}>
+      <div style={{ width: '100%', maxWidth: 1100, marginTop: 32, background: 'rgba(14,165,233,0.06)', border: '1px solid rgba(14,165,233,0.15)', borderRadius: 16, padding: '24px 28px' }}>
         <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>
           🔔 Fiți informați despre cele mai noi fraude
         </h3>
@@ -218,7 +243,8 @@ export default function Home() {
             <button
               onClick={subscribeNewsletter}
               disabled={newsletterStatus === 'loading' || !newsletterEmail.trim()}
-              style={{ background: newsletterEmail.trim() ? 'linear-gradient(135deg,#0ea5e9,#6366f1)' : 'rgba(30,41,59,0.1)', border: 'none', color: 'white', padding: '10px 20px', borderRadius: 10, fontSize: 14, fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap' }}
+              className="btn-pulse"
+              style={{ background: 'linear-gradient(135deg,#0ea5e9,#6366f1)', border: 'none', color: 'white', padding: '10px 20px', borderRadius: 10, fontSize: 14, fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap' }}
             >
               {newsletterStatus === 'loading' ? 'Se procesează...' : 'Abonați-vă →'}
             </button>
@@ -234,6 +260,7 @@ export default function Home() {
         </p>
       </div>
 
+      </div>
     </div>
   )
 }

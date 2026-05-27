@@ -84,6 +84,7 @@ export default function DeCeEverify() {
           </p>
           <button
             onClick={() => router.push('/')}
+            className="btn-pulse"
             style={{ background: 'linear-gradient(135deg,#0ea5e9,#6366f1)', border: 'none', color: 'white', padding: '13px 28px', borderRadius: 10, fontSize: 15, fontWeight: 600, cursor: 'pointer' }}
           >
             Încercați gratuit →
@@ -180,13 +181,15 @@ export default function DeCeEverify() {
           <div style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}>
             <button
               onClick={() => router.push('/')}
+              className="btn-pulse"
               style={{ background: 'linear-gradient(135deg,#0ea5e9,#6366f1)', border: 'none', color: 'white', padding: '13px 28px', borderRadius: 10, fontSize: 15, fontWeight: 600, cursor: 'pointer' }}
             >
               Verificați un mesaj →
             </button>
             <button
               onClick={() => router.push('/check-url')}
-              style={{ background: 'rgba(30,41,59,0.06)', border: '1px solid rgba(30,41,59,0.12)', color: '#1e293b', padding: '13px 28px', borderRadius: 10, fontSize: 15, fontWeight: 600, cursor: 'pointer' }}
+              className="btn-pulse"
+              style={{ background: 'linear-gradient(135deg,#0ea5e9,#6366f1)', border: 'none', color: 'white', padding: '13px 28px', borderRadius: 10, fontSize: 15, fontWeight: 600, cursor: 'pointer' }}
             >
               Verificați un site web →
             </button>

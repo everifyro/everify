@@ -30,8 +30,8 @@ export default function Header() {
   return (
     <header style={{
       width: '100%',
-      background: 'rgba(248,250,252,0.92)',
-      borderBottom: '1px solid rgba(14,165,233,0.15)',
+      background: 'rgba(15,23,42,0.10)',
+      borderBottom: '1px solid rgba(15,23,42,0.08)',
       padding: '0 24px',
       height: 60,
       minHeight: 60,
@@ -41,8 +41,9 @@ export default function Header() {
       position: 'sticky',
       top: 0,
       zIndex: 100,
-      backdropFilter: 'blur(10px)',
-      WebkitBackdropFilter: 'blur(10px)',
+      backdropFilter: 'blur(24px) saturate(180%)',
+      WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+      boxShadow: '0 8px 32px -16px rgba(15,23,42,0.18)',
       boxSizing: 'border-box',
     }}>
       <a href="/" style={{ textDecoration: 'none', flexShrink: 0 }}>
@@ -55,8 +56,8 @@ export default function Header() {
         <a href="/" style={{ color: '#0ea5e9', fontSize: 14, textDecoration: 'none', fontWeight: 700 }}>Verificare AI</a>
         <a href="/check-url" style={{ color: '#0ea5e9', fontSize: 14, textDecoration: 'none', fontWeight: 700 }}>Verificare Site</a>
         <a href="/de-ce-everify" style={{ color: 'rgba(30,41,59,0.85)', fontSize: 14, textDecoration: 'none' }}>De ce eVerify?</a>
-        <a href="/prices" style={{ color: 'rgba(30,41,59,0.85)', fontSize: 14, textDecoration: 'none' }}>Prețuri</a>
         <a href="/scam-types" style={{ color: 'rgba(30,41,59,0.85)', fontSize: 14, textDecoration: 'none' }}>Tipuri Scam</a>
+        <a href="/prices" style={{ color: 'rgba(30,41,59,0.85)', fontSize: 14, textDecoration: 'none' }}>Prețuri</a>
         <a href="/contact" style={{ color: 'rgba(30,41,59,0.85)', fontSize: 14, textDecoration: 'none' }}>Contact</a>
       </nav>
 

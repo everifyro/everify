@@ -3,6 +3,15 @@ import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
 
+const urlPlaceholders = [
+  'ex: www.site-suspect.ro sau https://site-suspect.ro',
+  'Vrei să cumperi de pe un site nou? Introdu adresa lui...',
+  'Ai primit un link suspect? Verifică-l înainte să dai click...',
+  'Produsul pare prea ieftin? Verifică dacă e real site-ul de pe care cumperi...',
+  'Site-ul cere date bancare? Verifică-l mai întâi aici...',
+  'Ai găsit o ofertă prea bună? Verifică autenticitatea site-ului...',
+]
+
 export default function CheckUrl() {
   const [url, setUrl] = useState('')
   const [loading, setLoading] = useState(false)
@@ -10,7 +19,32 @@ export default function CheckUrl() {
   const [error, setError] = useState('')
   const [credits, setCredits] = useState<number|null>(null)
   const [userId, setUserId] = useState<string|null>(null)
+  const [placeholderIndex, setPlaceholderIndex] = useState(0)
+  const [isDeleting, setIsDeleting] = useState(false)
+  const [displayText, setDisplayText] = useState('')
   const router = useRouter()
+
+  useEffect(() => {
+    const target = urlPlaceholders[placeholderIndex]
+    let timeout: NodeJS.Timeout
+
+    if (!isDeleting && displayText.length < target.length) {
+      timeout = setTimeout(() => {
+        setDisplayText(target.slice(0, displayText.length + 1))
+      }, 40)
+    } else if (!isDeleting && displayText.length === target.length) {
+      timeout = setTimeout(() => setIsDeleting(true), 2000)
+    } else if (isDeleting && displayText.length > 0) {
+      timeout = setTimeout(() => {
+        setDisplayText(displayText.slice(0, -1))
+      }, 20)
+    } else if (isDeleting && displayText.length === 0) {
+      setIsDeleting(false)
+      setPlaceholderIndex((i) => (i + 1) % urlPlaceholders.length)
+    }
+
+    return () => clearTimeout(timeout)
+  }, [displayText, isDeleting, placeholderIndex])
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -87,51 +121,79 @@ export default function CheckUrl() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'sans-serif', padding: '60px 20px' }}>
-      <div style={{ maxWidth: 720, margin: '0 auto' }}>
+    <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'sans-serif', display: 'flex', flexDirection: 'column' }}>
 
-        <div style={{ textAlign: 'center', marginBottom: 48 }}>
-          <div style={{ fontSize: 48, marginBottom: 16 }}>🌐</div>
-          <h1 style={{ fontSize: 32, fontWeight: 800, marginBottom: 12 }}>
-            Verificare <span style={{ color: '#0ea5e9' }}>Site Web</span>
-          </h1>
-          <p style={{ color: 'rgba(30,41,59,0.65)', fontSize: 15, maxWidth: 500, margin: '0 auto' }}>
-            Verificați dacă un site web este sigur înainte de a introduce date personale sau de a efectua o plată. Serviciul consumă 1 verificare din contul dumneavoastră.
+      {/* HERO full-width */}
+      <section style={{
+        width: '100%',
+        minHeight: 520,
+        backgroundImage: 'linear-gradient(rgba(15,23,42,0.50), rgba(15,23,42,0.50)), url(/buy_online.jpg)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '64px 20px'
+      }}>
+        <div style={{ fontSize: 48, marginBottom: 16 }}>🌐</div>
+        <h1 style={{ color: '#ffffff', fontSize: 42, fontWeight: 800, marginBottom: 12, textAlign: 'center', textShadow: '0 2px 12px rgba(15,23,42,0.5)' }}>
+          Verificare <span style={{ color: '#0ea5e9' }}>Site Web</span>
+        </h1>
+        <p style={{ color: 'rgba(255,255,255,0.9)', fontSize: 16, maxWidth: 700, textAlign: 'center', textShadow: '0 1px 8px rgba(15,23,42,0.4)', margin: 0 }}>
+          Verificați dacă un site web este sigur înainte de a introduce date personale sau de a efectua o plată. Serviciul consumă 1 verificare din contul dumneavoastră.
+        </p>
+        {userId && (
+          <p style={{ marginTop: 12, fontSize: 13, color: 'rgba(255,255,255,0.75)' }}>
+            <a href="/dashboard" style={{ color: '#0ea5e9' }}>Dashboard</a> · {credits ?? 0} credite rămase
           </p>
-          {userId && (
-            <p style={{ marginTop: 12, fontSize: 13, color: 'rgba(30,41,59,0.55)' }}>
-              <a href="/dashboard" style={{ color: '#0ea5e9' }}>Dashboard</a> · {credits ?? 0} credite rămase
-            </p>
-          )}
-        </div>
+        )}
 
-        <div style={{ background: '#ffffff', border: '1px solid rgba(14,165,233,0.2)', borderRadius: 16, padding: 28, marginBottom: 24, boxShadow: '0 4px 24px rgba(15,23,42,0.06)' }}>
-          <label style={{ fontSize: 13, color: 'rgba(30,41,59,0.65)', display: 'block', marginBottom: 8, letterSpacing: 1, textTransform: 'uppercase' }}>
-            Adresa site-ului de verificat
-          </label>
-          <div style={{ display: 'flex', gap: 12 }}>
+        <div style={{
+          width: '100%',
+          maxWidth: 600,
+          marginTop: 36,
+          background: 'rgba(255,255,255,0.97)',
+          border: '2px solid rgba(14,165,233,0.5)',
+          borderRadius: 20,
+          overflow: 'hidden',
+          boxShadow: '0 24px 64px -16px rgba(15,23,42,0.45), 0 8px 24px rgba(15,23,42,0.2)'
+        }}>
+          <div style={{ padding: '12px 18px', background: 'rgba(14,165,233,0.15)', borderBottom: '1px solid rgba(14,165,233,0.2)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span style={{ fontSize: 14, color: '#0ea5e9', fontWeight: 700, letterSpacing: 0.3 }}>eVerify AI</span>
+            <span style={{ fontSize: 12, color: 'rgba(30,41,59,0.7)', fontWeight: 500 }}>
+              {userId ? `${credits ?? 0} verificări rămase` : '— verificări rămase'}
+            </span>
+          </div>
+
+          <div style={{ padding: 12, display: 'flex', gap: 10, alignItems: 'stretch' }}>
             <input
               value={url}
               onChange={e => setUrl(e.target.value)}
               onKeyDown={e => { if (e.key === 'Enter') check() }}
-              placeholder="ex: www.site-suspect.ro sau https://site-suspect.ro"
-              style={{ flex: 1, background: 'rgba(30,41,59,0.04)', border: '1px solid rgba(14,165,233,0.2)', borderRadius: 10, padding: '12px 16px', color: '#1e293b', fontSize: 14, outline: 'none' }}
+              placeholder={displayText + '|'}
+              style={{ flex: 1, background: 'rgba(255,255,255,0.95)', border: '2px solid rgba(14,165,233,0.4)', borderRadius: 10, padding: '12px 14px', color: '#1e293b', fontSize: 14, outline: 'none', boxSizing: 'border-box' }}
             />
             <button
               onClick={check}
               disabled={loading || !url.trim()}
-              style={{ background: loading || !url.trim() ? 'rgba(30,41,59,0.1)' : 'linear-gradient(135deg,#0ea5e9,#6366f1)', border: 'none', color: 'white', padding: '12px 24px', borderRadius: 10, fontSize: 14, fontWeight: 600, cursor: loading || !url.trim() ? 'not-allowed' : 'pointer', whiteSpace: 'nowrap' }}
+              className="btn-pulse"
+              style={{ alignSelf: 'stretch', background: 'linear-gradient(135deg,#0ea5e9,#6366f1)', border: 'none', color: 'white', padding: '0 24px', borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap' }}
             >
               {loading ? 'Se verifică...' : 'Verifică →'}
             </button>
           </div>
 
           {error && (
-            <div style={{ marginTop: 12, background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', borderRadius: 8, padding: '10px 14px', fontSize: 13, color: '#ef4444' }}>
+            <div style={{ margin: '0 12px 12px', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', borderRadius: 8, padding: '10px 14px', fontSize: 13, color: '#ef4444' }}>
               {error}
             </div>
           )}
         </div>
+      </section>
+
+      {/* Below-hero content */}
+      <div style={{ width: '100%', maxWidth: 1100, margin: '0 auto', padding: '40px 20px' }}>
 
         {result && (
           <div style={{ background: '#ffffff', border: `1px solid ${getScoreColor(result.trustScore)}44`, borderRadius: 16, padding: 28, boxShadow: '0 4px 24px rgba(15,23,42,0.06)' }}>

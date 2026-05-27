@@ -91,6 +91,7 @@ export default function Login() {
           <button
             onClick={login}
             disabled={loading}
+            className={loading ? '' : 'btn-pulse'}
             style={{ width:'100%', padding:'13px', borderRadius:10, border:'none', background:'linear-gradient(135deg,#0ea5e9,#6366f1)', color:'white', fontSize:15, fontWeight:700, cursor:'pointer', fontFamily:'sans-serif', marginBottom:16 }}
           >
             {loading ? 'Se încarcă...' : 'Intră în cont →'}
@@ -99,6 +100,7 @@ export default function Login() {
           <button
             onClick={sendReset}
             disabled={loading}
+            className={loading ? '' : 'btn-pulse'}
             style={{ width:'100%', padding:'13px', borderRadius:10, border:'none', background:'linear-gradient(135deg,#0ea5e9,#6366f1)', color:'white', fontSize:15, fontWeight:700, cursor:'pointer', fontFamily:'sans-serif', marginBottom:16 }}
           >
             {loading ? 'Se trimite...' : 'Trimite email de resetare →'}
