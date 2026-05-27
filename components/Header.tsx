@@ -30,7 +30,7 @@ export default function Header() {
   return (
     <header style={{
       width: '100%',
-      background: 'rgba(5,13,26,0.98)',
+      background: 'rgba(248,250,252,0.92)',
       borderBottom: '1px solid rgba(14,165,233,0.15)',
       padding: '0 24px',
       height: 60,
@@ -46,7 +46,7 @@ export default function Header() {
       boxSizing: 'border-box',
     }}>
       <a href="/" style={{ textDecoration: 'none', flexShrink: 0 }}>
-        <span style={{ fontSize: 22, fontWeight: 800, color: 'white' }}>
+        <span style={{ fontSize: 22, fontWeight: 800, color: '#1e293b' }}>
           <span style={{ color: '#0ea5e9' }}>e</span>Verify
         </span>
       </a>
@@ -54,10 +54,10 @@ export default function Header() {
       <nav style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
         <a href="/" style={{ color: '#0ea5e9', fontSize: 14, textDecoration: 'none', fontWeight: 700 }}>Verificare AI</a>
         <a href="/check-url" style={{ color: '#0ea5e9', fontSize: 14, textDecoration: 'none', fontWeight: 700 }}>Verificare Site</a>
-        <a href="/de-ce-everify" style={{ color: 'rgba(255,255,255,0.85)', fontSize: 14, textDecoration: 'none' }}>De ce eVerify?</a>
-        <a href="/prices" style={{ color: 'rgba(255,255,255,0.85)', fontSize: 14, textDecoration: 'none' }}>Prețuri</a>
-        <a href="/scam-types" style={{ color: 'rgba(255,255,255,0.85)', fontSize: 14, textDecoration: 'none' }}>Tipuri Scam</a>
-        <a href="/contact" style={{ color: 'rgba(255,255,255,0.85)', fontSize: 14, textDecoration: 'none' }}>Contact</a>
+        <a href="/de-ce-everify" style={{ color: 'rgba(30,41,59,0.85)', fontSize: 14, textDecoration: 'none' }}>De ce eVerify?</a>
+        <a href="/prices" style={{ color: 'rgba(30,41,59,0.85)', fontSize: 14, textDecoration: 'none' }}>Prețuri</a>
+        <a href="/scam-types" style={{ color: 'rgba(30,41,59,0.85)', fontSize: 14, textDecoration: 'none' }}>Tipuri Scam</a>
+        <a href="/contact" style={{ color: 'rgba(30,41,59,0.85)', fontSize: 14, textDecoration: 'none' }}>Contact</a>
       </nav>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, minWidth: 180, justifyContent: 'flex-end' }}>
@@ -65,19 +65,19 @@ export default function Header() {
           <div style={{ minWidth: 180 }} />
         ) : userId ? (
           <>
-            <a href="/dashboard" style={{ color: 'rgba(255,255,255,0.85)', fontSize: 14, textDecoration: 'none' }}>
+            <a href="/dashboard" style={{ color: 'rgba(30,41,59,0.85)', fontSize: 14, textDecoration: 'none' }}>
               Dashboard
             </a>
             <button
               onClick={logout}
-              style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', color: 'white', padding: '6px 14px', borderRadius: 8, fontSize: 13, cursor: 'pointer' }}
+              style={{ background: 'rgba(30,41,59,0.06)', border: '1px solid rgba(30,41,59,0.15)', color: '#1e293b', padding: '6px 14px', borderRadius: 8, fontSize: 13, cursor: 'pointer' }}
             >
               Deconectare
             </button>
           </>
         ) : (
           <>
-            <a href="/login" style={{ color: 'rgba(255,255,255,0.85)', fontSize: 14, textDecoration: 'none' }}>
+            <a href="/login" style={{ color: 'rgba(30,41,59,0.85)', fontSize: 14, textDecoration: 'none' }}>
               Login
             </a>
             <a href="/register" style={{ background: 'linear-gradient(135deg,#0ea5e9,#6366f1)', color: 'white', padding: '7px 16px', borderRadius: 8, fontSize: 13, textDecoration: 'none', fontWeight: 600 }}>

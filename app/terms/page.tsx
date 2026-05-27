@@ -1,13 +1,13 @@
 export default function Terms() {
   return (
-    <div style={{ minHeight: '100vh', background: '#050d1a', color: 'white', fontFamily: 'sans-serif', padding: '60px 20px' }}>
+    <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'sans-serif', padding: '60px 20px' }}>
       <div style={{ maxWidth: 800, margin: '0 auto' }}>
 
         <div style={{ textAlign: 'center', marginBottom: 48 }}>
           <h1 style={{ fontSize: 32, fontWeight: 800, marginBottom: 12 }}>
             Termeni și <span style={{ color: '#0ea5e9' }}>Condiții</span>
           </h1>
-          <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 14 }}>
+          <p style={{ color: 'rgba(30,41,59,0.6)', fontSize: 14 }}>
             Ultima actualizare: Mai 2026
           </p>
         </div>
@@ -54,14 +54,14 @@ export default function Terms() {
             content: 'Prezentele Termeni și Condiții sunt guvernate de legislația română. Orice litigiu decurgând din sau în legătură cu utilizarea platformei eVerify va fi soluționat pe cale amiabilă sau, în caz de eșec, prin instanțele competente din România. Pentru orice întrebări sau solicitări, utilizatorii pot contacta eVerify la adresa contact@everify.ro.'
           }
         ].map((section, i) => (
-          <div key={i} style={{ background: 'rgba(15,23,42,0.9)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 14, padding: '24px 28px', marginBottom: 16 }}>
+          <div key={i} style={{ background: '#ffffff', border: '1px solid rgba(30,41,59,0.1)', borderRadius: 14, padding: '24px 28px', marginBottom: 16, boxShadow: '0 4px 24px rgba(15,23,42,0.06)' }}>
             <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 12, color: '#0ea5e9' }}>{section.title}</h2>
-            <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.6)', lineHeight: 1.8, margin: 0 }}>{section.content}</p>
+            <p style={{ fontSize: 14, color: 'rgba(30,41,59,0.7)', lineHeight: 1.8, margin: 0 }}>{section.content}</p>
           </div>
         ))}
 
-        <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 12, padding: '16px 20px', marginTop: 24 }}>
-          <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)', margin: 0, lineHeight: 1.7, textAlign: 'center' }}>
+        <div style={{ background: 'rgba(30,41,59,0.04)', border: '1px solid rgba(30,41,59,0.1)', borderRadius: 12, padding: '16px 20px', marginTop: 24 }}>
+          <p style={{ fontSize: 12, color: 'rgba(30,41,59,0.55)', margin: 0, lineHeight: 1.7, textAlign: 'center' }}>
             Pentru orice întrebări privind Termenii și Condițiile, contactați-ne la <a href="mailto:contact@everify.ro" style={{ color: '#0ea5e9' }}>contact@everify.ro</a>
           </p>
         </div>

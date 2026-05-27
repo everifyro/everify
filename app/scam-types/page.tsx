@@ -148,7 +148,7 @@ export default function ScamTypes() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: '#050d1a', color: 'white', fontFamily: 'sans-serif', padding: '60px 20px' }}>
+    <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'sans-serif', padding: '60px 20px' }}>
       <div style={{ maxWidth: 800, margin: '0 auto' }}>
 
         <div style={{ textAlign: 'center', marginBottom: 48 }}>
@@ -156,11 +156,11 @@ export default function ScamTypes() {
           <h1 style={{ fontSize: 32, fontWeight: 800, marginBottom: 12 }}>
             Tipuri de <span style={{ color: '#0ea5e9' }}>Fraude Documentate</span>
           </h1>
-          <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: 15, maxWidth: 600, margin: '0 auto 16px' }}>
+          <p style={{ color: 'rgba(30,41,59,0.65)', fontSize: 15, maxWidth: 600, margin: '0 auto 16px' }}>
             Baza de date eVerify conține peste 210 tipuri de fraude și escrocherii documentate. În scopul informării publice, prezentăm mai jos cele mai frecvente 10 tipuri identificate în România.
           </p>
           <div style={{ background: 'rgba(14,165,233,0.08)', border: '1px solid rgba(14,165,233,0.2)', borderRadius: 10, padding: '12px 20px', display: 'inline-block' }}>
-            <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', margin: 0 }}>
+            <p style={{ fontSize: 13, color: 'rgba(30,41,59,0.65)', margin: 0 }}>
               Informațiile complete sunt utilizate exclusiv în procesul de analiză AI pentru protecția utilizatorilor. Publicarea unui număr limitat de tipuri are scopul de a nu facilita activitatea infracțională.
             </p>
           </div>
@@ -168,7 +168,7 @@ export default function ScamTypes() {
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 48 }}>
           {scamTypes.map((scam) => (
-            <div key={scam.id} style={{ background: 'rgba(15,23,42,0.9)', border: `1px solid ${openId === scam.id ? 'rgba(14,165,233,0.4)' : 'rgba(255,255,255,0.08)'}`, borderRadius: 14, overflow: 'hidden', transition: 'border-color 0.2s' }}>
+            <div key={scam.id} style={{ background: '#ffffff', border: `1px solid ${openId === scam.id ? 'rgba(14,165,233,0.4)' : 'rgba(30,41,59,0.1)'}`, borderRadius: 14, overflow: 'hidden', transition: 'border-color 0.2s', boxShadow: '0 4px 24px rgba(15,23,42,0.06)' }}>
 
               <button
                 onClick={() => handleClick(scam.id)}
@@ -178,19 +178,19 @@ export default function ScamTypes() {
                 <div style={{ flex: 1 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4, flexWrap: 'wrap' }}>
                     <span style={{ fontSize: 11, color: '#0ea5e9', fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase' }}>#{scam.id}</span>
-                    <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', fontStyle: 'italic' }}>{scam.englishTitle}</span>
+                    <span style={{ fontSize: 11, color: 'rgba(30,41,59,0.5)', fontStyle: 'italic' }}>{scam.englishTitle}</span>
                   </div>
-                  <p style={{ fontSize: 16, fontWeight: 700, color: 'white', margin: '0 0 4px' }}>{scam.title}</p>
-                  <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', margin: 0 }}>{scam.shortDesc}</p>
+                  <p style={{ fontSize: 16, fontWeight: 700, color: '#1e293b', margin: '0 0 4px' }}>{scam.title}</p>
+                  <p style={{ fontSize: 13, color: 'rgba(30,41,59,0.65)', margin: 0 }}>{scam.shortDesc}</p>
                 </div>
-                <span style={{ fontSize: 18, color: 'rgba(255,255,255,0.4)', flexShrink: 0, transform: openId === scam.id ? 'rotate(180deg)' : 'rotate(0)', transition: 'transform 0.2s' }}>▼</span>
+                <span style={{ fontSize: 18, color: 'rgba(30,41,59,0.6)', flexShrink: 0, transform: openId === scam.id ? 'rotate(180deg)' : 'rotate(0)', transition: 'transform 0.2s' }}>▼</span>
               </button>
 
               {openId === scam.id && (
-                <div style={{ padding: '0 22px 22px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                <div style={{ padding: '0 22px 22px', borderTop: '1px solid rgba(30,41,59,0.08)' }}>
 
                   <div style={{ marginTop: 16, marginBottom: 16 }}>
-                    <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.7)', lineHeight: 1.7, margin: 0 }}>{scam.fullDesc}</p>
+                    <p style={{ fontSize: 14, color: 'rgba(30,41,59,0.75)', lineHeight: 1.7, margin: 0 }}>{scam.fullDesc}</p>
                   </div>
 
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 16 }}>
@@ -198,7 +198,7 @@ export default function ScamTypes() {
                     <div style={{ background: 'rgba(239,68,68,0.06)', border: '1px solid rgba(239,68,68,0.15)', borderRadius: 10, padding: '14px 16px' }}>
                       <p style={{ fontSize: 12, fontWeight: 700, color: '#ef4444', marginBottom: 10, textTransform: 'uppercase', letterSpacing: 1 }}>⚠️ Semne de alarmă</p>
                       {scam.semne.map((s, i) => (
-                        <p key={i} style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', marginBottom: 6, paddingLeft: 8, borderLeft: '2px solid rgba(239,68,68,0.3)' }}>
+                        <p key={i} style={{ fontSize: 13, color: 'rgba(30,41,59,0.75)', marginBottom: 6, paddingLeft: 8, borderLeft: '2px solid rgba(239,68,68,0.3)' }}>
                           {s}
                         </p>
                       ))}
@@ -207,7 +207,7 @@ export default function ScamTypes() {
                     <div style={{ background: 'rgba(34,197,94,0.06)', border: '1px solid rgba(34,197,94,0.15)', borderRadius: 10, padding: '14px 16px' }}>
                       <p style={{ fontSize: 12, fontWeight: 700, color: '#22c55e', marginBottom: 10, textTransform: 'uppercase', letterSpacing: 1 }}>🛡️ Ce să faceți</p>
                       {scam.ceFaci.map((c, i) => (
-                        <p key={i} style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', marginBottom: 6, paddingLeft: 8, borderLeft: '2px solid rgba(34,197,94,0.3)' }}>
+                        <p key={i} style={{ fontSize: 13, color: 'rgba(30,41,59,0.75)', marginBottom: 6, paddingLeft: 8, borderLeft: '2px solid rgba(34,197,94,0.3)' }}>
                           {c}
                         </p>
                       ))}
@@ -219,7 +219,7 @@ export default function ScamTypes() {
                     <p style={{ fontSize: 12, fontWeight: 700, color: '#0ea5e9', marginBottom: 10, textTransform: 'uppercase', letterSpacing: 1 }}>📢 Raportați la</p>
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                       {scam.raporteaza.map((r, i) => (
-                        <span key={i} style={{ fontSize: 12, color: 'rgba(255,255,255,0.6)', background: 'rgba(14,165,233,0.1)', padding: '4px 10px', borderRadius: 6 }}>
+                        <span key={i} style={{ fontSize: 12, color: 'rgba(30,41,59,0.75)', background: 'rgba(14,165,233,0.1)', padding: '4px 10px', borderRadius: 6 }}>
                           {r}
                         </span>
                       ))}
@@ -234,7 +234,7 @@ export default function ScamTypes() {
 
         <div style={{ textAlign: 'center', background: 'rgba(14,165,233,0.06)', border: '1px solid rgba(14,165,233,0.15)', borderRadius: 16, padding: '32px 24px', marginBottom: 32 }}>
           <h3 style={{ fontSize: 20, fontWeight: 700, marginBottom: 12 }}>Ați primit un mesaj suspect?</h3>
-          <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: 14, marginBottom: 20 }}>
+          <p style={{ color: 'rgba(30,41,59,0.65)', fontSize: 14, marginBottom: 20 }}>
             Utilizați sistemul de analiză AI eVerify pentru un verdict imediat. Primele 5 verificări sunt gratuite.
           </p>
           <a href="/" style={{ display: 'inline-block', background: 'linear-gradient(135deg,#0ea5e9,#6366f1)', color: 'white', padding: '12px 28px', borderRadius: 10, fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>
@@ -242,9 +242,9 @@ export default function ScamTypes() {
           </a>
         </div>
 
-        <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 12, padding: '16px 20px' }}>
-          <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)', margin: 0, lineHeight: 1.7 }}>
-            <strong style={{ color: 'rgba(255,255,255,0.5)' }}>Notă legală:</strong> Informațiile prezentate pe această pagină au caracter exclusiv educativ și informativ. Conținutul este generat și verificat cu ajutorul inteligenței artificiale și nu constituie consultanță juridică. Acestea nu pot fi utilizate ca probă sau mijloc de dovadă în niciun proces juridic, administrativ sau de altă natură. eVerify nu își asumă responsabilitatea pentru deciziile luate exclusiv pe baza informațiilor prezentate. În cazul unor prejudicii financiare, contactați autoritățile competente.
+        <div style={{ background: 'rgba(30,41,59,0.04)', border: '1px solid rgba(30,41,59,0.1)', borderRadius: 12, padding: '16px 20px' }}>
+          <p style={{ fontSize: 12, color: 'rgba(30,41,59,0.55)', margin: 0, lineHeight: 1.7 }}>
+            <strong style={{ color: 'rgba(30,41,59,0.75)' }}>Notă legală:</strong> Informațiile prezentate pe această pagină au caracter exclusiv educativ și informativ. Conținutul este generat și verificat cu ajutorul inteligenței artificiale și nu constituie consultanță juridică. Acestea nu pot fi utilizate ca probă sau mijloc de dovadă în niciun proces juridic, administrativ sau de altă natură. eVerify nu își asumă responsabilitatea pentru deciziile luate exclusiv pe baza informațiilor prezentate. În cazul unor prejudicii financiare, contactați autoritățile competente.
           </p>
         </div>
 

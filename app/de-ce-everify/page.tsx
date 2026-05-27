@@ -71,7 +71,7 @@ export default function DeCeEverify() {
   ]
 
   return (
-    <div style={{ minHeight: '100vh', background: '#050d1a', color: 'white', fontFamily: 'sans-serif', padding: '60px 20px' }}>
+    <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'sans-serif', padding: '60px 20px' }}>
       <div style={{ maxWidth: 860, margin: '0 auto' }}>
 
         <div style={{ textAlign: 'center', marginBottom: 64 }}>
@@ -79,7 +79,7 @@ export default function DeCeEverify() {
           <h1 style={{ fontSize: 36, fontWeight: 800, marginBottom: 16, lineHeight: 1.2 }}>
             De ce să utilizați <span style={{ color: '#0ea5e9' }}>eVerify</span>?
           </h1>
-          <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: 16, maxWidth: 620, margin: '0 auto 24px' }}>
+          <p style={{ color: 'rgba(30,41,59,0.65)', fontSize: 16, maxWidth: 620, margin: '0 auto 24px' }}>
             eVerify este platforma românească dedicată protecției cetățenilor împotriva fraudelor și escrocheriilor online, oferind analiză în timp real prin inteligență artificială.
           </p>
           <button
@@ -94,17 +94,17 @@ export default function DeCeEverify() {
           {statistici.map((s, i) => (
             <div key={i} style={{ background: 'rgba(14,165,233,0.08)', border: '1px solid rgba(14,165,233,0.2)', borderRadius: 14, padding: '24px 16px', textAlign: 'center' }}>
               <div style={{ fontSize: 36, fontWeight: 900, color: '#0ea5e9', marginBottom: 8 }}>{s.numar}</div>
-              <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', lineHeight: 1.4 }}>{s.label}</div>
+              <div style={{ fontSize: 13, color: 'rgba(30,41,59,0.65)', lineHeight: 1.4 }}>{s.label}</div>
             </div>
           ))}
         </div>
 
-        <div style={{ background: 'rgba(15,23,42,0.9)', border: '1px solid rgba(14,165,233,0.2)', borderRadius: 16, padding: '32px 28px', marginBottom: 48 }}>
+        <div style={{ background: '#ffffff', border: '1px solid rgba(14,165,233,0.2)', borderRadius: 16, padding: '32px 28px', marginBottom: 48, boxShadow: '0 4px 24px rgba(15,23,42,0.06)' }}>
           <h2 style={{ fontSize: 22, fontWeight: 700, marginBottom: 16, color: '#0ea5e9' }}>Misiunea noastră</h2>
-          <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.7)', lineHeight: 1.8, marginBottom: 16 }}>
+          <p style={{ fontSize: 15, color: 'rgba(30,41,59,0.75)', lineHeight: 1.8, marginBottom: 16 }}>
             În România, mii de cetățeni cad victime ale fraudelor online în fiecare an, cu prejudicii financiare semnificative. Escrocii utilizează metode din ce în ce mai sofisticate, inclusiv inteligența artificială, pentru a înșela victimele.
           </p>
-          <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.7)', lineHeight: 1.8, margin: 0 }}>
+          <p style={{ fontSize: 15, color: 'rgba(30,41,59,0.75)', lineHeight: 1.8, margin: 0 }}>
             eVerify a fost creat cu scopul de a pune la dispoziția fiecărui cetățean român un instrument accesibil, rapid și fiabil de verificare a mesajelor suspecte și a site-urilor web, contribuind la reducerea numărului de victime ale fraudelor online.
           </p>
         </div>
@@ -114,11 +114,11 @@ export default function DeCeEverify() {
         </h2>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(380px, 1fr))', gap: 16, marginBottom: 64 }}>
           {avantaje.map((a, i) => (
-            <div key={i} style={{ background: 'rgba(15,23,42,0.9)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 14, padding: '22px 24px', display: 'flex', gap: 16 }}>
+            <div key={i} style={{ background: '#ffffff', border: '1px solid rgba(30,41,59,0.1)', borderRadius: 14, padding: '22px 24px', display: 'flex', gap: 16, boxShadow: '0 4px 24px rgba(15,23,42,0.06)' }}>
               <span style={{ fontSize: 28, flexShrink: 0 }}>{a.icon}</span>
               <div>
-                <p style={{ fontSize: 15, fontWeight: 700, color: 'white', marginBottom: 8 }}>{a.title}</p>
-                <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.55)', lineHeight: 1.7, margin: 0 }}>{a.desc}</p>
+                <p style={{ fontSize: 15, fontWeight: 700, color: '#1e293b', marginBottom: 8 }}>{a.title}</p>
+                <p style={{ fontSize: 13, color: 'rgba(30,41,59,0.7)', lineHeight: 1.7, margin: 0 }}>{a.desc}</p>
               </div>
             </div>
           ))}
@@ -127,22 +127,22 @@ export default function DeCeEverify() {
         <h2 style={{ fontSize: 24, fontWeight: 700, marginBottom: 24, textAlign: 'center' }}>
           eVerify vs. alte metode de verificare
         </h2>
-        <div style={{ background: 'rgba(15,23,42,0.9)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 16, overflow: 'hidden', marginBottom: 64 }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', background: 'rgba(14,165,233,0.1)', padding: '14px 20px', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-            <span style={{ fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase', letterSpacing: 1 }}>Aspect</span>
+        <div style={{ background: '#ffffff', border: '1px solid rgba(30,41,59,0.1)', borderRadius: 16, overflow: 'hidden', marginBottom: 64, boxShadow: '0 4px 24px rgba(15,23,42,0.06)' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', background: 'rgba(14,165,233,0.1)', padding: '14px 20px', borderBottom: '1px solid rgba(30,41,59,0.1)' }}>
+            <span style={{ fontSize: 12, fontWeight: 700, color: 'rgba(30,41,59,0.65)', textTransform: 'uppercase', letterSpacing: 1 }}>Aspect</span>
             <span style={{ fontSize: 12, fontWeight: 700, color: '#0ea5e9', textTransform: 'uppercase', letterSpacing: 1, textAlign: 'center' }}>eVerify</span>
-            <span style={{ fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase', letterSpacing: 1, textAlign: 'center' }}>Alte metode</span>
+            <span style={{ fontSize: 12, fontWeight: 700, color: 'rgba(30,41,59,0.65)', textTransform: 'uppercase', letterSpacing: 1, textAlign: 'center' }}>Alte metode</span>
           </div>
           {comparatie.map((row, i) => (
-            <div key={i} style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', padding: '14px 20px', borderBottom: i < comparatie.length - 1 ? '1px solid rgba(255,255,255,0.05)' : 'none', alignItems: 'center' }}>
-              <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)' }}>{row.aspect}</span>
+            <div key={i} style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', padding: '14px 20px', borderBottom: i < comparatie.length - 1 ? '1px solid rgba(30,41,59,0.08)' : 'none', alignItems: 'center' }}>
+              <span style={{ fontSize: 13, color: 'rgba(30,41,59,0.7)' }}>{row.aspect}</span>
               <span style={{ fontSize: 13, color: '#22c55e', fontWeight: 600, textAlign: 'center' }}>{row.everify}</span>
-              <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textAlign: 'center' }}>{row.altele}</span>
+              <span style={{ fontSize: 13, color: 'rgba(30,41,59,0.55)', textAlign: 'center' }}>{row.altele}</span>
             </div>
           ))}
         </div>
 
-        <div style={{ background: 'rgba(15,23,42,0.9)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 16, padding: '32px 28px', marginBottom: 48 }}>
+        <div style={{ background: '#ffffff', border: '1px solid rgba(30,41,59,0.1)', borderRadius: 16, padding: '32px 28px', marginBottom: 48, boxShadow: '0 4px 24px rgba(15,23,42,0.06)' }}>
           <h2 style={{ fontSize: 22, fontWeight: 700, marginBottom: 20 }}>Cui se adresează eVerify?</h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 16 }}>
             {[
@@ -153,10 +153,10 @@ export default function DeCeEverify() {
               { icon: '🌍', title: 'Diaspora română', desc: 'Verificați ofertele de joburi, chirii și servicii din România.' },
               { icon: '🎓', title: 'Tineri și studenți', desc: 'Identificați ofertele false de joburi, burse și cursuri online.' },
             ].map((item, i) => (
-              <div key={i} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 12, padding: '18px 16px', textAlign: 'center' }}>
+              <div key={i} style={{ background: 'rgba(30,41,59,0.04)', border: '1px solid rgba(30,41,59,0.1)', borderRadius: 12, padding: '18px 16px', textAlign: 'center' }}>
                 <div style={{ fontSize: 32, marginBottom: 8 }}>{item.icon}</div>
-                <p style={{ fontSize: 14, fontWeight: 700, color: 'white', marginBottom: 6 }}>{item.title}</p>
-                <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', lineHeight: 1.5, margin: 0 }}>{item.desc}</p>
+                <p style={{ fontSize: 14, fontWeight: 700, color: '#1e293b', marginBottom: 6 }}>{item.title}</p>
+                <p style={{ fontSize: 12, color: 'rgba(30,41,59,0.65)', lineHeight: 1.5, margin: 0 }}>{item.desc}</p>
               </div>
             ))}
           </div>
@@ -166,15 +166,15 @@ export default function DeCeEverify() {
           <div style={{ fontSize: 40, flexShrink: 0 }}>🆘</div>
           <div>
             <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 10, color: '#ef4444' }}>Buton de urgență permanent disponibil</h3>
-            <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.6)', lineHeight: 1.7, margin: 0 }}>
-              Pe toate paginile platformei eVerify este disponibil un buton de urgență (<strong style={{ color: '#ef4444' }}>🆘</strong>) permanent vizibil în colțul din dreapta jos al ecranului. La apăsarea acestuia, utilizatorul are acces imediat la cele mai importante numere de telefon naționale: <strong style={{ color: 'white' }}>112</strong> (urgențe generale), <strong style={{ color: 'white' }}>1911</strong> (DNSC — fraude cibernetice), numerele de urgență ale principalelor bănci din România pentru blocarea imediată a cardurilor, linii de suport pentru victime ale violenței domestice, pentru copii în pericol și pentru prevenirea suicidului. Toate numerele sunt apelabile direct din dispozitivul mobil, fără a fi necesară memorarea acestora.
+            <p style={{ fontSize: 14, color: 'rgba(30,41,59,0.7)', lineHeight: 1.7, margin: 0 }}>
+              Pe toate paginile platformei eVerify este disponibil un buton de urgență (<strong style={{ color: '#ef4444' }}>🆘</strong>) permanent vizibil în colțul din dreapta jos al ecranului. La apăsarea acestuia, utilizatorul are acces imediat la cele mai importante numere de telefon naționale: <strong style={{ color: '#1e293b' }}>112</strong> (urgențe generale), <strong style={{ color: '#1e293b' }}>1911</strong> (DNSC — fraude cibernetice), numerele de urgență ale principalelor bănci din România pentru blocarea imediată a cardurilor, linii de suport pentru victime ale violenței domestice, pentru copii în pericol și pentru prevenirea suicidului. Toate numerele sunt apelabile direct din dispozitivul mobil, fără a fi necesară memorarea acestora.
             </p>
           </div>
         </div>
 
         <div style={{ textAlign: 'center', background: 'linear-gradient(135deg, rgba(14,165,233,0.1), rgba(99,102,241,0.1))', border: '1px solid rgba(14,165,233,0.2)', borderRadius: 16, padding: '40px 24px', marginBottom: 32 }}>
           <h3 style={{ fontSize: 24, fontWeight: 800, marginBottom: 12 }}>Protejați-vă acum</h3>
-          <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: 15, marginBottom: 24, maxWidth: 500, margin: '0 auto 24px' }}>
+          <p style={{ color: 'rgba(30,41,59,0.65)', fontSize: 15, marginBottom: 24, maxWidth: 500, margin: '0 auto 24px' }}>
             Primele 5 verificări sunt gratuite. Nu este necesară introducerea datelor de card.
           </p>
           <div style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}>
@@ -186,16 +186,16 @@ export default function DeCeEverify() {
             </button>
             <button
               onClick={() => router.push('/check-url')}
-              style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', color: 'white', padding: '13px 28px', borderRadius: 10, fontSize: 15, fontWeight: 600, cursor: 'pointer' }}
+              style={{ background: 'rgba(30,41,59,0.06)', border: '1px solid rgba(30,41,59,0.12)', color: '#1e293b', padding: '13px 28px', borderRadius: 10, fontSize: 15, fontWeight: 600, cursor: 'pointer' }}
             >
               Verificați un site web →
             </button>
           </div>
         </div>
 
-        <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 12, padding: '16px 20px' }}>
-          <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)', margin: 0, lineHeight: 1.7 }}>
-            <strong style={{ color: 'rgba(255,255,255,0.5)' }}>Notă legală:</strong> Conținutul generat de platforma eVerify are caracter exclusiv informativ și este produs cu ajutorul inteligenței artificiale. Acesta nu constituie consultanță juridică, tehnică sau financiară și nu poate fi utilizat ca probă sau mijloc de dovadă în niciun proces juridic, administrativ sau de altă natură. eVerify nu garantează acuratețea absolută a rezultatelor și recomandă contactarea autorităților competente în cazul unor prejudicii financiare.
+        <div style={{ background: 'rgba(30,41,59,0.04)', border: '1px solid rgba(30,41,59,0.1)', borderRadius: 12, padding: '16px 20px' }}>
+          <p style={{ fontSize: 12, color: 'rgba(30,41,59,0.55)', margin: 0, lineHeight: 1.7 }}>
+            <strong style={{ color: 'rgba(30,41,59,0.75)' }}>Notă legală:</strong> Conținutul generat de platforma eVerify are caracter exclusiv informativ și este produs cu ajutorul inteligenței artificiale. Acesta nu constituie consultanță juridică, tehnică sau financiară și nu poate fi utilizat ca probă sau mijloc de dovadă în niciun proces juridic, administrativ sau de altă natură. eVerify nu garantează acuratețea absolută a rezultatelor și recomandă contactarea autorităților competente în cazul unor prejudicii financiare.
           </p>
         </div>
 

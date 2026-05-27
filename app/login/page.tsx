@@ -35,12 +35,12 @@ export default function Login() {
   }
 
   return (
-    <div style={{ minHeight:'100vh', background:'#050d1a', display:'flex', alignItems:'center', justifyContent:'center', fontFamily:'sans-serif' }}>
-      <div style={{ background:'rgba(15,23,42,0.9)', border:'1px solid rgba(14,165,233,0.2)', borderRadius:16, padding:'40px 36px', width:'100%', maxWidth:400 }}>
-        <h1 style={{ color:'white', fontSize:24, fontWeight:800, marginBottom:8, textAlign:'center' }}>
+    <div style={{ minHeight:'100vh', background:'#f8fafc', color:'#1e293b', display:'flex', alignItems:'center', justifyContent:'center', fontFamily:'sans-serif' }}>
+      <div style={{ background:'#ffffff', border:'1px solid rgba(14,165,233,0.2)', borderRadius:16, padding:'40px 36px', width:'100%', maxWidth:400, boxShadow:'0 4px 24px rgba(15,23,42,0.06)' }}>
+        <h1 style={{ color:'#1e293b', fontSize:24, fontWeight:800, marginBottom:8, textAlign:'center' }}>
           <span style={{ color:'#0ea5e9' }}>e</span>Verify
         </h1>
-        <p style={{ color:'rgba(255,255,255,0.4)', textAlign:'center', marginBottom:32, fontSize:14 }}>Intră în contul tău</p>
+        <p style={{ color:'rgba(30,41,59,0.6)', textAlign:'center', marginBottom:32, fontSize:14 }}>Intră în contul tău</p>
 
         {error && (
           <div style={{ background:'rgba(239,68,68,0.1)', border:'1px solid rgba(239,68,68,0.3)', borderRadius:8, padding:'10px 14px', color:'#ef4444', fontSize:13, marginBottom:16 }}>
@@ -55,25 +55,25 @@ export default function Login() {
         )}
 
         <div style={{ marginBottom:16 }}>
-          <label style={{ color:'rgba(255,255,255,0.5)', fontSize:12, display:'block', marginBottom:6 }}>EMAIL</label>
+          <label style={{ color:'rgba(30,41,59,0.65)', fontSize:12, display:'block', marginBottom:6 }}>EMAIL</label>
           <input
             value={email}
             onChange={e => setEmail(e.target.value)}
             type="email"
             placeholder="adresa@email.ro"
-            style={{ width:'100%', background:'rgba(255,255,255,0.05)', border:'1px solid rgba(14,165,233,0.2)', borderRadius:10, padding:'11px 14px', color:'white', fontSize:14, outline:'none', fontFamily:'sans-serif', boxSizing:'border-box' }}
+            style={{ width:'100%', background:'rgba(30,41,59,0.04)', border:'1px solid rgba(14,165,233,0.2)', borderRadius:10, padding:'11px 14px', color:'#1e293b', fontSize:14, outline:'none', fontFamily:'sans-serif', boxSizing:'border-box' }}
           />
         </div>
 
         {!showReset && (
           <div style={{ marginBottom:8 }}>
-            <label style={{ color:'rgba(255,255,255,0.5)', fontSize:12, display:'block', marginBottom:6 }}>PAROLĂ</label>
+            <label style={{ color:'rgba(30,41,59,0.65)', fontSize:12, display:'block', marginBottom:6 }}>PAROLĂ</label>
             <input
               value={password}
               onChange={e => setPassword(e.target.value)}
               type="password"
               placeholder="••••••••"
-              style={{ width:'100%', background:'rgba(255,255,255,0.05)', border:'1px solid rgba(14,165,233,0.2)', borderRadius:10, padding:'11px 14px', color:'white', fontSize:14, outline:'none', fontFamily:'sans-serif', boxSizing:'border-box' }}
+              style={{ width:'100%', background:'rgba(30,41,59,0.04)', border:'1px solid rgba(14,165,233,0.2)', borderRadius:10, padding:'11px 14px', color:'#1e293b', fontSize:14, outline:'none', fontFamily:'sans-serif', boxSizing:'border-box' }}
             />
           </div>
         )}
@@ -105,7 +105,7 @@ export default function Login() {
           </button>
         )}
 
-        <p style={{ textAlign:'center', color:'rgba(255,255,255,0.4)', fontSize:13 }}>
+        <p style={{ textAlign:'center', color:'rgba(30,41,59,0.6)', fontSize:13 }}>
           Nu ai cont? <a href="/register" style={{ color:'#0ea5e9', textDecoration:'none' }}>Înregistrează-te</a>
         </p>
       </div>

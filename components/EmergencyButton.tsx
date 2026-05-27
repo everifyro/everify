@@ -58,20 +58,20 @@ export default function EmergencyButton() {
 
       {open && (
         <div onClick={() => setOpen(false)} style={{ position: 'fixed', inset: 0, zIndex: 1000, background: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20, backdropFilter: 'blur(4px)' }}>
-          <div onClick={e => e.stopPropagation()} style={{ background: '#0a1628', border: '1px solid rgba(220,38,38,0.3)', borderRadius: 20, padding: 28, width: '100%', maxWidth: 520, maxHeight: '85vh', overflowY: 'auto' }}>
+          <div onClick={e => e.stopPropagation()} style={{ background: '#ffffff', border: '1px solid rgba(220,38,38,0.3)', borderRadius: 20, padding: 28, width: '100%', maxWidth: 520, maxHeight: '85vh', overflowY: 'auto', boxShadow: '0 12px 40px rgba(15,23,42,0.18)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-              <h2 style={{ color: 'white', fontSize: 20, fontWeight: 800, margin: 0 }}>🆘 Numere de urgenta</h2>
-              <button onClick={() => setOpen(false)} style={{ background: 'rgba(255,255,255,0.1)', border: 'none', color: 'white', width: 32, height: 32, borderRadius: 8, cursor: 'pointer', fontSize: 16 }}>X</button>
+              <h2 style={{ color: '#1e293b', fontSize: 20, fontWeight: 800, margin: 0 }}>🆘 Numere de urgenta</h2>
+              <button onClick={() => setOpen(false)} style={{ background: 'rgba(30,41,59,0.08)', border: 'none', color: '#1e293b', width: 32, height: 32, borderRadius: 8, cursor: 'pointer', fontSize: 16 }}>X</button>
             </div>
-            <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 12, marginBottom: 20 }}>Apasa pe orice numar pentru a apela direct din telefon</p>
+            <p style={{ color: 'rgba(30,41,59,0.6)', fontSize: 12, marginBottom: 20 }}>Apasa pe orice numar pentru a apela direct din telefon</p>
             {numbers.map((cat, i) => (
               <div key={i} style={{ marginBottom: 20 }}>
-                <p style={{ fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.4)', marginBottom: 8, letterSpacing: 1 }}>{cat.category}</p>
+                <p style={{ fontSize: 12, fontWeight: 700, color: 'rgba(30,41,59,0.55)', marginBottom: 8, letterSpacing: 1 }}>{cat.category}</p>
                 {cat.items.map((item, j) => (
-                  <a key={j} href={'tel:' + item.number} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10, padding: '10px 14px', marginBottom: 6, textDecoration: 'none' }}>
+                  <a key={j} href={'tel:' + item.number} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(30,41,59,0.04)', border: '1px solid rgba(30,41,59,0.1)', borderRadius: 10, padding: '10px 14px', marginBottom: 6, textDecoration: 'none' }}>
                     <div>
-                      <span style={{ color: 'rgba(255,255,255,0.8)', fontSize: 13, display: 'block' }}>{item.name}</span>
-                      <span style={{ color: 'rgba(255,255,255,0.35)', fontSize: 11 }}>{item.note}</span>
+                      <span style={{ color: 'rgba(30,41,59,0.9)', fontSize: 13, display: 'block' }}>{item.name}</span>
+                      <span style={{ color: 'rgba(30,41,59,0.55)', fontSize: 11 }}>{item.note}</span>
                     </div>
                     <span style={{ color: '#ef4444', fontWeight: 800, fontSize: 14, fontFamily: 'monospace', marginLeft: 8 }}>📞 {item.number}</span>
                   </a>
@@ -79,7 +79,7 @@ export default function EmergencyButton() {
               </div>
             ))}
             <div style={{ background: 'rgba(220,38,38,0.08)', border: '1px solid rgba(220,38,38,0.2)', borderRadius: 10, padding: '10px 14px', marginTop: 8 }}>
-              <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: 12, margin: 0, textAlign: 'center' }}>In caz de pericol iminent, suna <strong style={{ color: '#ef4444' }}>112</strong> imediat</p>
+              <p style={{ color: 'rgba(30,41,59,0.7)', fontSize: 12, margin: 0, textAlign: 'center' }}>In caz de pericol iminent, suna <strong style={{ color: '#ef4444' }}>112</strong> imediat</p>
             </div>
           </div>
         </div>

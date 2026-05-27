@@ -5,7 +5,7 @@ export default function NotFound() {
   const router = useRouter()
 
   return (
-    <div style={{ minHeight: '100vh', background: '#050d1a', color: 'white', fontFamily: 'sans-serif', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px 20px', textAlign: 'center' }}>
+    <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'sans-serif', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px 20px', textAlign: 'center' }}>
       
       <div style={{ fontSize: 80, marginBottom: 24 }}>🔍</div>
       
@@ -15,7 +15,7 @@ export default function NotFound() {
         Pagina nu a fost găsită
       </h2>
       
-      <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: 16, maxWidth: 480, marginBottom: 32, lineHeight: 1.6 }}>
+      <p style={{ color: 'rgba(30,41,59,0.65)', fontSize: 16, maxWidth: 480, marginBottom: 32, lineHeight: 1.6 }}>
         Pagina pe care o căutați nu există sau a fost mutată. Verificați adresa URL sau navigați înapoi la pagina principală.
       </p>
 
@@ -28,17 +28,17 @@ export default function NotFound() {
         </button>
         <button
           onClick={() => router.back()}
-          style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', color: 'white', padding: '13px 28px', borderRadius: 10, fontSize: 15, fontWeight: 600, cursor: 'pointer' }}
+          style={{ background: 'rgba(30,41,59,0.06)', border: '1px solid rgba(30,41,59,0.12)', color: '#1e293b', padding: '13px 28px', borderRadius: 10, fontSize: 15, fontWeight: 600, cursor: 'pointer' }}
         >
           ← Înapoi
         </button>
       </div>
 
       <div style={{ marginTop: 48, display: 'flex', gap: 24, flexWrap: 'wrap', justifyContent: 'center' }}>
-        <a href="/scam-types" style={{ color: 'rgba(255,255,255,0.4)', fontSize: 13, textDecoration: 'none' }}>Tipuri de fraude</a>
-        <a href="/check-url" style={{ color: 'rgba(255,255,255,0.4)', fontSize: 13, textDecoration: 'none' }}>Verificare site</a>
-        <a href="/prices" style={{ color: 'rgba(255,255,255,0.4)', fontSize: 13, textDecoration: 'none' }}>Prețuri</a>
-        <a href="/contact" style={{ color: 'rgba(255,255,255,0.4)', fontSize: 13, textDecoration: 'none' }}>Contact</a>
+        <a href="/scam-types" style={{ color: 'rgba(30,41,59,0.6)', fontSize: 13, textDecoration: 'none' }}>Tipuri de fraude</a>
+        <a href="/check-url" style={{ color: 'rgba(30,41,59,0.6)', fontSize: 13, textDecoration: 'none' }}>Verificare site</a>
+        <a href="/prices" style={{ color: 'rgba(30,41,59,0.6)', fontSize: 13, textDecoration: 'none' }}>Prețuri</a>
+        <a href="/contact" style={{ color: 'rgba(30,41,59,0.6)', fontSize: 13, textDecoration: 'none' }}>Contact</a>
       </div>
 
     </div>
