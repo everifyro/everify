@@ -123,6 +123,46 @@ footer::before {
   .ss-grid-2 { grid-template-columns: 1fr; }
 }
 
+.ss-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+@media (max-width: 640px) {
+  .ss-grid-3 { grid-template-columns: 1fr; }
+}
+
+/* Card Companie — lat și distinct față de celelalte 3 publicuri */
+.ss-company-card {
+  width: 100%;
+  background: linear-gradient(135deg, rgba(96,165,250,0.12), rgba(99,102,241,0.12));
+  border: 1.5px solid rgba(96,165,250,0.45);
+  border-radius: 16px;
+  padding: 22px 24px;
+  cursor: pointer;
+  transition: border-color 0.18s ease, background 0.18s ease, transform 0.15s ease;
+  color: #ffffff;
+  font-family: inherit;
+  display: block;
+}
+.ss-company-card:hover {
+  border-color: #60A5FA;
+  background: linear-gradient(135deg, rgba(96,165,250,0.2), rgba(99,102,241,0.2));
+  transform: translateY(-2px);
+}
+
+/* Pills subdomenii sub cardul Companie */
+.ss-pill {
+  display: inline-block;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 999px;
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.82);
+}
+
 .ss-card {
   background: rgba(255,255,255,0.05);
   border: 1px solid rgba(255,255,255,0.1);

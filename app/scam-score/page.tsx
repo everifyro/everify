@@ -216,13 +216,13 @@ const AUDIENCES: { key: Audience; emoji: string; title: string; sub: string }[] 
   { key: 'company', emoji: '🏢', title: 'Companie', sub: 'Angajați' },
 ]
 
-const DEPTS: { key: Dept; emoji: string; title: string }[] = [
-  { key: 'general', emoji: '👤', title: 'Orice angajat' },
-  { key: 'finance', emoji: '💰', title: 'Finanțe / Contabilitate' },
-  { key: 'hr', emoji: '🧑‍💼', title: 'HR / Resurse Umane' },
-  { key: 'it', emoji: '💻', title: 'IT / Administrare' },
-  { key: 'sales', emoji: '📞', title: 'Vânzări / Relații Clienți' },
-  { key: 'management', emoji: '🏛️', title: 'Conducere / Management' },
+const DEPTS: { key: Dept; emoji: string; title: string; pill: string }[] = [
+  { key: 'general', emoji: '👤', title: 'Orice angajat', pill: 'Orice angajat' },
+  { key: 'finance', emoji: '💰', title: 'Finanțe / Contabilitate', pill: 'Finanțe' },
+  { key: 'hr', emoji: '🧑‍💼', title: 'HR / Resurse Umane', pill: 'HR' },
+  { key: 'it', emoji: '💻', title: 'IT / Administrare', pill: 'IT' },
+  { key: 'sales', emoji: '📞', title: 'Vânzări / Relații Clienți', pill: 'Vânzări' },
+  { key: 'management', emoji: '🏛️', title: 'Conducere / Management', pill: 'Conducere' },
 ]
 
 export default function ScamScore() {
@@ -363,7 +363,7 @@ export default function ScamScore() {
   if (screen === 'audience') {
     return (
       <div style={wrap}>
-        <div className="ss-fade" style={{ width: '100%', maxWidth: 560, textAlign: 'center' }}>
+        <div className="ss-fade" style={{ width: '100%', maxWidth: 600, textAlign: 'center' }}>
           <div style={{ fontSize: 42, marginBottom: 12 }}>🛡️</div>
           <h1 style={{ fontSize: 30, fontWeight: 800, marginBottom: 10, lineHeight: 1.2 }}>
             Cât de vulnerabil ești la <span style={{ color: ACCENT }}>scam-uri</span>?
@@ -372,17 +372,41 @@ export default function ScamScore() {
             Răspunde la câteva întrebări și află scorul tău de vulnerabilitate. Durează sub 2 minute.
           </p>
           <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: 14, fontWeight: 600, marginBottom: 16 }}>Pentru cine faci testul?</p>
-          <div className="ss-grid-2">
-            {AUDIENCES.map((a) => (
-              <button key={a.key} className="ss-card" onClick={() => pickAudience(a.key)}>
-                <span style={{ fontSize: 30 }}>{a.emoji}</span>
-                <span>
-                  <span style={{ display: 'block', fontWeight: 700, fontSize: 16 }}>{a.title}</span>
-                  <span style={{ display: 'block', fontSize: 12, color: 'rgba(255,255,255,0.55)' }}>{a.sub}</span>
-                </span>
+
+          {/* Primele 3 publicuri — un rând */}
+          <div className="ss-grid-3" style={{ marginBottom: 14 }}>
+            {AUDIENCES.filter((a) => a.key !== 'company').map((a) => (
+              <button
+                key={a.key}
+                className="ss-card"
+                onClick={() => pickAudience(a.key)}
+                style={{ flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: 8, padding: '22px 14px' }}
+              >
+                <span style={{ fontSize: 34 }}>{a.emoji}</span>
+                <span style={{ fontWeight: 700, fontSize: 16 }}>{a.title}</span>
+                <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.55)' }}>{a.sub}</span>
               </button>
             ))}
           </div>
+
+          {/* Companie — card lat, distinct, cu subdomeniile ca pills */}
+          <button className="ss-company-card" onClick={() => pickAudience('company')}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 14 }}>
+              <span style={{ fontSize: 38 }}>🏢</span>
+              <span style={{ flex: 1, textAlign: 'left' }}>
+                <span style={{ display: 'block', fontWeight: 800, fontSize: 20 }}>Companie</span>
+                <span style={{ display: 'block', fontSize: 13, color: 'rgba(255,255,255,0.6)' }}>
+                  Test pentru angajați — bloc general + modul pe departament
+                </span>
+              </span>
+              <span style={{ fontSize: 20, color: ACCENT }}>❯</span>
+            </div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+              {DEPTS.map((d) => (
+                <span key={d.key} className="ss-pill">{d.pill}</span>
+              ))}
+            </div>
+          </button>
         </div>
       </div>
     )
