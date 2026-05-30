@@ -1,12 +1,24 @@
 'use client'
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 
 export default function Header() {
   const [userId, setUserId] = useState<string|null>(null)
   const [mounted, setMounted] = useState(false)
   const router = useRouter()
+  const pathname = usePathname()
+
+  // Pe /scam-score pagina e dark (#0F172A): header solid (nu glassmorphism)
+  // + text deschis, ca să nu se vadă conținutul prin el și să rămână lizibil.
+  const dark = pathname === '/scam-score'
+  const headerBg = dark ? '#0F172A' : 'rgba(15,23,42,0.10)'
+  const headerBorder = dark ? '1px solid rgba(255,255,255,0.10)' : '1px solid rgba(15,23,42,0.08)'
+  const logoColor = dark ? '#ffffff' : '#1e293b'
+  const navColor = dark ? 'rgba(255,255,255,0.85)' : 'rgba(30,41,59,0.85)'
+  const btnBg = dark ? 'rgba(255,255,255,0.08)' : 'rgba(30,41,59,0.06)'
+  const btnBorder = dark ? '1px solid rgba(255,255,255,0.2)' : '1px solid rgba(30,41,59,0.15)'
+  const btnColor = dark ? '#ffffff' : '#1e293b'
 
   useEffect(() => {
     setMounted(true)
@@ -30,8 +42,8 @@ export default function Header() {
   return (
     <header style={{
       width: '100%',
-      background: 'rgba(15,23,42,0.10)',
-      borderBottom: '1px solid rgba(15,23,42,0.08)',
+      background: headerBg,
+      borderBottom: headerBorder,
       padding: '0 24px',
       height: 60,
       minHeight: 60,
@@ -47,7 +59,7 @@ export default function Header() {
       boxSizing: 'border-box',
     }}>
       <a href="/" style={{ textDecoration: 'none', flexShrink: 0 }}>
-        <span style={{ fontSize: 22, fontWeight: 800, color: '#1e293b' }}>
+        <span style={{ fontSize: 22, fontWeight: 800, color: logoColor }}>
           <span style={{ color: '#0ea5e9' }}>e</span>Verify
         </span>
       </a>
@@ -55,11 +67,11 @@ export default function Header() {
       <nav style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
         <a href="/" style={{ color: '#0ea5e9', fontSize: 14, textDecoration: 'none', fontWeight: 700 }}>Verificare AI</a>
         <a href="/check-url" style={{ color: '#0ea5e9', fontSize: 14, textDecoration: 'none', fontWeight: 700 }}>Verificare Site</a>
-        <a href="/de-ce-everify" style={{ color: 'rgba(30,41,59,0.85)', fontSize: 14, textDecoration: 'none' }}>De ce eVerify?</a>
-        <a href="/scam-types" style={{ color: 'rgba(30,41,59,0.85)', fontSize: 14, textDecoration: 'none' }}>Tipuri Scam</a>
-        <a href="/scam-score" style={{ color: 'rgba(30,41,59,0.85)', fontSize: 14, textDecoration: 'none' }}>Scam Score</a>
-        <a href="/prices" style={{ color: 'rgba(30,41,59,0.85)', fontSize: 14, textDecoration: 'none' }}>Prețuri</a>
-        <a href="/contact" style={{ color: 'rgba(30,41,59,0.85)', fontSize: 14, textDecoration: 'none' }}>Contact</a>
+        <a href="/de-ce-everify" style={{ color: navColor, fontSize: 14, textDecoration: 'none' }}>De ce eVerify?</a>
+        <a href="/scam-types" style={{ color: navColor, fontSize: 14, textDecoration: 'none' }}>Tipuri Scam</a>
+        <a href="/scam-score" style={{ color: navColor, fontSize: 14, textDecoration: 'none' }}>Scam Score</a>
+        <a href="/prices" style={{ color: navColor, fontSize: 14, textDecoration: 'none' }}>Prețuri</a>
+        <a href="/contact" style={{ color: navColor, fontSize: 14, textDecoration: 'none' }}>Contact</a>
       </nav>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, minWidth: 180, justifyContent: 'flex-end' }}>
@@ -67,19 +79,19 @@ export default function Header() {
           <div style={{ minWidth: 180 }} />
         ) : userId ? (
           <>
-            <a href="/dashboard" style={{ color: 'rgba(30,41,59,0.85)', fontSize: 14, textDecoration: 'none' }}>
+            <a href="/dashboard" style={{ color: navColor, fontSize: 14, textDecoration: 'none' }}>
               Dashboard
             </a>
             <button
               onClick={logout}
-              style={{ background: 'rgba(30,41,59,0.06)', border: '1px solid rgba(30,41,59,0.15)', color: '#1e293b', padding: '6px 14px', borderRadius: 8, fontSize: 13, cursor: 'pointer' }}
+              style={{ background: btnBg, border: btnBorder, color: btnColor, padding: '6px 14px', borderRadius: 8, fontSize: 13, cursor: 'pointer' }}
             >
               Deconectare
             </button>
           </>
         ) : (
           <>
-            <a href="/login" style={{ color: 'rgba(30,41,59,0.85)', fontSize: 14, textDecoration: 'none' }}>
+            <a href="/login" style={{ color: navColor, fontSize: 14, textDecoration: 'none' }}>
               Login
             </a>
             <a href="/register" style={{ background: 'linear-gradient(135deg,#0ea5e9,#6366f1)', color: 'white', padding: '7px 16px', borderRadius: 8, fontSize: 13, textDecoration: 'none', fontWeight: 600 }}>

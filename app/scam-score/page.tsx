@@ -353,7 +353,7 @@ export default function ScamScore() {
     background: NAVY,
     color: '#ffffff',
     fontFamily: 'var(--font-plus-jakarta), sans-serif',
-    padding: '56px 20px 80px',
+    padding: '88px 20px 80px',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
