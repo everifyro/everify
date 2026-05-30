@@ -290,7 +290,7 @@ export default function Home() {
       {/* De ce românii aleg eVerify */}
       <div style={{ width: '100%', marginTop: 48, background: '#f8fafc', border: '1px solid rgba(14,165,233,0.15)', borderRadius: 16, padding: '40px 32px' }}>
         <h2 style={{ fontSize: 28, fontWeight: 800, textAlign: 'center', marginBottom: 36, color: '#1e293b' }}>
-          De ce românii aleg <span style={{ color: '#0ea5e9' }}>eVerify</span>
+          De ce să alegi <span style={{ color: '#0ea5e9' }}>eVerify</span>?
         </h2>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 40, alignItems: 'center' }}>
