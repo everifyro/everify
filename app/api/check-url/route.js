@@ -1,9 +1,44 @@
+import { createClient } from '@supabase/supabase-js'
+import { CREDIT_COSTS } from '@/lib/credit-costs'
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_KEY
+)
+
 export async function POST(request) {
   try {
-    const { url } = await request.json()
+    const { url, userId } = await request.json()
 
     if (!url) {
       return Response.json({ error: 'URL lipsește' }, { status: 400 })
+    }
+
+    // Verificare sold ÎNAINTE de a rula serviciul
+    let userCredits = null
+    if (userId) {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('credits')
+        .eq('id', userId)
+        .single()
+      if (!profile || profile.credits < CREDIT_COSTS.url) {
+        return Response.json({ error: 'Nu mai ai credite' }, { status: 403 })
+      }
+      userCredits = profile.credits
+    }
+
+    // Scade costul și atașează soldul rămas la răspuns (doar pe succes)
+    const charge = async (payload) => {
+      if (userId) {
+        const newCredits = Math.max(0, (userCredits ?? 0) - CREDIT_COSTS.url)
+        await supabase
+          .from('profiles')
+          .update({ credits: newCredits })
+          .eq('id', userId)
+        return Response.json({ ...payload, credits: newCredits })
+      }
+      return Response.json(payload)
     }
 
     // Normalizare URL
@@ -30,7 +65,7 @@ export async function POST(request) {
 
     // eVerify — site oficial, verdict special
     if (bareDomain === 'everify.ro') {
-      return Response.json({
+      return charge({
         url: normalizedUrl,
         domain,
         trustScore: 100,
@@ -59,7 +94,7 @@ export async function POST(request) {
     const isWhitelisted = trustedDomains.some(d => bareDomain === d || bareDomain.endsWith('.' + d))
 
     if (isWhitelisted) {
-      return Response.json({
+      return charge({
         url: normalizedUrl,
         domain,
         trustScore: 100,
@@ -230,7 +265,7 @@ export async function POST(request) {
     else if (score >= 25) verdict = 'RISC RIDICAT'
     else verdict = 'PERICULOS — NU ACCESAȚI'
 
-    return Response.json({
+    return charge({
       url: normalizedUrl,
       domain,
       trustScore: score,

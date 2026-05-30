@@ -22,16 +22,16 @@ export default function Prices() {
     {
       name: 'Starter',
       price: '5€',
-      credits: 10,
-      perVerification: '0.50€',
+      credits: 20,
+      perVerification: '0.25€',
       color: '#0ea5e9',
       features: ['Verdict AI instant', 'Suport prin email']
     },
     {
       name: 'Basic',
       price: '9€',
-      credits: 25,
-      perVerification: '0.36€',
+      credits: 50,
+      perVerification: '0.18€',
       color: '#6366f1',
       popular: true,
       features: ['Verdict AI instant', 'Suport prin email', 'Istoric verificări']
@@ -39,16 +39,16 @@ export default function Prices() {
     {
       name: 'Pro',
       price: '19€',
-      credits: 60,
-      perVerification: '0.32€',
+      credits: 120,
+      perVerification: '0.16€',
       color: '#8b5cf6',
       features: ['Verdict AI instant', 'Suport prin email', 'Istoric verificări', 'Export PDF']
     },
     {
       name: 'Expert',
       price: '49€',
-      credits: 200,
-      perVerification: '0.25€',
+      credits: 350,
+      perVerification: '0.14€',
       color: '#f59e0b',
       features: ['Verdict AI instant', 'Suport prin email', 'Istoric verificări', 'Export PDF', 'Suport WhatsApp\nL-V 9:00-18:00']
     }
@@ -117,10 +117,10 @@ export default function Prices() {
 
               <h3 style={{ fontSize: 20, fontWeight: 700, marginBottom: 4, color: plan.color }}>{plan.name}</h3>
               <div style={{ fontSize: 36, fontWeight: 800, marginBottom: 4 }}>{plan.price}</div>
-              <div style={{ fontSize: 12, color: 'rgba(30,41,59,0.6)', marginBottom: 16 }}>{plan.perVerification}/verificare</div>
+              <div style={{ fontSize: 12, color: 'rgba(30,41,59,0.6)', marginBottom: 16 }}>{plan.perVerification}/credit</div>
 
               <div style={{ marginBottom: 20 }}>
-                <span style={{ fontSize: 22, fontWeight: 800, color: plan.color }}>{plan.credits} verificări</span>
+                <span style={{ fontSize: 22, fontWeight: 800, color: plan.color }}>{plan.credits} credite</span>
               </div>
 
               <ul style={{ listStyle: 'none', padding: 0, marginBottom: 24 }}>
@@ -172,10 +172,10 @@ export default function Prices() {
         <div style={{ padding: '40px 20px', background: 'rgba(14,165,233,0.05)', border: '1px solid rgba(14,165,233,0.15)', borderRadius: 16 }}>
           <h3 style={{ fontSize: 20, fontWeight: 700, marginBottom: 20, textAlign: 'center' }}>Întrebări frecvente</h3>
           <p style={{ color: 'rgba(30,41,59,0.65)', fontSize: 14, maxWidth: 600, margin: '0 auto 12px' }}>
-            <strong style={{ color: '#1e293b' }}>Verificările expiră?</strong> Nu, verificările nu expiră. Le folosești când ai nevoie.
+            <strong style={{ color: '#1e293b' }}>Creditele expiră?</strong> Nu, creditele nu expiră. Le folosești când ai nevoie.
           </p>
           <p style={{ color: 'rgba(30,41,59,0.65)', fontSize: 14, maxWidth: 600, margin: '0 auto 12px' }}>
-            <strong style={{ color: '#1e293b' }}>Pot cumpăra mai multe pachete?</strong> Da, verificările se adună în contul tău.
+            <strong style={{ color: '#1e293b' }}>Pot cumpăra mai multe pachete?</strong> Da, creditele se adună în contul tău.
           </p>
           <p style={{ color: 'rgba(30,41,59,0.65)', fontSize: 14, maxWidth: 600, margin: '0 auto 12px' }}>
             <strong style={{ color: '#1e293b' }}>Pot cumpăra pe factură fiscală?</strong> Da, contactează-ne la contact@everify.ro.

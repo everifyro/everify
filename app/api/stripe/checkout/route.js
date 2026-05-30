@@ -3,10 +3,10 @@ import Stripe from 'stripe'
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
 
 const PLANS = {
-  starter: { priceId: 'price_1TVWF5PHeKMimTR5zpaSwrYd', credits: 10 },
-  basic: { priceId: 'price_1TVWGDPHeKMimTR5xFX33SSa', credits: 25 },
-  pro: { priceId: 'price_1TVWHEPHeKMimTR5BYrGSQ1i', credits: 60 },
-  expert: { priceId: 'price_1TVWIUPHeKMimTR5uDkxpnil', credits: 200 },
+  starter: { priceId: 'price_1TVWF5PHeKMimTR5zpaSwrYd', credits: 20 },
+  basic: { priceId: 'price_1TVWGDPHeKMimTR5xFX33SSa', credits: 50 },
+  pro: { priceId: 'price_1TVWHEPHeKMimTR5BYrGSQ1i', credits: 120 },
+  expert: { priceId: 'price_1TVWIUPHeKMimTR5uDkxpnil', credits: 350 },
 }
 
 export async function POST(request) {

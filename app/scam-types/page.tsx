@@ -235,7 +235,7 @@ export default function ScamTypes() {
         <div style={{ textAlign: 'center', background: 'rgba(14,165,233,0.06)', border: '1px solid rgba(14,165,233,0.15)', borderRadius: 16, padding: '32px 24px', marginBottom: 32 }}>
           <h3 style={{ fontSize: 20, fontWeight: 700, marginBottom: 12 }}>Ați primit un mesaj suspect?</h3>
           <p style={{ color: 'rgba(30,41,59,0.65)', fontSize: 14, marginBottom: 20 }}>
-            Utilizați sistemul de analiză AI eVerify pentru un verdict imediat. Primele 5 verificări sunt gratuite.
+            Utilizați sistemul de analiză AI eVerify pentru un verdict imediat. Primele 5 credite sunt gratuite.
           </p>
           <a href="/" className="btn-pulse" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, textAlign: 'center', background: 'linear-gradient(135deg,#0ea5e9,#6366f1)', color: 'white', padding: '12px 28px', borderRadius: 10, fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>
             Verificați acum <span style={{ fontSize: '1.4em', lineHeight: 1 }}>❯</span>

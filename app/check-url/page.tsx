@@ -1,6 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
+import { CREDIT_COSTS } from '@/lib/credit-costs'
 import { useRouter } from 'next/navigation'
 
 const urlPlaceholders = [
@@ -75,7 +76,7 @@ export default function CheckUrl() {
         .eq('id', session.user.id)
         .single()
 
-      if (!profile || profile.credits <= 0) {
+      if (!profile || profile.credits < CREDIT_COSTS.url) {
         router.push('/prices')
         return
       }
@@ -83,7 +84,7 @@ export default function CheckUrl() {
       const res = await fetch('/api/check-url', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url: url.trim() })
+        body: JSON.stringify({ url: url.trim(), userId: session.user.id })
       })
 
       const data = await res.json()
@@ -92,12 +93,8 @@ export default function CheckUrl() {
         setError(data.error)
       } else {
         setResult(data)
-        const newCredits = (profile.credits || 1) - 1
-        await supabase
-          .from('profiles')
-          .update({ credits: newCredits })
-          .eq('id', session.user.id)
-        setCredits(newCredits)
+        // Soldul este scăzut server-side; folosim valoarea returnată de API
+        if (typeof data.credits === 'number') setCredits(data.credits)
       }
     } catch {
       setError('Eroare de conexiune. Încercați din nou.')
@@ -141,7 +138,7 @@ export default function CheckUrl() {
           Verificare <span style={{ color: '#0ea5e9' }}>Site Web</span>
         </h1>
         <p style={{ color: 'rgba(255,255,255,0.9)', fontSize: 16, maxWidth: 700, textAlign: 'center', textShadow: '0 1px 8px rgba(15,23,42,0.4)', margin: 0 }}>
-          Verificați dacă un site web este sigur înainte de a introduce date personale sau de a efectua o plată. Serviciul consumă 1 verificare din contul dumneavoastră.
+          Verificați dacă un site web este sigur înainte de a introduce date personale sau de a efectua o plată. Serviciul consumă 2 credite din contul dumneavoastră.
         </p>
         {userId && (
           <p style={{ marginTop: 12, fontSize: 13, color: 'rgba(255,255,255,0.75)' }}>
@@ -165,7 +162,7 @@ export default function CheckUrl() {
               <span style={{ background: 'linear-gradient(135deg,#0ea5e9,#6366f1)', color: 'white', borderRadius: 4, padding: '1px 5px', fontSize: 9, fontWeight: 800 }}>AI</span>
             </span>
             <span style={{ fontSize: 12, color: 'rgba(30,41,59,0.7)', fontWeight: 500 }}>
-              {userId ? `${credits ?? 0} verificări rămase` : '— verificări rămase'}
+              {userId ? `${credits ?? 0} credite rămase` : '— credite rămase'}
             </span>
           </div>
 
@@ -205,7 +202,7 @@ export default function CheckUrl() {
             { icon: '🔍', title: 'Detectare typosquatting' },
             { icon: '📅', title: 'Verificare vârstă domeniu' },
             { icon: '⚡', title: 'Rezultat în 3-5 secunde' },
-            { icon: '🆓', title: 'Prima verificare gratuită' },
+            { icon: '🆓', title: 'Primul credit gratuit' },
             { icon: '🏆', title: 'Singurul serviciu specializat pentru România' },
           ].map((b, i) => (
             <div key={i} style={{ background: '#ffffff', border: '1px solid rgba(14,165,233,0.15)', borderRadius: 12, padding: '18px 20px', display: 'flex', alignItems: 'center', gap: 14, boxShadow: '0 4px 24px rgba(15,23,42,0.06)' }}>

@@ -166,7 +166,7 @@ export default function Home() {
             <span style={{ background: 'linear-gradient(135deg,#0ea5e9,#6366f1)', color: 'white', borderRadius: 4, padding: '1px 5px', fontSize: 9, fontWeight: 800 }}>AI</span>
           </span>
           <span style={{ fontSize: 12, color: remaining <= 1 ? '#ef4444' : 'rgba(30,41,59,0.7)', fontWeight: 500 }}>
-            {remaining}/{userId ? (credits ?? 0) : FREE_LIMIT} verificări rămase
+            {remaining}/{userId ? (credits ?? 0) : FREE_LIMIT} credite rămase
           </span>
         </div>
 
@@ -217,7 +217,7 @@ export default function Home() {
           { icon: '🧠', title: '200+ tipuri de fraude documentate' },
           { icon: '🇷🇴', title: 'Specializat pentru România' },
           { icon: '🔒', title: '100% confidențial' },
-          { icon: '🆓', title: '5 verificări gratuite' },
+          { icon: '🆓', title: '5 credite gratuite' },
           { icon: '🤖', title: 'AI de ultimă generație' },
         ].map((b, i) => (
           <div key={i} style={{ background: '#ffffff', border: '1px solid rgba(14,165,233,0.15)', borderRadius: 12, padding: '18px 20px', display: 'flex', alignItems: 'center', gap: 14, boxShadow: '0 4px 24px rgba(15,23,42,0.06)' }}>

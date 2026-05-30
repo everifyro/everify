@@ -55,7 +55,7 @@ export default function DeCeEverify() {
   const statistici = [
     { numar: '200+', label: 'Tipuri diferite de fraude documentate' },
     { numar: '24/7', label: 'Disponibilitate continuă' },
-    { numar: '5', label: 'Verificări gratuite la înregistrare' },
+    { numar: '5', label: 'Credite gratuite la înregistrare' },
     { numar: '3', label: 'Surse independente de verificare URL' },
   ]
 
@@ -176,7 +176,7 @@ export default function DeCeEverify() {
         <div style={{ textAlign: 'center', background: 'linear-gradient(135deg, rgba(14,165,233,0.1), rgba(99,102,241,0.1))', border: '1px solid rgba(14,165,233,0.2)', borderRadius: 16, padding: '40px 24px', marginBottom: 32 }}>
           <h3 style={{ fontSize: 24, fontWeight: 800, marginBottom: 12 }}>Protejați-vă acum</h3>
           <p style={{ color: 'rgba(30,41,59,0.65)', fontSize: 15, marginBottom: 24, maxWidth: 500, margin: '0 auto 24px' }}>
-            Primele 5 verificări sunt gratuite. Nu este necesară introducerea datelor de card.
+            Primele 5 credite sunt gratuite. Nu este necesară introducerea datelor de card.
           </p>
           <div style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}>
             <button

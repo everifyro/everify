@@ -31,7 +31,7 @@ export default function Terms() {
           },
           {
             title: '5. Credite și plăți',
-            content: 'Serviciile eVerify funcționează pe baza unui sistem de credite. Primele 5 verificări sunt gratuite pentru utilizatorii nou înregistrați. Creditele achiziționate nu expiră și se cumulează în contul utilizatorului. Plățile sunt procesate exclusiv prin Stripe, o platformă securizată de procesare a plăților. eVerify nu stochează datele complete ale cardului bancar. Toate prețurile sunt exprimate în EUR și includ TVA aplicabil.'
+            content: 'Serviciile eVerify funcționează pe baza unui sistem de credite. Primele 5 credite sunt gratuite pentru utilizatorii nou înregistrați. Creditele achiziționate nu expiră și se cumulează în contul utilizatorului. Plățile sunt procesate exclusiv prin Stripe, o platformă securizată de procesare a plăților. eVerify nu stochează datele complete ale cardului bancar. Toate prețurile sunt exprimate în EUR și includ TVA aplicabil.'
           },
           {
             title: '6. Politica de rambursare',

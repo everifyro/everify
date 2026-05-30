@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
+import { CREDIT_COSTS } from '@/lib/credit-costs'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -300,7 +301,7 @@ export async function POST(request) {
         .select('credits')
         .eq('id', userId)
         .single()
-      if (profile && profile.credits <= 0) {
+      if (profile && profile.credits < CREDIT_COSTS.ai) {
         return Response.json({ error: 'Nu mai ai credite' }, { status: 403 })
       }
     }
@@ -329,7 +330,7 @@ export async function POST(request) {
         .single()
       await supabase
         .from('profiles')
-        .update({ credits: (profile?.credits || 1) - 1 })
+        .update({ credits: Math.max(0, (profile?.credits ?? 0) - CREDIT_COSTS.ai) })
         .eq('id', userId)
       await supabase
         .from('analyses')

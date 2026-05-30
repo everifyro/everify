@@ -8,16 +8,16 @@ const packages = [
     priceId: 'price_1TVWF5PHeKMimTR5zpaSwrYd',
     name: 'Starter',
     price: 5,
-    credits: 10,
-    description: '10 verificări',
+    credits: 20,
+    description: '20 credite',
     color: 'border-gray-600',
   },
   {
     priceId: 'price_1TVWGDPHeKMimTR5xFX33SSa',
     name: 'Basic',
     price: 9,
-    credits: 25,
-    description: '25 verificări',
+    credits: 50,
+    description: '50 credite',
     color: 'border-blue-500',
     popular: true,
   },
@@ -25,16 +25,16 @@ const packages = [
     priceId: 'price_1TVWHEPHeKMimTR5BYrGSQ1i',
     name: 'Pro',
     price: 19,
-    credits: 60,
-    description: '60 verificări',
+    credits: 120,
+    description: '120 credite',
     color: 'border-purple-500',
   },
   {
     priceId: 'price_1TVWIUPHeKMimTR5uDkxpnil',
     name: 'Expert',
     price: 49,
-    credits: 200,
-    description: '200 verificări',
+    credits: 350,
+    description: '350 credite',
     color: 'border-yellow-500',
   },
 ];
@@ -94,7 +94,7 @@ export default function PricingPage() {
                 <span className="text-sm text-gray-400 font-normal"> / one-time</span>
               </p>
               <ul className="text-sm text-gray-300 mb-6 space-y-2 flex-1">
-                <li className="text-lg font-bold text-white">✅ {pkg.credits} verificări</li>
+                <li className="text-lg font-bold text-white">✅ {pkg.credits} credite</li>
                 <li>✅ Rezultate instant</li>
                 <li>✅ Istoric analize</li>
                 <li>✅ Fără abonament</li>
