@@ -102,9 +102,10 @@ export default function PricingPage() {
               <button
                 onClick={() => handlePurchase(pkg.priceId)}
                 disabled={loading === pkg.priceId}
-                className="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-500 transition font-semibold disabled:opacity-50"
+                className="btn-pulse w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-500 transition font-semibold disabled:opacity-50"
+                style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, textAlign: 'center' }}
               >
-                {loading === pkg.priceId ? 'Se încarcă...' : 'Cumpără acum'}
+                {loading === pkg.priceId ? 'Se încarcă...' : <>Cumpără acum <span style={{ fontSize: '1.4em', lineHeight: 1 }}>❯</span></>}
               </button>
             </div>
           ))}

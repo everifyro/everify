@@ -85,9 +85,9 @@ export default function DeCeEverify() {
           <button
             onClick={() => router.push('/')}
             className="btn-pulse"
-            style={{ background: 'linear-gradient(135deg,#0ea5e9,#6366f1)', border: 'none', color: 'white', padding: '13px 28px', borderRadius: 10, fontSize: 15, fontWeight: 600, cursor: 'pointer' }}
+            style={{ background: 'linear-gradient(135deg,#0ea5e9,#6366f1)', border: 'none', color: 'white', padding: '13px 28px', borderRadius: 10, fontSize: 15, fontWeight: 600, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, textAlign: 'center' }}
           >
-            Încercați gratuit →
+            Încercați gratuit <span style={{ fontSize: '1.4em', lineHeight: 1 }}>❯</span>
           </button>
         </div>
 
@@ -182,16 +182,16 @@ export default function DeCeEverify() {
             <button
               onClick={() => router.push('/')}
               className="btn-pulse"
-              style={{ background: 'linear-gradient(135deg,#0ea5e9,#6366f1)', border: 'none', color: 'white', padding: '13px 28px', borderRadius: 10, fontSize: 15, fontWeight: 600, cursor: 'pointer' }}
+              style={{ background: 'linear-gradient(135deg,#0ea5e9,#6366f1)', border: 'none', color: 'white', padding: '13px 28px', borderRadius: 10, fontSize: 15, fontWeight: 600, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, textAlign: 'center' }}
             >
-              Verificați un mesaj →
+              Verificați un mesaj <span style={{ fontSize: '1.4em', lineHeight: 1 }}>❯</span>
             </button>
             <button
               onClick={() => router.push('/check-url')}
               className="btn-pulse"
-              style={{ background: 'linear-gradient(135deg,#0ea5e9,#6366f1)', border: 'none', color: 'white', padding: '13px 28px', borderRadius: 10, fontSize: 15, fontWeight: 600, cursor: 'pointer' }}
+              style={{ background: 'linear-gradient(135deg,#0ea5e9,#6366f1)', border: 'none', color: 'white', padding: '13px 28px', borderRadius: 10, fontSize: 15, fontWeight: 600, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, textAlign: 'center' }}
             >
-              Verificați un site web →
+              Verificați un site web <span style={{ fontSize: '1.4em', lineHeight: 1 }}>❯</span>
             </button>
           </div>
         </div>

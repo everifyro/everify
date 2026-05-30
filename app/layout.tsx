@@ -44,6 +44,34 @@ export default function RootLayout({
           position: 'relative'
         }}>
           <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+
+            {/* Trust badges */}
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, justifyContent: 'center', marginBottom: 20 }}>
+              {[
+                '🔒 256-bit SSL Encrypted',
+                '✅ GDPR Compliant',
+                '🛡️ Powered by Google Safe Browsing',
+                '🌐 Verificare Interpol/Europol URLhaus',
+                '💳 Plăți securizate prin Stripe',
+              ].map((b, i) => (
+                <span key={i} style={{ background: 'rgba(14,165,233,0.06)', border: '1px solid rgba(14,165,233,0.2)', borderRadius: 8, padding: '6px 12px', fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.7)' }}>{b}</span>
+              ))}
+              <span style={{ background: 'rgba(14,165,233,0.06)', border: '1px solid rgba(14,165,233,0.2)', borderRadius: 8, padding: '6px 12px', fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.7)', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                <span><span style={{ color: '#0ea5e9' }}>e</span>Verify</span>
+                <span style={{ background: 'linear-gradient(135deg,#0ea5e9,#6366f1)', color: 'white', borderRadius: 4, padding: '1px 5px', fontSize: 9, fontWeight: 800 }}>AI</span>
+              </span>
+              {[
+                '🇷🇴 Made in Romania',
+                '🚫 Nu vindem date personale',
+                '🌍 Date stocate în UE',
+                '💯 200+ tipuri de fraude documentate',
+                '⚡ Verdict în sub 5 secunde',
+                '🏆 Cea mai completă bază de date anti-scam din România',
+              ].map((b, i) => (
+                <span key={i} style={{ background: 'rgba(14,165,233,0.06)', border: '1px solid rgba(14,165,233,0.2)', borderRadius: 8, padding: '6px 12px', fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.7)' }}>{b}</span>
+              ))}
+            </div>
+
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16, marginBottom: 12 }}>
               <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap' }}>
                 <a href="/de-ce-everify" style={{ color: 'rgba(255,255,255,0.5)', fontSize: 12, textDecoration: 'none' }}>De ce eVerify?</a>

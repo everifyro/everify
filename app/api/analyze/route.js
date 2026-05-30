@@ -218,6 +218,16 @@ BAZA DE DATE COMPLETĂ DE SCAM-URI (Format: Denumire EN / Denumire RO):
 - Fake Account Boosting / Boosting gaming fals — dai acces la cont, contul e furat
 - Fake Discord Moderator / Moderator Discord fals — pretinde verificare, cere link sau 2FA
 
+🗞️ FAKE NEWS & DEZINFORMARE:
+- Fake News Investment / Știri false despre investiții cu vedete
+- Fake News Medical / Știri false medicale cu tratamente miraculoase
+- Deepfake News / Știri video false generate cu AI
+- Fake News Electoral / Dezinformare electorală cu scopuri financiare
+- Fake News Calamități / Colecte false după dezastre naturale
+- Impersonare Publicații / Site-uri false care imită Digi24, ProTV, Antena3
+- Fake News Crypto / Știri false crypto pentru pump and dump
+- Fake News Celebrități / Știri false cu vedete pentru produse sau investiții false
+
 SEMNE GENERALE DE ALARMĂ:
 - Urgență artificială și presiune psihologică
 - Cerere de plată în avans pentru a primi ceva

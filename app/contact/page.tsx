@@ -145,15 +145,17 @@ export default function Contact() {
             <button
               onClick={handleSubmit}
               disabled={!name || !email || !message}
-              className={name && email && message ? 'btn-pulse' : ''}
+              className="btn-pulse"
               style={{
                 width: '100%', padding: '13px', borderRadius: 10, border: 'none',
-                background: name && email && message ? 'linear-gradient(135deg,#0ea5e9,#6366f1)' : 'rgba(30,41,59,0.1)',
+                background: 'linear-gradient(135deg,#0ea5e9,#6366f1)',
                 color: 'white', fontSize: 15, fontWeight: 600,
-                cursor: name && email && message ? 'pointer' : 'not-allowed'
+                cursor: name && email && message ? 'pointer' : 'not-allowed',
+                opacity: name && email && message ? 1 : 0.6,
+                display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, textAlign: 'center'
               }}
             >
-              Trimite mesajul →
+              Trimite mesajul <span style={{ fontSize: '1.4em', lineHeight: 1 }}>❯</span>
             </button>
 
             <p style={{ textAlign: 'center', marginTop: 16, fontSize: 12, color: 'rgba(30,41,59,0.5)' }}>

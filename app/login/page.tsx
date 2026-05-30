@@ -91,19 +91,19 @@ export default function Login() {
           <button
             onClick={login}
             disabled={loading}
-            className={loading ? '' : 'btn-pulse'}
-            style={{ width:'100%', padding:'13px', borderRadius:10, border:'none', background:'linear-gradient(135deg,#0ea5e9,#6366f1)', color:'white', fontSize:15, fontWeight:700, cursor:'pointer', fontFamily:'sans-serif', marginBottom:16 }}
+            className="btn-pulse"
+            style={{ width:'100%', padding:'13px', borderRadius:10, border:'none', background:'linear-gradient(135deg,#0ea5e9,#6366f1)', color:'white', fontSize:15, fontWeight:700, cursor:'pointer', fontFamily:'sans-serif', marginBottom:16, display:'inline-flex', alignItems:'center', justifyContent:'center', gap:8, textAlign:'center' }}
           >
-            {loading ? 'Se încarcă...' : 'Intră în cont →'}
+            {loading ? 'Se încarcă...' : <>Intră în cont <span style={{ fontSize:'1.4em', lineHeight:1 }}>❯</span></>}
           </button>
         ) : (
           <button
             onClick={sendReset}
             disabled={loading}
-            className={loading ? '' : 'btn-pulse'}
-            style={{ width:'100%', padding:'13px', borderRadius:10, border:'none', background:'linear-gradient(135deg,#0ea5e9,#6366f1)', color:'white', fontSize:15, fontWeight:700, cursor:'pointer', fontFamily:'sans-serif', marginBottom:16 }}
+            className="btn-pulse"
+            style={{ width:'100%', padding:'13px', borderRadius:10, border:'none', background:'linear-gradient(135deg,#0ea5e9,#6366f1)', color:'white', fontSize:15, fontWeight:700, cursor:'pointer', fontFamily:'sans-serif', marginBottom:16, display:'inline-flex', alignItems:'center', justifyContent:'center', gap:8, textAlign:'center' }}
           >
-            {loading ? 'Se trimite...' : 'Trimite email de resetare →'}
+            {loading ? 'Se trimite...' : <>Trimite email de resetare <span style={{ fontSize:'1.4em', lineHeight:1 }}>❯</span></>}
           </button>
         )}
 

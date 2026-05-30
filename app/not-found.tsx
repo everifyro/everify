@@ -23,15 +23,16 @@ export default function NotFound() {
         <button
           onClick={() => router.push('/')}
           className="btn-pulse"
-          style={{ background: 'linear-gradient(135deg,#0ea5e9,#6366f1)', border: 'none', color: 'white', padding: '13px 28px', borderRadius: 10, fontSize: 15, fontWeight: 600, cursor: 'pointer' }}
+          style={{ background: 'linear-gradient(135deg,#0ea5e9,#6366f1)', border: 'none', color: 'white', padding: '13px 28px', borderRadius: 10, fontSize: 15, fontWeight: 600, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, textAlign: 'center' }}
         >
-          Pagina principală →
+          Pagina principală <span style={{ fontSize: '1.4em', lineHeight: 1 }}>❯</span>
         </button>
         <button
           onClick={() => router.back()}
-          style={{ background: 'rgba(30,41,59,0.06)', border: '1px solid rgba(30,41,59,0.12)', color: '#1e293b', padding: '13px 28px', borderRadius: 10, fontSize: 15, fontWeight: 600, cursor: 'pointer' }}
+          className="btn-pulse"
+          style={{ background: 'linear-gradient(135deg,#0ea5e9,#6366f1)', border: 'none', color: 'white', padding: '13px 28px', borderRadius: 10, fontSize: 15, fontWeight: 600, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, textAlign: 'center' }}
         >
-          ← Înapoi
+          Înapoi <span style={{ fontSize: '1.4em', lineHeight: 1 }}>❯</span>
         </button>
       </div>
 

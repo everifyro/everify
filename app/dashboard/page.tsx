@@ -74,8 +74,8 @@ export default function Dashboard() {
 
         <div style={{ background: 'rgba(14,165,233,0.05)', border: '1px solid rgba(14,165,233,0.2)', borderRadius: 12, padding: 20, marginBottom: 32, textAlign: 'center' }}>
           <p style={{ marginBottom: 12, color: 'rgba(30,41,59,0.65)' }}>Ai nevoie de mai multe credite?</p>
-          <button onClick={() => router.push('/')} style={{ background: 'linear-gradient(135deg,#0ea5e9,#6366f1)', border: 'none', color: 'white', padding: '10px 24px', borderRadius: 8, cursor: 'pointer', fontWeight: 600 }}>
-            Cumpără credite
+          <button onClick={() => router.push('/prices')} className="btn-pulse" style={{ background: 'linear-gradient(135deg,#0ea5e9,#6366f1)', border: 'none', color: 'white', padding: '10px 24px', borderRadius: 10, cursor: 'pointer', fontWeight: 600, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, textAlign: 'center' }}>
+            Cumpără credite <span style={{ fontSize: '1.4em', lineHeight: 1 }}>❯</span>
           </button>
         </div>
 
@@ -95,8 +95,8 @@ export default function Dashboard() {
         )}
 
         <div style={{ marginTop: 32, textAlign: 'center' }}>
-          <button onClick={() => router.push('/')} style={{ background: 'none', border: '1px solid rgba(14,165,233,0.3)', color: '#0ea5e9', padding: '10px 24px', borderRadius: 8, cursor: 'pointer' }}>
-            ← Înapoi la verificator
+          <button onClick={() => router.push('/')} className="btn-pulse" style={{ background: 'linear-gradient(135deg,#0ea5e9,#6366f1)', border: 'none', color: 'white', padding: '10px 24px', borderRadius: 10, fontSize: 14, fontWeight: 600, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, textAlign: 'center' }}>
+            Înapoi la verificator <span style={{ fontSize: '1.4em', lineHeight: 1 }}>❯</span>
           </button>
         </div>
 

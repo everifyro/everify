@@ -160,7 +160,10 @@ export default function CheckUrl() {
           boxShadow: '0 24px 64px -16px rgba(15,23,42,0.45), 0 8px 24px rgba(15,23,42,0.2)'
         }}>
           <div style={{ padding: '12px 18px', background: 'rgba(14,165,233,0.15)', borderBottom: '1px solid rgba(14,165,233,0.2)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ fontSize: 14, color: '#0ea5e9', fontWeight: 700, letterSpacing: 0.3 }}>eVerify AI</span>
+            <span style={{ fontSize: 14, fontWeight: 700, letterSpacing: 0.3, display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+              <span style={{ color: '#1e293b' }}><span style={{ color: '#0ea5e9' }}>e</span>Verify</span>
+              <span style={{ background: 'linear-gradient(135deg,#0ea5e9,#6366f1)', color: 'white', borderRadius: 4, padding: '1px 5px', fontSize: 9, fontWeight: 800 }}>AI</span>
+            </span>
             <span style={{ fontSize: 12, color: 'rgba(30,41,59,0.7)', fontWeight: 500 }}>
               {userId ? `${credits ?? 0} verificări rămase` : '— verificări rămase'}
             </span>
@@ -178,9 +181,9 @@ export default function CheckUrl() {
               onClick={check}
               disabled={loading || !url.trim()}
               className="btn-pulse"
-              style={{ alignSelf: 'stretch', background: 'linear-gradient(135deg,#0ea5e9,#6366f1)', border: 'none', color: 'white', padding: '0 24px', borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap' }}
+              style={{ alignSelf: 'stretch', background: 'linear-gradient(135deg,#0ea5e9,#6366f1)', border: 'none', color: 'white', padding: '0 24px', borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, textAlign: 'center' }}
             >
-              {loading ? 'Se verifică...' : 'Verifică →'}
+              {loading ? 'Se verifică...' : <>Verifică <span style={{ fontSize: '1.4em', lineHeight: 1 }}>❯</span></>}
             </button>
           </div>
 
@@ -194,6 +197,23 @@ export default function CheckUrl() {
 
       {/* Below-hero content */}
       <div style={{ width: '100%', maxWidth: 1100, margin: '0 auto', padding: '40px 20px' }}>
+
+        {/* Beneficii */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16, marginBottom: 40 }}>
+          {[
+            { icon: '🛡️', title: '3 surse independente de verificare' },
+            { icon: '🔍', title: 'Detectare typosquatting' },
+            { icon: '📅', title: 'Verificare vârstă domeniu' },
+            { icon: '⚡', title: 'Rezultat în 3-5 secunde' },
+            { icon: '🆓', title: 'Prima verificare gratuită' },
+            { icon: '🏆', title: 'Singurul serviciu specializat pentru România' },
+          ].map((b, i) => (
+            <div key={i} style={{ background: '#ffffff', border: '1px solid rgba(14,165,233,0.15)', borderRadius: 12, padding: '18px 20px', display: 'flex', alignItems: 'center', gap: 14, boxShadow: '0 4px 24px rgba(15,23,42,0.06)' }}>
+              <span style={{ fontSize: 28 }}>{b.icon}</span>
+              <span style={{ fontSize: 14, fontWeight: 700, color: '#1e293b' }}>{b.title}</span>
+            </div>
+          ))}
+        </div>
 
         {result && (
           <div style={{ background: '#ffffff', border: `1px solid ${getScoreColor(result.trustScore)}44`, borderRadius: 16, padding: 28, boxShadow: '0 4px 24px rgba(15,23,42,0.06)' }}>

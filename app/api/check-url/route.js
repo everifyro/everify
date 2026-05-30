@@ -25,6 +25,56 @@ export async function POST(request) {
       return Response.json({ error: 'URL invalid' }, { status: 400 })
     }
 
+    // 0. WHITELIST domenii sigure verificate manual
+    const bareDomain = domain.replace(/^www\./, '')
+
+    // eVerify — site oficial, verdict special
+    if (bareDomain === 'everify.ro') {
+      return Response.json({
+        url: normalizedUrl,
+        domain,
+        trustScore: 100,
+        verdict: '✅ Acesta este site-ul oficial eVerify — platforma românească anti-scam. SITE VERIFICAT 100/100',
+        checks: {
+          https: { secure: normalizedUrl.startsWith('https://') },
+          whitelist: { trusted: true, source: 'eVerify Whitelist' },
+          patterns: { warnings: [] },
+        },
+        warnings: [],
+        isKnownSafe: true,
+        isWhitelisted: true,
+      })
+    }
+
+    const trustedDomains = [
+      // Instituții publice
+      'dnsc.ro', 'politiaromana.ro', 'anpc.ro', 'anaf.ro', 'bnr.ro',
+      // Bănci
+      'bcr.ro', 'brd.ro', 'ingbank.ro', 'raiffeisen.ro', 'bancatransilvania.ro', 'revolut.com',
+      // Presă
+      'digi24.ro', 'protv.ro', 'antena3.ro', 'g4media.ro', 'hotnews.ro',
+      // Comerț
+      'emag.ro', 'olx.ro', 'altex.ro', 'mediasmart.ro',
+    ]
+    const isWhitelisted = trustedDomains.some(d => bareDomain === d || bareDomain.endsWith('.' + d))
+
+    if (isWhitelisted) {
+      return Response.json({
+        url: normalizedUrl,
+        domain,
+        trustScore: 100,
+        verdict: 'PROBABIL SIGUR',
+        checks: {
+          https: { secure: normalizedUrl.startsWith('https://') },
+          whitelist: { trusted: true, source: 'eVerify Whitelist — domeniu oficial verificat' },
+          patterns: { warnings: [] },
+        },
+        warnings: [],
+        isKnownSafe: true,
+        isWhitelisted: true,
+      })
+    }
+
     // 1. Google Safe Browsing
     try {
       const safeBrowsingResponse = await fetch(
@@ -107,7 +157,7 @@ export async function POST(request) {
     }
 
     // 6. Pattern analysis
-    const knownSafeDomains = ['google.com', 'microsoft.com', 'apple.com', 'amazon.com', 'paypal.com', 'facebook.com', 'instagram.com', 'tiktok.com', 'youtube.com', 'linkedin.com', 'olx.ro', 'emag.ro', 'bcr.ro', 'brd.ro', 'ingbank.ro', 'raiffeisen.ro', 'bancatransilvania.ro', 'revolut.com', 'netflix.com', 'spotify.com']
+    const knownSafeDomains = ['google.com', 'microsoft.com', 'apple.com', 'amazon.com', 'paypal.com', 'facebook.com', 'instagram.com', 'tiktok.com', 'youtube.com', 'linkedin.com', 'netflix.com', 'spotify.com', 'dnsc.ro', 'politiaromana.ro', 'anpc.ro', 'anaf.ro', 'bnr.ro', 'bcr.ro', 'brd.ro', 'ingbank.ro', 'raiffeisen.ro', 'bancatransilvania.ro', 'revolut.com', 'digi24.ro', 'protv.ro', 'antena3.ro', 'g4media.ro', 'hotnews.ro', 'emag.ro', 'olx.ro', 'altex.ro']
     const isKnownSafe = knownSafeDomains.some(d => domain === d || domain.endsWith('.' + d))
 
     const suspiciousPatterns = [

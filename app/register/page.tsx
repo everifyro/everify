@@ -33,8 +33,8 @@ export default function Register() {
           <label style={{ color:'rgba(30,41,59,0.65)', fontSize:12, display:'block', marginBottom:6 }}>PAROLA</label>
           <input value={password} onChange={e=>setPassword(e.target.value)} type='password' placeholder='minim 6 caractere' style={{ width:'100%', background:'rgba(30,41,59,0.04)', border:'1px solid rgba(14,165,233,0.2)', borderRadius:10, padding:'11px 14px', color:'#1e293b', fontSize:14, outline:'none', fontFamily:'sans-serif' }} />
         </div>
-        <button onClick={register} disabled={loading} style={{ width:'100%', padding:'13px', borderRadius:10, border:'none', background:'linear-gradient(135deg,#0ea5e9,#6366f1)', color:'white', fontSize:15, fontWeight:700, cursor:'pointer', fontFamily:'sans-serif', marginBottom:16 }}>
-          {loading ? 'Se incarca...' : 'Creeaza cont gratuit'}
+        <button onClick={register} disabled={loading} className="btn-pulse" style={{ width:'100%', padding:'13px', borderRadius:10, border:'none', background:'linear-gradient(135deg,#0ea5e9,#6366f1)', color:'white', fontSize:15, fontWeight:700, cursor:'pointer', fontFamily:'sans-serif', marginBottom:16, display:'inline-flex', alignItems:'center', justifyContent:'center', gap:8, textAlign:'center' }}>
+          {loading ? 'Se incarca...' : <>Creeaza cont gratuit <span style={{ fontSize:'1.4em', lineHeight:1 }}>❯</span></>}
         </button>
         <p style={{ textAlign:'center', color:'rgba(30,41,59,0.6)', fontSize:13 }}>Ai deja cont? <a href='/login' style={{ color:'#0ea5e9', textDecoration:'none' }}>Logheaza-te</a></p>
       </div>

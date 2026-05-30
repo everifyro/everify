@@ -91,9 +91,10 @@ export default function ResetPassword() {
         <button
           onClick={handleReset}
           disabled={loading}
-          style={{ width: '100%', background: loading ? 'rgba(30,41,59,0.1)' : 'linear-gradient(135deg,#0ea5e9,#6366f1)', border: 'none', color: 'white', padding: '12px', borderRadius: 8, fontSize: 15, fontWeight: 600, cursor: loading ? 'not-allowed' : 'pointer' }}
+          className="btn-pulse"
+          style={{ width: '100%', background: 'linear-gradient(135deg,#0ea5e9,#6366f1)', border: 'none', color: 'white', padding: '12px', borderRadius: 10, fontSize: 15, fontWeight: 600, cursor: loading ? 'not-allowed' : 'pointer', opacity: loading ? 0.6 : 1, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, textAlign: 'center' }}
         >
-          {loading ? 'Se procesează...' : 'Schimbă parola'}
+          {loading ? 'Se procesează...' : <>Schimbă parola <span style={{ fontSize: '1.4em', lineHeight: 1 }}>❯</span></>}
         </button>
 
         <p style={{ textAlign: 'center', marginTop: 16, fontSize: 13, color: 'rgba(30,41,59,0.5)' }}>

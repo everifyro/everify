@@ -67,6 +67,33 @@ export default function Prices() {
           </p>
         </div>
 
+        {/* Trust badges */}
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, justifyContent: 'center', marginBottom: 36 }}>
+          {[
+            '🔒 256-bit SSL Encrypted',
+            '✅ GDPR Compliant',
+            '🛡️ Powered by Google Safe Browsing',
+            '🌐 Verificare Interpol/Europol URLhaus',
+            '💳 Plăți securizate prin Stripe',
+          ].map((b, i) => (
+            <span key={i} style={{ background: 'rgba(14,165,233,0.06)', border: '1px solid rgba(14,165,233,0.2)', borderRadius: 8, padding: '6px 12px', fontSize: 11, fontWeight: 600, color: '#1e293b' }}>{b}</span>
+          ))}
+          <span style={{ background: 'rgba(14,165,233,0.06)', border: '1px solid rgba(14,165,233,0.2)', borderRadius: 8, padding: '6px 12px', fontSize: 11, fontWeight: 600, color: '#1e293b', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+            <span><span style={{ color: '#0ea5e9' }}>e</span>Verify</span>
+            <span style={{ background: 'linear-gradient(135deg,#0ea5e9,#6366f1)', color: 'white', borderRadius: 4, padding: '1px 5px', fontSize: 9, fontWeight: 800 }}>AI</span>
+          </span>
+          {[
+            '🇷🇴 Made in Romania',
+            '🚫 Nu vindem date personale',
+            '🌍 Date stocate în UE',
+            '💯 200+ tipuri de fraude documentate',
+            '⚡ Verdict în sub 5 secunde',
+            '🏆 Cea mai completă bază de date anti-scam din România',
+          ].map((b, i) => (
+            <span key={i} style={{ background: 'rgba(14,165,233,0.06)', border: '1px solid rgba(14,165,233,0.2)', borderRadius: 8, padding: '6px 12px', fontSize: 11, fontWeight: 600, color: '#1e293b' }}>{b}</span>
+          ))}
+        </div>
+
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 20, marginBottom: 60 }}>
           {plans.map((plan) => (
             <div key={plan.name} style={{
@@ -118,13 +145,15 @@ export default function Prices() {
                   if (data.url) window.location.href = data.url
                   setLoadingPlan(null)
                 }}
+                className="btn-pulse"
                 style={{
                   width: '100%', padding: '11px', borderRadius: 10, border: 'none',
                   background: `linear-gradient(135deg, ${plan.color}, #6366f1)`,
-                  color: 'white', fontSize: 14, fontWeight: 600, cursor: 'pointer'
+                  color: 'white', fontSize: 14, fontWeight: 600, cursor: 'pointer',
+                  display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, textAlign: 'center'
                 }}
               >
-                {loadingPlan === plan.name ? 'Se încarcă...' : userId ? 'Cumpără acum' : 'Înregistrează-te'}
+                {loadingPlan === plan.name ? 'Se încarcă...' : <>{userId ? 'Cumpără acum' : 'Înregistrează-te'} <span style={{ fontSize: '1.4em', lineHeight: 1 }}>❯</span></>}
               </button>
             </div>
           ))}
@@ -135,8 +164,8 @@ export default function Prices() {
           <p style={{ color: 'rgba(30,41,59,0.65)', fontSize: 14, maxWidth: 560, margin: '0 auto 16px' }}>
             Integrează eVerify în compania ta. Punem la dispoziție un sistem online dedicat, configurat pentru nevoile și dimensiunea echipei tale.
           </p>
-          <a href="/contact" className="btn-pulse" style={{ display: 'inline-block', background: 'linear-gradient(135deg,#0ea5e9,#6366f1)', color: 'white', padding: '10px 24px', borderRadius: 8, fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>
-            Contactează-ne →
+          <a href="/contact" className="btn-pulse" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, textAlign: 'center', background: 'linear-gradient(135deg,#0ea5e9,#6366f1)', color: 'white', padding: '10px 24px', borderRadius: 8, fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>
+            Contactează-ne <span style={{ fontSize: '1.4em', lineHeight: 1 }}>❯</span>
           </a>
         </div>
 
