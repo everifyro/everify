@@ -57,6 +57,7 @@ export default function Header() {
         <a href="/check-url" style={{ color: '#0ea5e9', fontSize: 14, textDecoration: 'none', fontWeight: 700 }}>Verificare Site</a>
         <a href="/de-ce-everify" style={{ color: 'rgba(30,41,59,0.85)', fontSize: 14, textDecoration: 'none' }}>De ce eVerify?</a>
         <a href="/scam-types" style={{ color: 'rgba(30,41,59,0.85)', fontSize: 14, textDecoration: 'none' }}>Tipuri Scam</a>
+        <a href="/scam-score" style={{ color: 'rgba(30,41,59,0.85)', fontSize: 14, textDecoration: 'none' }}>Scam Score</a>
         <a href="/prices" style={{ color: 'rgba(30,41,59,0.85)', fontSize: 14, textDecoration: 'none' }}>Prețuri</a>
         <a href="/contact" style={{ color: 'rgba(30,41,59,0.85)', fontSize: 14, textDecoration: 'none' }}>Contact</a>
       </nav>

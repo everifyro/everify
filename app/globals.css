@@ -106,3 +106,47 @@ footer::before {
 .btn-pulse:hover {
   transform: translateY(-1px);
 }
+
+/* ===== Scam Score page (/scam-score) ===== */
+@keyframes ssFadeSlide {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.ss-fade { animation: ssFadeSlide 0.4s ease-out; }
+
+.ss-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+@media (max-width: 640px) {
+  .ss-grid-2 { grid-template-columns: 1fr; }
+}
+
+.ss-card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 14px;
+  padding: 18px 20px;
+  cursor: pointer;
+  transition: border-color 0.18s ease, background 0.18s ease, transform 0.15s ease;
+  color: #ffffff;
+  text-align: left;
+  font-size: 15px;
+  line-height: 1.4;
+  width: 100%;
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.ss-card:hover {
+  border-color: #60A5FA;
+  background: rgba(96,165,250,0.15);
+  transform: translateY(-1px);
+}
+.ss-card.ss-selected {
+  border-color: #60A5FA;
+  background: rgba(96,165,250,0.15);
+  box-shadow: inset 0 0 0 1px #60A5FA;
+}

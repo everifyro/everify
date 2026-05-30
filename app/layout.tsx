@@ -76,6 +76,7 @@ export default function RootLayout({
               <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap' }}>
                 <a href="/de-ce-everify" style={{ color: 'rgba(255,255,255,0.5)', fontSize: 12, textDecoration: 'none' }}>De ce eVerify?</a>
                 <a href="/scam-types" style={{ color: 'rgba(255,255,255,0.5)', fontSize: 12, textDecoration: 'none' }}>Tipuri de fraude</a>
+                <a href="/scam-score" style={{ color: 'rgba(255,255,255,0.5)', fontSize: 12, textDecoration: 'none' }}>Scam Score</a>
                 <a href="/check-url" style={{ color: 'rgba(255,255,255,0.5)', fontSize: 12, textDecoration: 'none' }}>Verificare site</a>
                 <a href="/prices" style={{ color: 'rgba(255,255,255,0.5)', fontSize: 12, textDecoration: 'none' }}>Prețuri</a>
                 <a href="/contact" style={{ color: 'rgba(255,255,255,0.5)', fontSize: 12, textDecoration: 'none' }}>Contact</a>
