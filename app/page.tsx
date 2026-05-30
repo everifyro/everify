@@ -237,6 +237,43 @@ export default function Home() {
         </p>
       )}
 
+      {/* Scam Score preview */}
+      <section style={{ width: '100%', marginTop: 48, background: '#0F172A', borderRadius: 20, padding: '44px 28px', boxShadow: '0 8px 40px -12px rgba(15,23,42,0.5)' }}>
+        <div style={{ maxWidth: 560, margin: '0 auto', textAlign: 'center' }}>
+          <div style={{ fontSize: 36, marginBottom: 12 }}>🛡️</div>
+          <h2 style={{ fontSize: 28, fontWeight: 800, color: '#ffffff', marginBottom: 10, lineHeight: 1.2 }}>
+            Cât de expus ești la <span style={{ color: '#60A5FA' }}>scam-uri</span>?
+          </h2>
+          <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', marginBottom: 28, lineHeight: 1.5 }}>
+            Răspunde la câteva întrebări și află scorul tău de vulnerabilitate. Durează sub 2 minute.
+          </p>
+
+          {/* Întrebare demo — doar vizuală, neinteractivă */}
+          <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 16, padding: '24px 20px', marginBottom: 28, textAlign: 'left' }}>
+            <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)', fontWeight: 600, marginBottom: 12 }}>Întrebarea 1 din 10 · exemplu</p>
+            <p style={{ fontSize: 19, fontWeight: 700, color: '#ffffff', lineHeight: 1.45, marginBottom: 20 }}>
+              Primești un SMS: „Coletul tău e blocat, plătește 2 lei taxa" cu un link. Ce faci?
+            </p>
+            <div className="ss-grid-2" aria-hidden="true">
+              {[
+                'Îl șterg — curierii nu cer plăți prin SMS',
+                'Intru separat pe app-ul curierului ca să verific',
+                'Apăs linkul să văd despre ce e',
+                'Plătesc, să nu pierd coletul',
+              ].map((t, i) => (
+                <div key={i} style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 14, padding: '14px 16px', color: 'rgba(255,255,255,0.85)', fontSize: 14, lineHeight: 1.4 }}>
+                  {t}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <a href="/scam-score" className="btn-pulse" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, background: 'linear-gradient(135deg,#0ea5e9,#6366f1)', color: 'white', padding: '14px 32px', borderRadius: 12, fontSize: 16, fontWeight: 700, textDecoration: 'none' }}>
+            Începe testul gratuit <span style={{ fontSize: '1.3em', lineHeight: 1 }}>❯</span>
+          </a>
+        </div>
+      </section>
+
       {/* Comparison table */}
       <div style={{ width: '100%', marginTop: 48 }}>
         <h2 style={{ fontSize: 28, fontWeight: 800, textAlign: 'center', marginBottom: 8, color: '#1e293b' }}>
