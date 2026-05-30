@@ -31,10 +31,10 @@ const ADULT_Q: Q[] = [
     a: [{ t: 'Închid — banca nu cere niciodată coduri', p: 0 }, { t: 'Ezit, dar nu dau codul', p: 4 }, { t: 'Întreb detalii, apoi poate dau', p: 8 }, { t: 'Dau codul, vor să mă ajute', p: 10 }],
     rec: REC_BANK },
   { q: 'Înainte să introduci parola pe un site, te uiți la adresa exactă din bara browserului?',
-    a: [{ t: 'Mereu, verific fiecare literă', p: 0 }, { t: 'Doar dacă ceva mi se pare ciudat', p: 4 }, { t: 'Rar', p: 8 }, { t: 'Nu știu la ce să mă uit', p: 10 }],
+    a: [{ t: 'Rar', p: 8 }, { t: 'Niciodată / nu știu ce să caut', p: 10 }, { t: 'Mereu, verific fiecare literă', p: 0 }, { t: 'Doar dacă pare suspect', p: 4 }],
     rec: 'Verifică adresa exactă a site-ului pe eVerify înainte să introduci date.' },
   { q: 'Folosești aceeași parolă (sau variații) pe mai multe conturi?',
-    a: [{ t: 'Nu, fiecare cont are parolă unică (am manager de parole)', p: 0 }, { t: 'Câteva variații ale aceleiași parole', p: 5 }, { t: 'Da, cam aceeași peste tot', p: 10 }],
+    a: [{ t: 'Da, cam aceeași peste tot', p: 10 }, { t: 'Nu, fiecare cont are parolă unică (am manager de parole)', p: 0 }, { t: 'Câteva variații ale aceleiași parole', p: 5 }],
     rec: REC_PASS },
   { q: 'Ai autentificare în doi pași (2FA / cod la logare) pe email și pe bancă?',
     a: [{ t: 'Da, pe ambele', p: 0 }, { t: 'Doar pe unul', p: 5 }, { t: 'Nu / nu știu ce e', p: 10 }],
@@ -51,15 +51,15 @@ const ADULT_Q: Q[] = [
   { q: 'Cât din viața ta (locație, planuri, achiziții) e public pe rețele?',
     a: [{ t: 'Foarte puțin / cont privat', p: 0 }, { t: 'Lucruri generale', p: 4 }, { t: 'Destul de mult', p: 8 }, { t: 'Aproape tot, în timp real', p: 10 }],
     rec: 'Restrânge ce postezi public — escrocii își construiesc atacul din ce afli despre tine.' },
-  { q: 'Cât de des actualizezi telefonul/calculatorul (sistem + aplicații)?',
-    a: [{ t: 'Automat, mereu la zi', p: 0 }, { t: 'Când îmi aduc aminte', p: 5 }, { t: 'Rar, amân mereu', p: 9 }, { t: 'Niciodată', p: 10 }],
-    rec: 'Pune actualizările pe automat; multe atacuri folosesc găuri deja reparate.' },
+  { q: 'Ai primit vreodată un email de phishing și l-ai recunoscut imediat. Înseamnă că ești protejat?',
+    a: [{ t: 'Da, dacă îl recunosc înseamnă că sunt vigilent', p: 8 }, { t: 'Nu neapărat — atacurile evoluează constant și unul mai sofisticat mă poate prinde', p: 0 }, { t: 'Depinde de cât de convingător e emailul', p: 5 }, { t: 'Nu am primit niciodată email de phishing', p: 9 }],
+    rec: 'Nu te baza pe „știu eu să recunosc phishing-ul" — atacurile evoluează; rămâi vigilent și verifică mereu, mai ales când ești sigur.' },
 ]
 
-// ---------- COPII (8 întrebări) ----------
+// ---------- COPII (9 întrebări) ----------
 const CHILD_Q: Q[] = [
   { q: 'Un jucător necunoscut din joc îți zice că-ți dă skin-uri/V-bucks gratis dacă-i dai parola contului. Ce faci?',
-    a: [{ t: 'Nu dau parola nimănui, niciodată', p: 0 }, { t: 'Întreb un părinte', p: 3 }, { t: 'Poate, dacă pare de treabă', p: 10 }, { t: 'Da, vreau skin-urile', p: 12 }],
+    a: [{ t: 'Poate, dacă pare de treabă', p: 10 }, { t: 'Da, vreau skin-urile', p: 12 }, { t: 'Nu dau parola nimănui, niciodată', p: 0 }, { t: 'Întreb un părinte', p: 3 }],
     rec: 'Nu da niciodată parola nimănui, nici pentru skin-uri sau V-bucks gratis. Parola e doar a ta.' },
   { q: 'Cineva pe care nu-l cunoști îți scrie și vrea să fiți „prieteni secreți", să nu spui părinților. Ce faci?',
     a: [{ t: 'Spun imediat unui părinte/adult', p: 0 }, { t: 'Blochez persoana', p: 1 }, { t: 'Răspund, dar nu spun nimic', p: 11 }, { t: 'Vorbesc cu el, pare prietenos', p: 12 }],
@@ -71,7 +71,7 @@ const CHILD_Q: Q[] = [
     a: [{ t: 'Nu trimit așa ceva', p: 0 }, { t: 'Întreb mama/tata', p: 2 }, { t: 'Trimit dacă e prieten', p: 11 }, { t: 'Trimit, nu e mare lucru', p: 12 }],
     rec: 'Nu trimite poze cu tine sau adresa de acasă pe chat. Întreabă mereu mama sau tata.' },
   { q: 'Vrei să descarci un joc gratis de pe un site ciudat. Ce faci?',
-    a: [{ t: 'Întreb un adult întâi', p: 0 }, { t: 'Doar din magazinul oficial (App Store/Google Play)', p: 1 }, { t: 'Descarc, vreau jocul', p: 11 }, { t: 'Apăs pe tot ca să meargă', p: 12 }],
+    a: [{ t: 'Descarc, vreau jocul', p: 11 }, { t: 'Apăs pe tot ca să meargă', p: 12 }, { t: 'Întreb un adult întâi', p: 0 }, { t: 'Doar din magazinul oficial (App Store/Google Play)', p: 1 }],
     rec: 'Descarcă jocuri doar din magazinul oficial (App Store / Google Play) și întreabă un adult.' },
   { q: 'Cineva îți spune lucruri urâte sau te sperie online. Ce faci?',
     a: [{ t: 'Spun unui adult de încredere', p: 0 }, { t: 'Blochez și nu răspund', p: 2 }, { t: 'Mă cert cu el', p: 9 }, { t: 'Nu spun nimănui, mi-e rușine', p: 12 }],
@@ -82,12 +82,15 @@ const CHILD_Q: Q[] = [
   { q: 'Cât de des vorbești cu părinții despre ce faci pe internet?',
     a: [{ t: 'Des, le spun ce văd', p: 0 }, { t: 'Câteodată', p: 5 }, { t: 'Aproape niciodată', p: 10 }, { t: 'Nu vor să știe ce fac', p: 12 }],
     rec: 'Vorbește des cu părinții despre ce faci pe internet — ei te pot ajuta când ceva pare ciudat.' },
+  { q: 'Prietenul tău cel mai bun de la școală îți cere pe chat parola la un joc ca să îți trimită un cadou surpriză. Ce faci?',
+    a: [{ t: 'Îi dau parola, e cel mai bun prieten al meu', p: 10 }, { t: 'Nu dau parola nimănui, nici prietenilor', p: 0 }, { t: 'Îl întreb de ce are nevoie de parolă', p: 4 }, { t: 'Îi spun părinților despre cerere', p: 2 }],
+    rec: 'Nu da parola NIMĂNUI, nici celui mai bun prieten — contul lui poate fi folosit de altcineva. Spune unui adult.' },
 ]
 
-// ---------- VÂRSTNICI (8 întrebări) ----------
+// ---------- VÂRSTNICI (9 întrebări) ----------
 const ELDERLY_Q: Q[] = [
   { q: 'Te sună cineva și spune că e nepotul/ruda ta, are o urgență și are nevoie urgent de bani. Ce faci?',
-    a: [{ t: 'Închid și sun eu direct ruda la numărul ei știut', p: 0 }, { t: 'Întreb detalii pe care doar ruda le-ar ști', p: 2 }, { t: 'Mă panichez, dar verific întâi', p: 6 }, { t: 'Trimit banii imediat, e o urgență', p: 12 }],
+    a: [{ t: 'Mă panichez, dar verific întâi', p: 6 }, { t: 'Trimit banii imediat, e o urgență', p: 12 }, { t: 'Închid și sun eu direct ruda la numărul ei știut', p: 0 }, { t: 'Întreb detalii pe care doar ruda le-ar ști', p: 2 }],
     rec: 'Dacă vă sună „o rudă la nevoie", închideți și sunați dvs. ruda la numărul ei cunoscut. Escrocii pot imita vocea.' },
   { q: 'Un mesaj sau apel spune că ai câștigat o sumă de bani / un premiu, dar trebuie să plătești o taxă întâi. Ce faci?',
     a: [{ t: 'Ignor — premiile reale nu cer bani înainte', p: 0 }, { t: 'Întreb un membru al familiei', p: 2 }, { t: 'Sunt curios, întreb cât e taxa', p: 9 }, { t: 'Plătesc taxa ca să primesc premiul', p: 12 }],
@@ -108,23 +111,26 @@ const ELDERLY_Q: Q[] = [
     a: [{ t: 'Da, știu sigur', p: 0 }, { t: 'Cam știu, dar nu sunt sigur(ă)', p: 6 }, { t: 'Nu știam asta', p: 12 }],
     rec: 'Rețineți: nicio bancă, poliție sau instituție nu vă cere parole sau coduri prin telefon.' },
   { q: 'Dacă te grăbește cineva („acum, imediat, altfel pierzi totul"), ce faci?',
-    a: [{ t: 'Mă opresc — graba e semn de înșelătorie', p: 0 }, { t: 'Cer timp de gândire', p: 3 }, { t: 'Mă stresez și acționez repede', p: 11 }, { t: 'Fac ce zice, ca să nu pierd', p: 12 }],
+    a: [{ t: 'Fac ce zice, ca să nu pierd', p: 12 }, { t: 'Mă stresez și acționez repede', p: 11 }, { t: 'Mă opresc — graba e semn de înșelătorie', p: 0 }, { t: 'Cer timp de gândire', p: 3 }],
     rec: 'Când cineva vă grăbește („acum, imediat"), opriți-vă. Graba este semnul clasic al fraudei.' },
+  { q: 'Folosești internetul doar pentru lucruri simple (email, știri). Ești mai puțin expus la fraude decât cei care fac cumpărături online?',
+    a: [{ t: 'Da, cu cât folosești mai puțin internetul, cu atât ești mai sigur', p: 9 }, { t: 'Nu neapărat — fraudele vin și prin email și telefon, nu doar prin cumpărături', p: 0 }, { t: 'Poate, depinde de ce site-uri vizitezi', p: 5 }, { t: 'Da, eu nu dau datele cardului online', p: 7 }],
+    rec: 'Chiar dacă folosiți puțin internetul, fraudele vin și prin telefon și email — rămâneți atent(ă) la orice cerere de bani sau date.' },
 ]
 
-// ---------- COMPANII — bloc general (7 întrebări, max 10) ----------
+// ---------- COMPANII — bloc general (8 întrebări) ----------
 const COMPANY_GENERAL_Q: Q[] = [
   { q: 'Primești un email de la „CEO/șef" care cere urgent o plată sau date confidențiale, „strict secret, nu spune nimănui". Ce faci?',
     a: [{ t: 'Verific pe alt canal (sun/Teams) înainte de orice', p: 0 }, { t: 'Răspund cerând confirmare', p: 3 }, { t: 'Mă conformez, e de la șef', p: 9 }, { t: 'Execut imediat, e urgent', p: 10 }],
     rec: 'Confirmă pe alt canal (telefon/Teams) orice cerere urgentă de plată sau date „de la șef", oricât de presantă.' },
   { q: 'Un email cere să dai click pe un link și să te „reautentifici" la un cont de muncă. Ce faci?',
-    a: [{ t: 'Nu dau click; merg manual la site-ul oficial', p: 0 }, { t: 'Verific adresa expeditorului întâi', p: 3 }, { t: 'Dau click dacă pare de la firmă', p: 9 }, { t: 'Mă loghez direct prin link', p: 10 }],
+    a: [{ t: 'Dau click dacă pare de la firmă', p: 9 }, { t: 'Mă loghez direct prin link', p: 10 }, { t: 'Verific adresa expeditorului înainte', p: 3 }, { t: 'Nu dau click — merg manual la site-ul oficial', p: 0 }],
     rec: 'Nu te reautentifica prin linkuri din email. Mergi manual la site-ul oficial al serviciului.' },
   { q: 'Folosești parole diferite pentru conturile de muncă și ai 2FA activat?',
     a: [{ t: 'Da, parole unice + 2FA peste tot', p: 0 }, { t: 'Parțial', p: 5 }, { t: 'Aceeași parolă, fără 2FA', p: 10 }],
     rec: 'Folosește parole unice pentru conturile de muncă și activează 2FA peste tot.' },
   { q: 'Găsești un stick USB necunoscut în birou/parcare. Ce faci?',
-    a: [{ t: 'Îl predau la IT, nu îl bag în calculator', p: 0 }, { t: 'Îl las acolo', p: 2 }, { t: 'Îl bag să văd al cui e', p: 10 }],
+    a: [{ t: 'Îl introduc să văd al cui e', p: 10 }, { t: 'Îl predau la IT, nu îl introduc în calculator', p: 0 }, { t: 'Îl las acolo', p: 2 }],
     rec: 'Nu conecta stickuri USB găsite. Predă-le la IT — pot conține malware.' },
   { q: 'Un „furnizor" trimite o factură cu IBAN schimbat față de cel obișnuit. Ce faci?',
     a: [{ t: 'Sun furnizorul la numărul cunoscut ca să confirm', p: 0 }, { t: 'Întreb colegii/contabilitatea', p: 3 }, { t: 'Plătesc, e de la furnizorul nostru', p: 10 }],
@@ -135,6 +141,9 @@ const COMPANY_GENERAL_Q: Q[] = [
   { q: 'Dacă observi ceva suspect (email ciudat, cont compromis), știi cui raportezi și o faci?',
     a: [{ t: 'Da, raportez imediat la IT/securitate', p: 0 }, { t: 'Aș întreba un coleg', p: 5 }, { t: 'Nu știu cui / probabil ignor', p: 10 }],
     rec: 'Învață cui raportezi incidentele (IT/securitate) și fă-o imediat ce observi ceva suspect.' },
+  { q: 'Firma voastră a făcut un training de securitate acum 6 luni. Angajații sunt pregătiți?',
+    a: [{ t: 'Da, training-ul acoperă tot ce trebuie știut', p: 9 }, { t: 'Parțial — amenințările evoluează, e nevoie de training periodic', p: 0 }, { t: 'Depinde cât de bun a fost training-ul', p: 5 }, { t: 'Da, dacă angajații au trecut testul final', p: 7 }],
+    rec: 'Un training vechi nu e suficient — securitatea cere training periodic și vigilență continuă, nu o bifă o dată pe an.' },
 ]
 
 const MODULE_REC: Record<Exclude<Dept, 'general'>, string> = {
@@ -148,28 +157,33 @@ const MODULE_REC: Record<Exclude<Dept, 'general'>, string> = {
 const MODULE_Q: Record<Exclude<Dept, 'general'>, { q: string; a: Ans[] }[]> = {
   finance: [
     { q: 'Ai un proces de dublă-aprobare pentru plăți sau modificări de IBAN?', a: [{ t: 'Da, mereu, două persoane', p: 0 }, { t: 'Uneori', p: 5 }, { t: 'Nu, decid singur', p: 10 }] },
-    { q: 'O cerere de plată urgentă „în afara procedurii" de la conducere — ce faci?', a: [{ t: 'Refuz până trece prin proces', p: 0 }, { t: 'Verific telefonic', p: 3 }, { t: 'Execut, e urgent', p: 10 }] },
+    { q: 'Primești un email de la „CEO/director" care cere o plată urgentă și confidențială. Ce faci?', a: [{ t: 'Execut imediat, e de la CEO', p: 10 }, { t: 'Execut dacă emailul pare autentic', p: 9 }, { t: 'Răspund cerând confirmare scrisă', p: 3 }, { t: 'Refuz și verific pe alt canal (telefon/Teams) înainte de orice', p: 0 }] },
     { q: 'Verifici schimbările de cont bancar ale furnizorilor pe canal separat?', a: [{ t: 'Mereu', p: 0 }, { t: 'Uneori', p: 5 }, { t: 'Plătesc pe ce scrie în email', p: 10 }] },
+    { q: 'Cunoașteți personal furnizorul și lucrați cu el de ani de zile. Primiți o factură cu IBAN nou. Verificați?', a: [{ t: 'Nu, îl cunoaștem bine, nu e nevoie', p: 10 }, { t: 'Da, sun mereu la numărul din contract indiferent de cine e furnizorul', p: 0 }, { t: 'Poate, dacă suma e mare', p: 6 }, { t: 'Întreb colegul care se ocupă de furnizor', p: 4 }] },
   ],
   hr: [
-    { q: 'Deschizi atașamente din CV-uri/aplicații de la candidați necunoscuți?', a: [{ t: 'Doar în mediu sigur / le scanez', p: 0 }, { t: 'De obicei direct', p: 6 }, { t: 'Mereu direct', p: 10 }] },
+    { q: 'Primești un CV cu un atașament de la un candidat necunoscut. Ce faci?', a: [{ t: 'Îl deschid direct — vreau să văd CV-ul', p: 10 }, { t: 'Îl deschid doar dacă candidatul pare serios', p: 7 }, { t: 'Îl trimit la IT pentru scanare înainte de a-l deschide', p: 0 }] },
     { q: 'Cereri de schimbare a contului unde se virează salariul unui angajat — verifici?', a: [{ t: 'Confirm direct cu angajatul', p: 0 }, { t: 'Întreb pe email', p: 5 }, { t: 'Modific la cerere', p: 10 }] },
     { q: 'Datele personale ale angajaților sunt accesate/trimise doar pe canale securizate?', a: [{ t: 'Mereu', p: 0 }, { t: 'De obicei', p: 5 }, { t: 'Le trimit pe email normal', p: 10 }] },
+    { q: 'Un angajat vă trimite cererea de schimbare cont bancar de pe emailul lui de firmă, cu semnătură digitală. Procesați?', a: [{ t: 'Da, e de pe emailul oficial cu semnătură', p: 9 }, { t: 'Da, semnătura digitală confirmă identitatea', p: 8 }, { t: 'Nu — confirm direct cu angajatul față în față sau telefonic', p: 0 }, { t: 'Întreb managerul lui să confirme', p: 3 }] },
   ],
   it: [
     { q: 'Conturile cu privilegii (admin) au 2FA și sunt separate de cele zilnice?', a: [{ t: 'Da, complet separat', p: 0 }, { t: 'Parțial', p: 5 }, { t: 'Folosesc admin pentru tot', p: 10 }] },
-    { q: 'Aplici la timp patch-urile de securitate critice?', a: [{ t: 'Imediat / automat', p: 0 }, { t: 'Cu întârziere', p: 6 }, { t: 'Rar', p: 10 }] },
+    { q: 'Observi un ransomware care se răspândește. Ce faci în primele 5 minute?', a: [{ t: 'Încerc să rezolv direct pe calculator', p: 10 }, { t: 'Încerc să înțeleg situația înainte să acționez', p: 5 }, { t: 'Izolez imediat calculatorul din rețea, alertez echipa și activez planul de incident', p: 0 }] },
     { q: 'Ai backup-uri testate și izolate (împotriva ransomware)?', a: [{ t: 'Da, testate regulat', p: 0 }, { t: 'Există dar netestate', p: 6 }, { t: 'Nu', p: 10 }] },
+    { q: 'Aveți antivirus actualizat pe toate calculatoarele. Sunteți protejați împotriva ransomware?', a: [{ t: 'Da, antivirusul detectează orice ransomware', p: 9 }, { t: 'Parțial — antivirusul e un strat, dar backup-urile izolate și segmentarea rețelei sunt esențiale', p: 0 }, { t: 'Depinde de cât de nou e ransomware-ul', p: 4 }, { t: 'Da, plus că avem și firewall', p: 7 }] },
   ],
   sales: [
-    { q: 'Verifici identitatea unui „client" care cere date sau modificări sensibile?', a: [{ t: 'Mereu, pe canal oficial', p: 0 }, { t: 'Uneori', p: 5 }, { t: 'Am încredere', p: 10 }] },
+    { q: 'Primești un „contract" prin email care îți cere să activezi macro-urile ca să-l vezi. Ce faci?', a: [{ t: 'Activez, vreau să văd contractul', p: 10 }, { t: 'Activez dacă documentul pare oficial', p: 8 }, { t: 'Nu activez macro-urile — trimit documentul la IT', p: 0 }] },
     { q: 'Dai click pe linkuri/atașamente din emailuri de la „clienți" noi?', a: [{ t: 'Verific întâi', p: 0 }, { t: 'De obicei deschid', p: 6 }, { t: 'Mereu', p: 10 }] },
     { q: 'Datele clienților le partajezi doar prin sistemele aprobate?', a: [{ t: 'Da', p: 0 }, { t: 'Uneori pe email', p: 5 }, { t: 'Cum e mai rapid', p: 10 }] },
+    { q: 'Un client fidel de 3 ani vă cere datele de contact ale unui alt client, spunând că vor să colaboreze. Ce faceți?', a: [{ t: 'Îi dau datele, e un client de încredere', p: 10 }, { t: 'Întreb managerul înainte', p: 3 }, { t: 'Refuz — datele clienților sunt confidențiale indiferent de cine cere', p: 0 }, { t: 'Trimit dacă clientul semnează o declarație', p: 6 }] },
   ],
   management: [
-    { q: 'Știi că ești o țintă preferată pentru fraude personalizate (whaling)?', a: [{ t: 'Da, sunt foarte atent', p: 0 }, { t: 'Oarecum', p: 5 }, { t: 'Nu mă gândisem', p: 10 }] },
+    { q: 'Un „avocat" te contactează urgent pentru un transfer confidențial legat de o achiziție secretă. Ce faci?', a: [{ t: 'Transfer imediat — urgența și confidențialitatea sunt semne de legitimitate', p: 10 }, { t: 'Acționez — e o situație legală sensibilă', p: 9 }, { t: 'Cer mai multe detalii înainte', p: 4 }, { t: 'Verific identitatea avocatului pe alt canal și refuz să acționez fără procedură', p: 0 }] },
     { q: 'Confirmi pe canal secundar cererile financiare făcute în numele tău?', a: [{ t: 'Am procedură clară', p: 0 }, { t: 'Uneori', p: 5 }, { t: 'Mă bazez pe email', p: 10 }] },
     { q: 'Separi dispozitivele/conturile personale de cele de muncă?', a: [{ t: 'Da', p: 0 }, { t: 'Parțial', p: 5 }, { t: 'Le amestec', p: 10 }] },
+    { q: 'Sunteți sigur că angajații voștri nu ar cădea în capcana unui email de phishing. De ce?', a: [{ t: 'Da, am angajați experimentați și educați', p: 8 }, { t: 'Da, am instalat filtre anti-spam bune', p: 7 }, { t: 'Nu sunt 100% sigur — oricine poate fi păcălit într-o zi proastă, inclusiv eu', p: 0 }, { t: 'Depinde de angajat', p: 4 }] },
   ],
 }
 
