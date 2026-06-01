@@ -191,12 +191,12 @@ export default function RaporteazaPage() {
             {/* Email / telefon / site suspect */}
             <div style={{ marginBottom: 20 }}>
               <label style={{ color: 'rgba(30,41,59,0.55)', fontSize: 12, fontWeight: 700, letterSpacing: 1, display: 'block', marginBottom: 8 }}>EMAIL / TELEFON / SITE SUSPECT <span style={{ color: 'rgba(30,41,59,0.35)', fontWeight: 400 }}>(opțional)</span></label>
-              <input
-                type="text"
+              <textarea
                 value={link}
                 onChange={e => setLink(e.target.value)}
-                placeholder="ex: contact@fraud.ro sau 07xx xxx xxx sau https://site-suspect.ro"
-                style={{ width: '100%', padding: '12px 14px', borderRadius: 10, border: '1px solid rgba(30,41,59,0.15)', background: '#fff', fontSize: 14, color: '#1e293b', outline: 'none', boxSizing: 'border-box' }}
+                placeholder="Introduceți orice informație relevantă: link, număr de telefon, IBAN, email, etc."
+                rows={3}
+                style={{ width: '100%', padding: '12px 14px', borderRadius: 10, border: '1px solid rgba(30,41,59,0.15)', background: '#fff', fontSize: 14, color: '#1e293b', resize: 'vertical', outline: 'none', boxSizing: 'border-box' }}
               />
             </div>
 
