@@ -71,6 +71,7 @@ export default function Header() {
         <a href="/scam-types" style={{ color: navColor, fontSize: 14, textDecoration: 'none' }}>Tipuri Scam</a>
         <a href="/scam-score" style={{ color: navColor, fontSize: 14, textDecoration: 'none' }}>Scam Score</a>
         <a href="/prices" style={{ color: navColor, fontSize: 14, textDecoration: 'none' }}>Prețuri</a>
+        <a href="/raporteaza" style={{ color: navColor, fontSize: 14, textDecoration: 'none' }}>Raportează</a>
         <a href="/contact" style={{ color: navColor, fontSize: 14, textDecoration: 'none' }}>Contact</a>
       </nav>
 
