@@ -1,7 +1,11 @@
 'use client'
 import { useState } from 'react'
+import { supabase } from '@/lib/supabase'
+
+const DEFAULT_TYPE = 'Nespecificat (se va determina din descriere)'
 
 const SCAM_TYPES = [
+  DEFAULT_TYPE,
   'Phishing / email fals',
   'SMS fals (smishing)',
   'Apel telefonic fals (vishing)',
@@ -16,32 +20,54 @@ const SCAM_TYPES = [
   'Fraudă cu criptomonede',
   'SIM swap / preluare număr',
   'Malware / virus / ransomware',
-  'Altul / nespecificat',
+  'Altul',
 ]
 
 export default function RaporteazaPage() {
   const [mode, setMode] = useState<'anonim' | 'contact'>('anonim')
-  const [scamType, setScamType] = useState('')
+  const [scamType, setScamType] = useState(DEFAULT_TYPE)
   const [description, setDescription] = useState('')
   const [link, setLink] = useState('')
   const [email, setEmail] = useState('')
   const [originalMessage, setOriginalMessage] = useState('')
+  const [attachmentFiles, setAttachmentFiles] = useState<File[]>([])
   const [sent, setSent] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+
+  const uploadFiles = async (files: File[]): Promise<string[]> => {
+    const urls: string[] = []
+    for (const file of files) {
+      const path = `reports/${Date.now()}-${file.name.replace(/\s+/g, '_')}`
+      const { error: upErr } = await supabase.storage
+        .from('scam-attachments')
+        .upload(path, file, { upsert: false })
+      if (!upErr) {
+        const { data } = supabase.storage.from('scam-attachments').getPublicUrl(path)
+        urls.push(data.publicUrl)
+      }
+    }
+    return urls
+  }
 
   const handleSubmit = async () => {
     if (!description.trim()) {
       setError('Descrierea este obligatorie.')
       return
     }
-    if (!scamType) {
-      setError('Selectați tipul de scam.')
-      return
-    }
     setError('')
     setLoading(true)
     try {
+      let messageText = originalMessage.trim()
+      if (attachmentFiles.length > 0) {
+        const urls = await uploadFiles(attachmentFiles)
+        if (urls.length > 0) {
+          messageText += (messageText ? '\n\n' : '') + 'Atașamente:\n' + urls.join('\n')
+        } else {
+          messageText += (messageText ? '\n\n' : '') + 'Fișiere atașate (upload eșuat): ' + attachmentFiles.map(f => f.name).join(', ')
+        }
+      }
+
       const res = await fetch('/api/report-scam', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -51,7 +77,7 @@ export default function RaporteazaPage() {
           link: link.trim() || null,
           email: mode === 'contact' && email.trim() ? email.trim() : null,
           is_anonymous: mode === 'anonim',
-          original_message: originalMessage.trim() || null,
+          original_message: messageText || null,
         }),
       })
       if (res.ok) {
@@ -65,6 +91,16 @@ export default function RaporteazaPage() {
     } finally {
       setLoading(false)
     }
+  }
+
+  const reset = () => {
+    setSent(false)
+    setDescription('')
+    setLink('')
+    setEmail('')
+    setOriginalMessage('')
+    setAttachmentFiles([])
+    setScamType(DEFAULT_TYPE)
   }
 
   return (
@@ -84,12 +120,12 @@ export default function RaporteazaPage() {
         {sent ? (
           <div style={{ textAlign: 'center', padding: '60px 20px', background: 'rgba(34,197,94,0.08)', border: '1px solid rgba(34,197,94,0.3)', borderRadius: 20 }}>
             <div style={{ fontSize: 56, marginBottom: 16 }}>✅</div>
-            <h2 style={{ fontSize: 22, fontWeight: 800, marginBottom: 8 }}>Raportare trimisă!</h2>
-            <p style={{ color: 'rgba(30,41,59,0.65)', fontSize: 15, marginBottom: 24 }}>
-              Mulțumim! Sesizarea dvs. a fost înregistrată și va fi analizată de echipa eVerify.
+            <h2 style={{ fontSize: 22, fontWeight: 800, marginBottom: 16 }}>Raportare trimisă!</h2>
+            <p style={{ color: 'rgba(30,41,59,0.7)', fontSize: 15, lineHeight: 1.7, maxWidth: 440, margin: '0 auto 28px' }}>
+              Mulțumim pentru raportare! Echipa eVerify va analiza informațiile transmise în cel mai scurt timp. Contribuția ta protejează alți utilizatori.
             </p>
             <button
-              onClick={() => { setSent(false); setDescription(''); setLink(''); setEmail(''); setOriginalMessage(''); setScamType(''); }}
+              onClick={reset}
               style={{ background: 'linear-gradient(135deg,#3b82f6,#6366f1)', color: 'white', border: 'none', borderRadius: 10, padding: '12px 28px', fontWeight: 700, cursor: 'pointer', fontSize: 15 }}
             >Trimite o altă raportare</button>
           </div>
@@ -134,9 +170,8 @@ export default function RaporteazaPage() {
               <select
                 value={scamType}
                 onChange={e => setScamType(e.target.value)}
-                style={{ width: '100%', padding: '12px 14px', borderRadius: 10, border: `1px solid ${!scamType && error ? '#ef4444' : 'rgba(30,41,59,0.15)'}`, background: '#fff', fontSize: 14, color: scamType ? '#1e293b' : 'rgba(30,41,59,0.4)', outline: 'none', cursor: 'pointer' }}
+                style={{ width: '100%', padding: '12px 14px', borderRadius: 10, border: '1px solid rgba(30,41,59,0.15)', background: '#fff', fontSize: 14, color: '#1e293b', outline: 'none', cursor: 'pointer' }}
               >
-                <option value="">Selectați tipul de scam...</option>
                 {SCAM_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
               </select>
             </div>
@@ -153,22 +188,22 @@ export default function RaporteazaPage() {
               />
             </div>
 
-            {/* Link / telefon / IBAN */}
+            {/* Email / telefon / site suspect */}
             <div style={{ marginBottom: 20 }}>
-              <label style={{ color: 'rgba(30,41,59,0.55)', fontSize: 12, fontWeight: 700, letterSpacing: 1, display: 'block', marginBottom: 8 }}>LINK / TELEFON / IBAN <span style={{ color: 'rgba(30,41,59,0.35)', fontWeight: 400 }}>(opțional)</span></label>
+              <label style={{ color: 'rgba(30,41,59,0.55)', fontSize: 12, fontWeight: 700, letterSpacing: 1, display: 'block', marginBottom: 8 }}>EMAIL / TELEFON / SITE SUSPECT <span style={{ color: 'rgba(30,41,59,0.35)', fontWeight: 400 }}>(opțional)</span></label>
               <input
                 type="text"
                 value={link}
                 onChange={e => setLink(e.target.value)}
-                placeholder="https://site-suspect.ro sau 07xx xxx xxx sau RO49..."
+                placeholder="ex: contact@fraud.ro sau 07xx xxx xxx sau https://site-suspect.ro"
                 style={{ width: '100%', padding: '12px 14px', borderRadius: 10, border: '1px solid rgba(30,41,59,0.15)', background: '#fff', fontSize: 14, color: '#1e293b', outline: 'none', boxSizing: 'border-box' }}
               />
             </div>
 
-            {/* Email — doar dacă nu e anonim */}
+            {/* Email utilizator — doar dacă nu e anonim */}
             {mode === 'contact' && (
               <div style={{ marginBottom: 20 }}>
-                <label style={{ color: 'rgba(30,41,59,0.55)', fontSize: 12, fontWeight: 700, letterSpacing: 1, display: 'block', marginBottom: 8 }}>EMAIL <span style={{ color: 'rgba(30,41,59,0.35)', fontWeight: 400 }}>(opțional)</span></label>
+                <label style={{ color: 'rgba(30,41,59,0.55)', fontSize: 12, fontWeight: 700, letterSpacing: 1, display: 'block', marginBottom: 8 }}>EMAIL-UL TĂU <span style={{ color: 'rgba(30,41,59,0.35)', fontWeight: 400 }}>(opțional)</span></label>
                 <input
                   type="email"
                   value={email}
@@ -180,7 +215,7 @@ export default function RaporteazaPage() {
               </div>
             )}
 
-            {/* Mesaj original */}
+            {/* Mesaj original + upload fișiere */}
             <div style={{ marginBottom: 28 }}>
               <label style={{ color: 'rgba(30,41,59,0.55)', fontSize: 12, fontWeight: 700, letterSpacing: 1, display: 'block', marginBottom: 8 }}>MESAJ ORIGINAL <span style={{ color: 'rgba(30,41,59,0.35)', fontWeight: 400 }}>(opțional)</span></label>
               <textarea
@@ -188,8 +223,29 @@ export default function RaporteazaPage() {
                 onChange={e => setOriginalMessage(e.target.value)}
                 placeholder="Copiați aici textul exact al mesajului primit (SMS, email, WhatsApp etc.)"
                 rows={3}
-                style={{ width: '100%', padding: '12px 14px', borderRadius: 10, border: '1px solid rgba(30,41,59,0.15)', background: '#fff', fontSize: 14, color: '#1e293b', resize: 'vertical', outline: 'none', boxSizing: 'border-box' }}
+                style={{ width: '100%', padding: '12px 14px', borderRadius: 10, border: '1px solid rgba(30,41,59,0.15)', background: '#fff', fontSize: 14, color: '#1e293b', resize: 'vertical', outline: 'none', boxSizing: 'border-box', marginBottom: 10 }}
               />
+              <label style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', border: '1px dashed rgba(99,102,241,0.35)', borderRadius: 10, cursor: 'pointer', background: 'rgba(99,102,241,0.03)' }}>
+                <span style={{ fontSize: 18 }}>📎</span>
+                <span style={{ fontSize: 13, color: 'rgba(30,41,59,0.6)' }}>
+                  {attachmentFiles.length > 0
+                    ? attachmentFiles.map(f => f.name).join(', ')
+                    : 'Atașați capturi de ecran sau documente (PDF, imagini)'}
+                </span>
+                <input
+                  type="file"
+                  accept=".pdf,image/*"
+                  multiple
+                  style={{ display: 'none' }}
+                  onChange={e => setAttachmentFiles(Array.from(e.target.files ?? []))}
+                />
+              </label>
+              {attachmentFiles.length > 0 && (
+                <button
+                  onClick={() => setAttachmentFiles([])}
+                  style={{ marginTop: 6, background: 'none', border: 'none', color: 'rgba(30,41,59,0.45)', fontSize: 11, cursor: 'pointer', padding: 0 }}
+                >✕ Șterge fișierele selectate</button>
+              )}
             </div>
 
             {/* Error */}
