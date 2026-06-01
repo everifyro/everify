@@ -3,6 +3,7 @@ import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import CookieBanner from "@/components/CookieBanner";
 import EmergencyButton from "@/components/EmergencyButton";
+import ReportButton from "@/components/ReportButton";
 import Header from "@/components/Header";
 
 const plusJakarta = Plus_Jakarta_Sans({
@@ -79,6 +80,7 @@ export default function RootLayout({
                 <a href="/scam-score" style={{ color: 'rgba(255,255,255,0.5)', fontSize: 12, textDecoration: 'none' }}>Scam Score</a>
                 <a href="/check-url" style={{ color: 'rgba(255,255,255,0.5)', fontSize: 12, textDecoration: 'none' }}>Verificare site</a>
                 <a href="/prices" style={{ color: 'rgba(255,255,255,0.5)', fontSize: 12, textDecoration: 'none' }}>Prețuri</a>
+                <a href="/raporteaza" style={{ color: 'rgba(255,255,255,0.5)', fontSize: 12, textDecoration: 'none' }}>Raportează</a>
                 <a href="/contact" style={{ color: 'rgba(255,255,255,0.5)', fontSize: 12, textDecoration: 'none' }}>Contact</a>
                 <a href="/privacy" style={{ color: 'rgba(255,255,255,0.5)', fontSize: 12, textDecoration: 'none' }}>Confidențialitate</a>
                 <a href="/terms" style={{ color: 'rgba(255,255,255,0.5)', fontSize: 12, textDecoration: 'none' }}>Termeni și Condiții</a>
@@ -95,6 +97,7 @@ export default function RootLayout({
 
         <CookieBanner />
         <EmergencyButton />
+        <ReportButton />
       </body>
     </html>
   );
