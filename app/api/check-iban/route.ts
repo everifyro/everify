@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js'
 import { CREDIT_COSTS } from '@/lib/credit-costs'
-import { ROMANIAN_BANKS } from '@/src/lib/romanian-banks'
+import { ROMANIAN_BANKS, ROMANIAN_BANKS_SWIFT } from '@/src/lib/romanian-banks'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -99,6 +99,7 @@ export async function POST(request: Request) {
 
     const bankCode = countryCode === 'RO' ? iban.slice(4, 8) : null
     const bankName = bankCode ? (ROMANIAN_BANKS[bankCode] ?? `Bancă neidentificată (cod: ${bankCode})`) : null
+    const swiftCode = bankCode ? (ROMANIAN_BANKS_SWIFT[bankCode] ?? null) : null
     const isSepa = SEPA_COUNTRIES.has(countryCode)
 
     let recoveryLevel: 'green' | 'yellow' | 'red'
@@ -132,6 +133,7 @@ export async function POST(request: Request) {
       countryName: COUNTRY_NAMES[countryCode] ?? countryCode,
       bankCode,
       bankName,
+      swiftCode,
       isSepa,
       recoveryLevel,
       recoveryLabel,

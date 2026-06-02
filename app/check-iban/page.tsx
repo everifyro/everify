@@ -238,6 +238,11 @@ export default function CheckIban() {
                 <div style={{ background: 'rgba(30,41,59,0.04)', border: '1px solid rgba(30,41,59,0.1)', borderRadius: 10, padding: '14px 16px' }}>
                   <p style={{ fontSize: 11, color: 'rgba(30,41,59,0.6)', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 1 }}>Bancă emitentă</p>
                   <p style={{ fontSize: 14, fontWeight: 700, color: '#1e293b', margin: 0 }}>{result.bankName}</p>
+                  {result.swiftCode && (
+                    <p style={{ fontSize: 11, color: 'rgba(30,41,59,0.55)', margin: '5px 0 0', fontFamily: 'monospace', letterSpacing: 0.5 }}>
+                      Cod SWIFT/BIC: <strong style={{ color: '#1e293b' }}>{result.swiftCode}</strong>
+                    </p>
+                  )}
                 </div>
               )}
 
