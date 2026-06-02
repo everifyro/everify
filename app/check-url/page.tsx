@@ -133,7 +133,6 @@ export default function CheckUrl() {
         justifyContent: 'center',
         padding: '64px 20px'
       }}>
-        <div style={{ fontSize: 48, marginBottom: 16 }}>🌐</div>
         <h1 style={{ color: '#ffffff', fontSize: 42, fontWeight: 800, marginBottom: 12, textAlign: 'center', textShadow: '0 2px 12px rgba(15,23,42,0.5)' }}>
           Verificare <span style={{ color: '#0ea5e9' }}>Site Web</span>
         </h1>
