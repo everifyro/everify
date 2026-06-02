@@ -1,0 +1,18 @@
+export const ROMANIAN_BANKS: Record<string, string> = {
+  RNCB: 'BCR (Banca Comercială Română)',
+  BTRL: 'Banca Transilvania',
+  INGB: 'ING Bank',
+  BRDE: 'BRD – Groupe Société Générale',
+  CECB: 'CEC Bank',
+  TREZ: 'Trezoreria Statului',
+  PIRB: 'First Bank',
+  BREL: 'Libra Internet Bank',
+  OTPV: 'OTP Bank România',
+  BACX: 'UniCredit Bank',
+  RZBR: 'Raiffeisen Bank',
+  MIRO: 'Mihai Eminescu Banca',
+  UGBI: 'Garanti BBVA',
+  CARP: 'Patria Bank',
+  EXIM: 'Eximbank',
+  WBAN: 'WB Banca (fosta Idea Bank)',
+}

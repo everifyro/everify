@@ -221,9 +221,10 @@ export default function CheckIban() {
                 <p style={{ fontSize: 11, color: 'rgba(30,41,59,0.6)', marginBottom: 4, letterSpacing: 1, textTransform: 'uppercase' }}>IBAN verificat</p>
                 <p style={{ fontSize: 18, fontWeight: 800, color: '#1e293b', fontFamily: 'monospace', letterSpacing: 2, margin: 0 }}>{result.iban}</p>
               </div>
-              <span style={{ background: 'rgba(34,197,94,0.12)', border: '1px solid rgba(34,197,94,0.4)', color: '#16a34a', borderRadius: 10, padding: '8px 16px', fontSize: 14, fontWeight: 700 }}>
-                ✅ MOD97 Valid
-              </span>
+              <div style={{ background: 'rgba(34,197,94,0.12)', border: '1px solid rgba(34,197,94,0.4)', borderRadius: 10, padding: '8px 16px', textAlign: 'right' }}>
+                <p style={{ fontSize: 14, fontWeight: 700, color: '#16a34a', margin: 0 }}>✅ IBAN valid</p>
+                <p style={{ fontSize: 10, color: 'rgba(30,41,59,0.55)', margin: '3px 0 0', lineHeight: 1.4, maxWidth: 220 }}>Formatul și cifra de control matematică sunt corecte conform standardului internațional ISO 13616.</p>
+              </div>
             </div>
 
             {/* Grid de info */}
@@ -247,7 +248,9 @@ export default function CheckIban() {
                   {result.isSepa ? '✅ Zonă SEPA' : '❌ Non-SEPA'}
                 </p>
                 <p style={{ fontSize: 10, color: 'rgba(30,41,59,0.5)', margin: '4px 0 0', lineHeight: 1.4 }}>
-                  {result.isSepa ? 'Transfer în Euro disponibil' : 'Costuri internaționale ridicate'}
+                  {result.isSepa
+                    ? 'SEPA (Single Euro Payments Area) permite transferuri în euro rapide și ieftine între cele 36 de țări membre.'
+                    : 'Costuri internaționale ridicate'}
                 </p>
               </div>
 
@@ -282,16 +285,10 @@ export default function CheckIban() {
                   {result.recoveryLevel === 'yellow' && 'Recuperarea fondurilor în afara UE este posibilă prin cooperare internațională, dar durează și necesită avocați specializați.'}
                   {result.recoveryLevel === 'red' && 'Recuperarea fondurilor în această jurisdicție este extrem de dificilă. Contactați imediat banca și poliția pentru a limita prejudiciul.'}
                 </p>
-              </div>
-            </div>
-
-            {/* Avertizare BEC */}
-            <div style={{ background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.3)', borderRadius: 12, padding: '14px 18px', marginBottom: 20, display: 'flex', gap: 12, alignItems: 'flex-start' }}>
-              <span style={{ fontSize: 22, flexShrink: 0 }}>⚠️</span>
-              <div>
-                <p style={{ fontSize: 13, fontWeight: 700, color: '#b45309', margin: '0 0 4px' }}>Avertizare BEC (Business Email Compromise)</p>
-                <p style={{ fontSize: 12, color: 'rgba(30,41,59,0.7)', margin: 0, lineHeight: 1.6 }}>
-                  Dacă acest IBAN v-a fost trimis prin email de un furnizor cunoscut, verificați telefonic înainte de orice plată. Escrocii interceptează emailurile și înlocuiesc IBAN-urile reale cu unele frauduloase.
+                <p style={{ fontSize: 12, color: recoveryColor(result.recoveryLevel), margin: '6px 0 0', fontWeight: 600, lineHeight: 1.4 }}>
+                  {result.recoveryLevel === 'green' && 'Puteți solicita băncii un SEPA Recall în maxim 10 zile lucrătoare de la transfer.'}
+                  {result.recoveryLevel === 'yellow' && 'Recuperarea necesită proceduri internaționale, poate dura luni și implică costuri suplimentare.'}
+                  {result.recoveryLevel === 'red' && 'Recuperarea este practic imposibilă fără un proces juridic internațional costisitor.'}
                 </p>
               </div>
             </div>
@@ -305,6 +302,17 @@ export default function CheckIban() {
 
           </div>
         )}
+
+        {/* Sfat de siguranță BEC — întotdeauna vizibil */}
+        <div style={{ background: 'rgba(14,165,233,0.06)', border: '1px solid rgba(14,165,233,0.2)', borderRadius: 12, padding: '16px 20px', marginTop: 24, display: 'flex', gap: 14, alignItems: 'flex-start' }}>
+          <span style={{ fontSize: 22, flexShrink: 0 }}>💡</span>
+          <div>
+            <p style={{ fontSize: 13, fontWeight: 700, color: '#0369a1', margin: '0 0 4px' }}>Sfat de siguranță</p>
+            <p style={{ fontSize: 12, color: 'rgba(30,41,59,0.7)', margin: 0, lineHeight: 1.6 }}>
+              Dacă ați primit acest IBAN prin email de la un furnizor sau persoană necunoscută, verificați telefonic înainte de orice plată. Escrocii înlocuiesc IBAN-urile reale cu unele frauduloase.
+            </p>
+          </div>
+        </div>
 
         {/* Edu cards afișate cât timp nu e rezultat */}
         {!result && (

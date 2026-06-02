@@ -1,29 +1,11 @@
 import { createClient } from '@supabase/supabase-js'
 import { CREDIT_COSTS } from '@/lib/credit-costs'
+import { ROMANIAN_BANKS } from '@/src/lib/romanian-banks'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_KEY!
 )
-
-const RO_BANKS: Record<string, string> = {
-  RNCB: 'BCR (Banca Comercială Română)',
-  BTRL: 'Banca Transilvania',
-  INGB: 'ING Bank',
-  BRDE: 'BRD – Groupe Société Générale',
-  CECB: 'CEC Bank',
-  TREZ: 'Trezoreria Statului',
-  PIRB: 'First Bank',
-  BREL: 'Libra Internet Bank',
-  OTPV: 'OTP Bank România',
-  BACX: 'UniCredit Bank',
-  RZBR: 'Raiffeisen Bank',
-  MIRO: 'Mihai Eminescu Banca',
-  UGBI: 'Garanti BBVA',
-  CARP: 'Patria Bank',
-  EXIM: 'Eximbank',
-  WBAN: 'WB Banca (fosta Idea Bank)',
-}
 
 const SEPA_COUNTRIES = new Set([
   'AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU',
@@ -116,7 +98,7 @@ export async function POST(request: Request) {
     }
 
     const bankCode = countryCode === 'RO' ? iban.slice(4, 8) : null
-    const bankName = bankCode ? (RO_BANKS[bankCode] ?? `Bancă neidentificată (cod: ${bankCode})`) : null
+    const bankName = bankCode ? (ROMANIAN_BANKS[bankCode] ?? `Bancă neidentificată (cod: ${bankCode})`) : null
     const isSepa = SEPA_COUNTRIES.has(countryCode)
 
     let recoveryLevel: 'green' | 'yellow' | 'red'
