@@ -152,20 +152,20 @@ export default function CheckIban() {
             </span>
           </div>
 
-          <div style={{ padding: 12, display: 'flex', flexDirection: 'column', gap: 10 }}>
+          <div style={{ padding: 12, display: 'flex', gap: 10, alignItems: 'stretch' }}>
             <textarea
               value={iban}
               onChange={e => setIban(e.target.value)}
               onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); check() } }}
               placeholder={displayText + '|'}
-              rows={3}
-              style={{ width: '100%', background: 'rgba(255,255,255,0.95)', border: '2px solid rgba(14,165,233,0.4)', borderRadius: 10, padding: '12px 14px', color: '#1e293b', fontSize: 14, outline: 'none', boxSizing: 'border-box', resize: 'none', fontFamily: 'monospace', letterSpacing: 1 }}
+              rows={2}
+              style={{ flex: 1, background: 'rgba(255,255,255,0.95)', border: '2px solid rgba(14,165,233,0.4)', borderRadius: 10, padding: '12px 14px', color: '#1e293b', fontSize: 14, outline: 'none', boxSizing: 'border-box', resize: 'none', fontFamily: 'monospace', letterSpacing: 1 }}
             />
             <button
               onClick={check}
               disabled={loading || !iban.trim()}
               className="btn-pulse"
-              style={{ background: 'linear-gradient(135deg,#0ea5e9,#6366f1)', border: 'none', color: 'white', padding: '13px 24px', borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
+              style={{ alignSelf: 'stretch', background: 'linear-gradient(135deg,#0ea5e9,#6366f1)', border: 'none', color: 'white', padding: '0 24px', borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
             >
               {loading ? 'Se verifică...' : <>Verifică IBAN <span style={{ fontSize: '1.4em', lineHeight: 1 }}>❯</span></>}
             </button>
