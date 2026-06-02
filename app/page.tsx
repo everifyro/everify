@@ -144,10 +144,10 @@ export default function Home() {
         justifyContent: 'center',
         padding: '64px 20px'
       }}>
-        <h1 style={{ fontSize: 48, fontWeight: 800, marginBottom: 12, color: '#ffffff', textAlign: 'center', textShadow: '0 2px 12px rgba(15,23,42,0.5)' }}>
+        <h1 style={{ fontSize: 42, fontWeight: 800, marginBottom: 12, color: '#ffffff', textAlign: 'center', textShadow: '0 2px 12px rgba(15,23,42,0.5)' }}>
           <span style={{ color: '#0ea5e9' }}>e</span>Verify
         </h1>
-        <p style={{ color: 'rgba(255,255,255,0.9)', fontSize: 18, marginBottom: 36, textAlign: 'center', textShadow: '0 1px 8px rgba(15,23,42,0.4)' }}>
+        <p style={{ color: 'rgba(255,255,255,0.9)', fontSize: 16, maxWidth: 700, marginBottom: 36, textAlign: 'center', textShadow: '0 1px 8px rgba(15,23,42,0.4)' }}>
           Verifică orice mesaj suspect cu AI
         </p>
 
@@ -195,7 +195,7 @@ export default function Home() {
             onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send() } }}
             placeholder={displayText + '|'}
             rows={2}
-            style={{ flex: 1, background: 'rgba(255,255,255,0.95)', border: '2px solid rgba(14,165,233,0.4)', borderRadius: 10, padding: '10px 14px', color: '#1e293b', fontSize: 14, resize: 'none', outline: 'none', fontFamily: 'sans-serif', boxSizing: 'border-box' }}
+            style={{ flex: 1, background: 'rgba(255,255,255,0.95)', border: '2px solid rgba(14,165,233,0.4)', borderRadius: 10, padding: '12px 14px', color: '#1e293b', fontSize: 14, resize: 'none', outline: 'none', fontFamily: 'sans-serif', boxSizing: 'border-box' }}
           />
           <button
             onClick={send}

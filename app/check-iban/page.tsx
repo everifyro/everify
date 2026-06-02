@@ -109,7 +109,7 @@ export default function CheckIban() {
       {/* HERO */}
       <section style={{
         width: '100%',
-        minHeight: 560,
+        minHeight: 520,
         backgroundImage: 'linear-gradient(rgba(15,23,42,0.55), rgba(15,23,42,0.55)), url(/buy_online.jpg)',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
@@ -133,7 +133,7 @@ export default function CheckIban() {
 
         <div style={{
           width: '100%',
-          maxWidth: 640,
+          maxWidth: 600,
           marginTop: 36,
           background: 'rgba(255,255,255,0.97)',
           border: '2px solid rgba(14,165,233,0.5)',
