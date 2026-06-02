@@ -254,6 +254,7 @@ export default function CheckIban() {
                 </p>
               </div>
 
+              {/* Raportări comunitate — temporar ascuns
               <div style={{ background: 'rgba(30,41,59,0.04)', border: '1px solid rgba(30,41,59,0.1)', borderRadius: 10, padding: '14px 16px' }}>
                 <p style={{ fontSize: 11, color: 'rgba(30,41,59,0.6)', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 1 }}>Raportări comunitate</p>
                 <p style={{ fontSize: 15, fontWeight: 700, color: result.communityReports > 0 ? '#ef4444' : '#22c55e', margin: 0 }}>
@@ -261,6 +262,7 @@ export default function CheckIban() {
                 </p>
                 <p style={{ fontSize: 10, color: 'rgba(30,41,59,0.5)', margin: '4px 0 0', lineHeight: 1.4 }}>Baza de date eVerify</p>
               </div>
+              */}
 
             </div>
 
@@ -293,25 +295,55 @@ export default function CheckIban() {
               </div>
             </div>
 
+            {/* Atenție la numele beneficiarului */}
+            <div style={{ background: 'rgba(245,158,11,0.07)', border: '1px solid rgba(245,158,11,0.25)', borderRadius: 12, padding: '14px 18px', marginBottom: 16, display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+              <span style={{ fontSize: 20, flexShrink: 0 }}>⚠️</span>
+              <div>
+                <p style={{ fontSize: 13, fontWeight: 700, color: '#92400e', margin: '0 0 4px' }}>Atenție la numele beneficiarului</p>
+                <p style={{ fontSize: 13, color: 'rgba(30,41,59,0.75)', margin: 0, lineHeight: 1.6 }}>
+                  La efectuarea oricărei plăți, verificați că numele beneficiarului afișat în aplicația băncii corespunde exact cu persoana sau firma căreia intenționați să îi trimiteți banii. O neconcordanță poate indica un IBAN fraudulos.
+                </p>
+              </div>
+            </div>
+
             {/* Disclaimer */}
-            <div style={{ background: 'rgba(30,41,59,0.04)', border: '1px solid rgba(30,41,59,0.1)', borderRadius: 10, padding: '12px 16px' }}>
-              <p style={{ fontSize: 11, color: 'rgba(30,41,59,0.55)', margin: 0, lineHeight: 1.6 }}>
-                <strong style={{ color: 'rgba(30,41,59,0.75)' }}>Disclaimer:</strong> Clasificarea este orientativă. Un IBAN valid matematic nu garantează că destinatarul este legitim. Contactați imediat banca și depuneți plângere la ANPC (021.9551) și Poliție (112) în cazul unui prejudiciu.
+            <div style={{ background: 'rgba(30,41,59,0.04)', border: '1px solid rgba(30,41,59,0.1)', borderRadius: 10, padding: '14px 16px' }}>
+              <p style={{ fontSize: 13, color: 'rgba(30,41,59,0.75)', margin: 0, lineHeight: 1.6 }}>
+                <strong style={{ color: '#1e293b' }}>Disclaimer:</strong> Clasificarea este orientativă. Un IBAN valid matematic nu garantează că destinatarul este legitim. Contactați imediat banca și depuneți plângere la ANPC (021.9551) și Poliție (112) în cazul unui prejudiciu.
               </p>
             </div>
 
           </div>
         )}
 
-        {/* Sfat de siguranță BEC — întotdeauna vizibil */}
-        <div style={{ background: 'rgba(14,165,233,0.06)', border: '1px solid rgba(14,165,233,0.2)', borderRadius: 12, padding: '16px 20px', marginTop: 24, display: 'flex', gap: 14, alignItems: 'flex-start' }}>
-          <span style={{ fontSize: 22, flexShrink: 0 }}>💡</span>
+        {/* Fraudă prin înlocuire IBAN (BEC) — întotdeauna vizibil */}
+        <div style={{ background: 'rgba(239,68,68,0.06)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 12, padding: '16px 20px', marginTop: 24, display: 'flex', gap: 14, alignItems: 'flex-start' }}>
+          <span style={{ fontSize: 22, flexShrink: 0 }}>⚠️</span>
           <div>
-            <p style={{ fontSize: 13, fontWeight: 700, color: '#0369a1', margin: '0 0 4px' }}>Sfat de siguranță</p>
-            <p style={{ fontSize: 12, color: 'rgba(30,41,59,0.7)', margin: 0, lineHeight: 1.6 }}>
-              Dacă ați primit acest IBAN prin email de la un furnizor sau persoană necunoscută, verificați telefonic înainte de orice plată. Escrocii înlocuiesc IBAN-urile reale cu unele frauduloase.
+            <p style={{ fontSize: 13, fontWeight: 700, color: '#b91c1c', margin: '0 0 4px' }}>Fraudă prin înlocuire IBAN</p>
+            <p style={{ fontSize: 13, color: 'rgba(30,41,59,0.75)', margin: 0, lineHeight: 1.6 }}>
+              Escrocii interceptează emailurile dintre firme și înlocuiesc IBAN-ul real al furnizorului cu unul fraudulos. Banii ajung la escroci, nu la furnizor. Este cea mai frecventă fraudă B2B din Europa.
             </p>
           </div>
+        </div>
+
+        {/* Sfaturi pentru a evita frauda cu IBAN — întotdeauna vizibil */}
+        <div style={{ background: '#ffffff', border: '1px solid rgba(14,165,233,0.15)', borderRadius: 12, padding: '20px 24px', marginTop: 16, boxShadow: '0 4px 24px rgba(15,23,42,0.06)' }}>
+          <p style={{ fontSize: 14, fontWeight: 700, color: '#1e293b', margin: '0 0 14px', display: 'flex', alignItems: 'center', gap: 8 }}>
+            <span>💡</span> Sfaturi pentru a evita frauda cu IBAN
+          </p>
+          <ol style={{ margin: 0, paddingLeft: 20, display: 'flex', flexDirection: 'column', gap: 10 }}>
+            {[
+              'Sunați furnizorul la un număr cunoscut pentru a confirma orice IBAN nou sau modificat — nu folosiți numărul din emailul suspect.',
+              'Verificați IBAN-ul caracter cu caracter, în special cifrele din mijloc — escrocii păstrează începutul și sfârșitul identice cu IBAN-ul real pentru a nu fi observați.',
+              'Fiți precaut la urgențe artificiale: presiunea de a plăti imediat este un semn clasic de fraudă.',
+              'Verificați adresa de email a expeditorului caracter cu caracter — diferențele subtile sunt greu de observat.',
+              'Pentru un IBAN nou, trimiteți o sumă mică de test și confirmați că a ajuns înainte de plata principală.',
+              'Salvați IBAN-urile cunoscute în agenda băncii — orice diferență față de cel salvat trebuie verificată telefonic.',
+            ].map((tip, i) => (
+              <li key={i} style={{ fontSize: 13, color: 'rgba(30,41,59,0.8)', lineHeight: 1.6 }}>{tip}</li>
+            ))}
+          </ol>
         </div>
 
         {/* Edu cards afișate cât timp nu e rezultat */}
