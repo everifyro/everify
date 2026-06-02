@@ -79,6 +79,7 @@ export default function RootLayout({
                 <a href="/scam-types" style={{ color: 'rgba(255,255,255,0.5)', fontSize: 12, textDecoration: 'none' }}>Tipuri de fraude</a>
                 <a href="/scam-score" style={{ color: 'rgba(255,255,255,0.5)', fontSize: 12, textDecoration: 'none' }}>Scam Score</a>
                 <a href="/check-url" style={{ color: 'rgba(255,255,255,0.5)', fontSize: 12, textDecoration: 'none' }}>Verificare site</a>
+                <a href="/check-iban" style={{ color: 'rgba(255,255,255,0.5)', fontSize: 12, textDecoration: 'none' }}>Verificare IBAN</a>
                 <a href="/prices" style={{ color: 'rgba(255,255,255,0.5)', fontSize: 12, textDecoration: 'none' }}>Prețuri</a>
                 <a href="/raporteaza" style={{ color: 'rgba(255,255,255,0.5)', fontSize: 12, textDecoration: 'none' }}>Raportează</a>
                 <a href="/contact" style={{ color: 'rgba(255,255,255,0.5)', fontSize: 12, textDecoration: 'none' }}>Contact</a>

@@ -4,7 +4,7 @@ export const CREDIT_COSTS = {
   ai: 1,    // analiză AI mesaj/text — /api/analyze
   url: 2,   // verificare site web — /api/check-url
   phone: 2, // verificare număr de telefon (planificat)
-  iban: 3,  // verificare IBAN (planificat)
+  iban: 1,  // verificare IBAN — /api/check-iban
   pdf: 5,   // analiză document PDF (planificat)
 } as const
 

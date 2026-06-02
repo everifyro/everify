@@ -67,6 +67,7 @@ export default function Header() {
       <nav style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
         <a href="/" style={{ color: '#0ea5e9', fontSize: 14, textDecoration: 'none', fontWeight: 700 }}>Verificare AI</a>
         <a href="/check-url" style={{ color: '#0ea5e9', fontSize: 14, textDecoration: 'none', fontWeight: 700 }}>Verificare Site</a>
+        <a href="/check-iban" style={{ color: '#0ea5e9', fontSize: 14, textDecoration: 'none', fontWeight: 700 }}>Verificare IBAN</a>
         <a href="/de-ce-everify" style={{ color: navColor, fontSize: 14, textDecoration: 'none' }}>De ce eVerify?</a>
         <a href="/scam-types" style={{ color: navColor, fontSize: 14, textDecoration: 'none' }}>Tipuri Scam</a>
         <a href="/scam-score" style={{ color: navColor, fontSize: 14, textDecoration: 'none' }}>Scam Score</a>
