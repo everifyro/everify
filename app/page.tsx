@@ -165,8 +165,8 @@ export default function Home() {
             <span style={{ color: '#1e293b' }}><span style={{ color: '#0ea5e9' }}>e</span>Verify</span>
             <span style={{ background: 'linear-gradient(135deg,#0ea5e9,#6366f1)', color: 'white', borderRadius: 4, padding: '1px 5px', fontSize: 9, fontWeight: 800 }}>AI</span>
           </span>
-          <span style={{ fontSize: 12, color: remaining <= 1 ? '#ef4444' : 'rgba(30,41,59,0.7)', fontWeight: 500 }}>
-            {remaining}/{userId ? (credits ?? 0) : FREE_LIMIT} credite rămase
+          <span style={{ fontSize: 12, color: 'rgba(30,41,59,0.7)', fontWeight: 500 }}>
+            {userId ? `${credits ?? 0} credite rămase` : `${remaining}/${FREE_LIMIT} credite rămase`}
           </span>
         </div>
 
