@@ -5,82 +5,66 @@ type Message = { role: 'user' | 'vera'; text: string }
 
 function VeraAvatar({ size }: { size: number }) {
   return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 60 60"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      {/* Hair base behind face */}
-      <ellipse cx="30" cy="21" rx="18" ry="17" fill="#1c1040" />
+    <svg width={size} height={size} viewBox="0 0 60 60" fill="none">
+      {/* ── Jacket & collar ── */}
+      <path d="M5 60 L8 44 Q18 39 30 41 Q42 39 52 44 L55 60Z" fill="#3730a3"/>
+      <path d="M30 41 L23 57 L30 61 L37 57Z" fill="#4f46e5"/>
 
-      {/* Face */}
-      <circle cx="30" cy="28" r="16" fill="#FDDBB4" />
+      {/* ── Neck ── */}
+      <rect x="26.5" y="38" width="7" height="6" rx="0.5" fill="#F2BC90"/>
 
-      {/* Hair top — short, dark */}
-      <path
-        d="M12 25 Q12 5 30 5 Q48 5 48 25 Q45 15 30 15 Q15 15 12 25Z"
-        fill="#1c1040"
-      />
+      {/* ── Hair silhouette (medium brown, "șaten") ── */}
+      <ellipse cx="30" cy="18" rx="15" ry="16" fill="#7B5035"/>
 
-      {/* Hair side tufts */}
-      <path d="M12 24 Q11 32 13 40 L12 24Z" fill="#1c1040" />
-      <path d="M48 24 Q49 32 47 40 L48 24Z" fill="#1c1040" />
+      {/* ── Face ── warm, realistic skin */}
+      <ellipse cx="30" cy="27" rx="13" ry="13" fill="#F2BC90"/>
 
-      {/* Left lens — big round glasses */}
-      <circle
-        cx="22"
-        cy="28"
-        r="7.5"
-        fill="rgba(200,214,255,0.18)"
-        stroke="#6366f1"
-        strokeWidth="1.8"
-      />
-      {/* Right lens */}
-      <circle
-        cx="38"
-        cy="28"
-        r="7.5"
-        fill="rgba(200,214,255,0.18)"
-        stroke="#6366f1"
-        strokeWidth="1.8"
-      />
-      {/* Bridge (gap between lenses: left edge 22+7.5=29.5, right edge 38-7.5=30.5) */}
-      <line
-        x1="29.5"
-        y1="28"
-        x2="30.5"
-        y2="28"
-        stroke="#6366f1"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-      />
+      {/* ── Eyebrows — thin, slightly arched ── */}
+      <path d="M21.5 18.5 Q24.5 17.3 27 18.5"
+        stroke="#4A2A12" strokeWidth="1.3" strokeLinecap="round"/>
+      <path d="M33 18.5 Q35.5 17.3 38.5 18.5"
+        stroke="#4A2A12" strokeWidth="1.3" strokeLinecap="round"/>
+
+      {/* ── Eye whites ── */}
+      <ellipse cx="24.5" cy="23" rx="2.8" ry="2.1" fill="white"/>
+      <ellipse cx="35.5" cy="23" rx="2.8" ry="2.1" fill="white"/>
+
+      {/* ── Irises + pupils ── */}
+      <circle cx="24.5" cy="23" r="1.45" fill="#3D2410"/>
+      <circle cx="35.5" cy="23" r="1.45" fill="#3D2410"/>
+
+      {/* ── Eye-light specular ── */}
+      <circle cx="25.2" cy="22.3" r="0.55" fill="white"/>
+      <circle cx="36.2" cy="22.3" r="0.55" fill="white"/>
+
+      {/* ── Glasses: thin rectangular black frames ──
+           Left frame:  x 20.5–29  y 20.5–26
+           Right frame: x 31–39.5  y 20.5–26
+           Eyes (cy=23) sit neatly centred inside each frame        */}
+      <rect x="20.5" y="20.5" width="8.5" height="5.5" rx="0.7"
+        stroke="#111827" strokeWidth="1.2" fill="none"/>
+      <rect x="31"   y="20.5" width="8.5" height="5.5" rx="0.7"
+        stroke="#111827" strokeWidth="1.2" fill="none"/>
+      {/* Bridge (gap between frames: 29 → 31) */}
+      <line x1="29" y1="23.3" x2="31" y2="23.3"
+        stroke="#111827" strokeWidth="1.2" strokeLinecap="round"/>
       {/* Temples */}
-      <line x1="14.5" y1="27" x2="12" y2="25.5" stroke="#6366f1" strokeWidth="1.4" strokeLinecap="round" />
-      <line x1="45.5" y1="27" x2="48" y2="25.5" stroke="#6366f1" strokeWidth="1.4" strokeLinecap="round" />
+      <line x1="20.5" y1="23" x2="16.5" y2="22"
+        stroke="#111827" strokeWidth="1.1" strokeLinecap="round"/>
+      <line x1="39.5" y1="23" x2="43.5" y2="22"
+        stroke="#111827" strokeWidth="1.1" strokeLinecap="round"/>
 
-      {/* Eyes */}
-      <circle cx="22" cy="28" r="3" fill="#1e293b" />
-      <circle cx="23.2" cy="26.9" r="0.95" fill="white" />
-      <circle cx="38" cy="28" r="3" fill="#1e293b" />
-      <circle cx="39.2" cy="26.9" r="0.95" fill="white" />
+      {/* ── Nose — very subtle ── */}
+      <path d="M29 28.5 Q30 30.5 31 28.5"
+        stroke="#CE9471" strokeWidth="1" strokeLinecap="round"/>
 
-      {/* Nose */}
-      <path d="M28.5 33 Q30 35 31.5 33" stroke="#c09070" strokeWidth="1.2" strokeLinecap="round" />
+      {/* ── Mouth — natural closed smile ── */}
+      <path d="M25.5 33 Q30 36.5 34.5 33"
+        stroke="#B97050" strokeWidth="1.4" strokeLinecap="round"/>
 
-      {/* Smile */}
-      <path d="M24.5 37.5 Q30 42 35.5 37.5" stroke="#c09070" strokeWidth="1.5" strokeLinecap="round" />
-
-      {/* Jacket / body */}
-      <path d="M4 60 L7 46 Q17 41 30 43 Q43 41 53 46 L56 60Z" fill="#3730a3" />
-
-      {/* Collar / lapels */}
-      <path d="M30 43 L22.5 57 L30 61 L37.5 57Z" fill="#6366f1" />
-
-      {/* eV badge on jacket */}
-      <rect x="14" y="49" width="10" height="6" rx="1.5" fill="#0ea5e9" />
-      <text x="19" y="53.8" textAnchor="middle" fill="white" fontSize="3.5" fontWeight="bold">eV</text>
+      {/* ── eV badge on jacket ── */}
+      <rect x="13.5" y="48" width="9.5" height="5.5" rx="1.5" fill="#0ea5e9"/>
+      <text x="18.3" y="52.8" textAnchor="middle" fill="white" fontSize="3.5" fontWeight="bold">eV</text>
     </svg>
   )
 }
