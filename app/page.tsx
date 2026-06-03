@@ -2,6 +2,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
+import VeraBot from '@/components/VeraBot'
 
 const placeholders = [
   'Descrie situația suspectă sau introdu adresa site-ului pe care vrei să îl verificăm...',
@@ -417,6 +418,8 @@ export default function Home() {
       </div>
 
       </div>
+
+      <VeraBot />
     </div>
   )
 }
