@@ -3,6 +3,88 @@ import { useState, useEffect, useRef } from 'react'
 
 type Message = { role: 'user' | 'vera'; text: string }
 
+function VeraAvatar({ size }: { size: number }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 60 60"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      {/* Hair base behind face */}
+      <ellipse cx="30" cy="21" rx="18" ry="17" fill="#1c1040" />
+
+      {/* Face */}
+      <circle cx="30" cy="28" r="16" fill="#FDDBB4" />
+
+      {/* Hair top — short, dark */}
+      <path
+        d="M12 25 Q12 5 30 5 Q48 5 48 25 Q45 15 30 15 Q15 15 12 25Z"
+        fill="#1c1040"
+      />
+
+      {/* Hair side tufts */}
+      <path d="M12 24 Q11 32 13 40 L12 24Z" fill="#1c1040" />
+      <path d="M48 24 Q49 32 47 40 L48 24Z" fill="#1c1040" />
+
+      {/* Left lens — big round glasses */}
+      <circle
+        cx="22"
+        cy="28"
+        r="7.5"
+        fill="rgba(200,214,255,0.18)"
+        stroke="#6366f1"
+        strokeWidth="1.8"
+      />
+      {/* Right lens */}
+      <circle
+        cx="38"
+        cy="28"
+        r="7.5"
+        fill="rgba(200,214,255,0.18)"
+        stroke="#6366f1"
+        strokeWidth="1.8"
+      />
+      {/* Bridge (gap between lenses: left edge 22+7.5=29.5, right edge 38-7.5=30.5) */}
+      <line
+        x1="29.5"
+        y1="28"
+        x2="30.5"
+        y2="28"
+        stroke="#6366f1"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
+      {/* Temples */}
+      <line x1="14.5" y1="27" x2="12" y2="25.5" stroke="#6366f1" strokeWidth="1.4" strokeLinecap="round" />
+      <line x1="45.5" y1="27" x2="48" y2="25.5" stroke="#6366f1" strokeWidth="1.4" strokeLinecap="round" />
+
+      {/* Eyes */}
+      <circle cx="22" cy="28" r="3" fill="#1e293b" />
+      <circle cx="23.2" cy="26.9" r="0.95" fill="white" />
+      <circle cx="38" cy="28" r="3" fill="#1e293b" />
+      <circle cx="39.2" cy="26.9" r="0.95" fill="white" />
+
+      {/* Nose */}
+      <path d="M28.5 33 Q30 35 31.5 33" stroke="#c09070" strokeWidth="1.2" strokeLinecap="round" />
+
+      {/* Smile */}
+      <path d="M24.5 37.5 Q30 42 35.5 37.5" stroke="#c09070" strokeWidth="1.5" strokeLinecap="round" />
+
+      {/* Jacket / body */}
+      <path d="M4 60 L7 46 Q17 41 30 43 Q43 41 53 46 L56 60Z" fill="#3730a3" />
+
+      {/* Collar / lapels */}
+      <path d="M30 43 L22.5 57 L30 61 L37.5 57Z" fill="#6366f1" />
+
+      {/* eV badge on jacket */}
+      <rect x="14" y="49" width="10" height="6" rx="1.5" fill="#0ea5e9" />
+      <text x="19" y="53.8" textAnchor="middle" fill="white" fontSize="3.5" fontWeight="bold">eV</text>
+    </svg>
+  )
+}
+
 export default function VeraBot() {
   const [visible, setVisible] = useState(false)
   const [open, setOpen] = useState(false)
@@ -72,13 +154,13 @@ export default function VeraBot() {
           from { opacity: 0; transform: translateY(18px) scale(0.96); }
           to   { opacity: 1; transform: translateY(0)   scale(1);    }
         }
-        .vera-typing-dot {
+        .vera-dot {
           width: 7px; height: 7px; border-radius: 50%;
           background: #6366f1;
           animation: vera-pulse 1.2s infinite ease-in-out;
         }
-        .vera-typing-dot:nth-child(2) { animation-delay: 0.2s; }
-        .vera-typing-dot:nth-child(3) { animation-delay: 0.4s; }
+        .vera-dot:nth-child(2) { animation-delay: 0.2s; }
+        .vera-dot:nth-child(3) { animation-delay: 0.4s; }
         @keyframes vera-pulse {
           0%, 100% { opacity: 0.3; transform: scale(0.85); }
           50%       { opacity: 1;   transform: scale(1.15); }
@@ -104,19 +186,22 @@ export default function VeraBot() {
           }}>
             {/* Header */}
             <div style={{
-              padding: '14px 16px',
+              padding: '12px 16px',
               background: 'linear-gradient(135deg, #0ea5e9, #6366f1)',
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
               flexShrink: 0
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                 <div style={{
-                  width: 38, height: 38, borderRadius: '50%',
-                  background: 'rgba(255,255,255,0.22)',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: 17, fontWeight: 800, color: 'white',
-                  border: '2px solid rgba(255,255,255,0.4)'
-                }}>V</div>
+                  width: 56, height: 56,
+                  borderRadius: '50%',
+                  overflow: 'hidden',
+                  border: '2px solid rgba(255,255,255,0.45)',
+                  flexShrink: 0,
+                  background: 'rgba(255,255,255,0.1)'
+                }}>
+                  <VeraAvatar size={56} />
+                </div>
                 <div>
                   <div style={{ fontSize: 15, fontWeight: 700, color: 'white', lineHeight: 1.2 }}>Vera</div>
                   <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.8)', display: 'flex', alignItems: 'center', gap: 4 }}>
@@ -131,7 +216,7 @@ export default function VeraBot() {
                   background: 'rgba(255,255,255,0.18)', border: 'none', color: 'white',
                   width: 28, height: 28, borderRadius: '50%', cursor: 'pointer',
                   fontSize: 18, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontWeight: 600, lineHeight: 1
+                  fontWeight: 600, lineHeight: 1, flexShrink: 0
                 }}
                 aria-label="Închide chat"
               >×</button>
@@ -162,9 +247,9 @@ export default function VeraBot() {
               ))}
               {loading && (
                 <div style={{ display: 'flex', gap: 5, padding: '8px 12px', background: '#f1f5f9', borderRadius: '4px 16px 16px 16px', width: 'fit-content' }}>
-                  <div className="vera-typing-dot" />
-                  <div className="vera-typing-dot" />
-                  <div className="vera-typing-dot" />
+                  <div className="vera-dot" />
+                  <div className="vera-dot" />
+                  <div className="vera-dot" />
                 </div>
               )}
               <div ref={endRef} />
@@ -204,24 +289,23 @@ export default function VeraBot() {
           </div>
         )}
 
-        {/* Avatar trigger */}
+        {/* Avatar trigger button */}
         <button
           onClick={() => setOpen(o => !o)}
           title="Vera — Asistenta eVerify"
           style={{
-            width: 60, height: 60, borderRadius: '50%',
+            width: 60, height: 60,
+            borderRadius: '50%',
             background: 'linear-gradient(135deg, #0ea5e9, #6366f1)',
             border: '3px solid white',
             boxShadow: '0 8px 28px rgba(99,102,241,0.45)',
             cursor: 'pointer',
-            display: 'flex', flexDirection: 'column',
-            alignItems: 'center', justifyContent: 'center', gap: 1,
+            padding: 0,
+            overflow: 'hidden',
             animation: 'veraBounceIn 0.45s ease-out',
-            transition: 'transform 0.18s, box-shadow 0.18s'
           }}
         >
-          <span style={{ fontSize: 22, fontWeight: 800, color: 'white', lineHeight: 1 }}>V</span>
-          <span style={{ fontSize: 8, color: 'rgba(255,255,255,0.92)', fontWeight: 700, letterSpacing: 0.8 }}>VERA</span>
+          <VeraAvatar size={60} />
         </button>
       </div>
     </>
