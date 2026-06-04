@@ -7,12 +7,14 @@ const MAX_USER_MESSAGES = 10
 const CLOSING_MESSAGE =
   'Am ajuns la limita conversației noastre 😊 Sper că te-am putut ajuta! Poți verifica orice conținut suspect direct pe eVerify.ro. Pentru alte întrebări: Contact.'
 
+const BASE_URL = 'https://everify.ro'
+
 const PAGE_BUTTONS: { pattern: RegExp; label: string; href: string }[] = [
-  { pattern: /\bhomepage\b|\beVerify\.ro\b/i, label: 'Verificare AI', href: '/' },
-  { pattern: /check-url/i, label: 'Verifică link', href: '/check-url' },
-  { pattern: /check-iban/i, label: 'Verifică IBAN', href: '/check-iban' },
-  { pattern: /raporteaz/i, label: 'Raportează scam', href: '/raporteaza' },
-  { pattern: /\bContact\b/, label: 'Contact', href: '/contact' },
+  { pattern: /\bhomepage\b|\beVerify\.ro\b/i, label: 'Verificare AI', href: BASE_URL },
+  { pattern: /check-url/i, label: 'Verifică link', href: `${BASE_URL}/check-url` },
+  { pattern: /check-iban/i, label: 'Verifică IBAN', href: `${BASE_URL}/check-iban` },
+  { pattern: /raporteaz/i, label: 'Raportează scam', href: `${BASE_URL}/raporteaza` },
+  { pattern: /\bContact\b/, label: 'Contact', href: `${BASE_URL}/contact` },
 ]
 
 function extractButtons(text: string): { label: string; href: string }[] {
