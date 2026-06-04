@@ -18,6 +18,22 @@ const PAGE_BUTTONS: { pattern: RegExp; label: string; href: string }[] = [
   { pattern: /\bContact\b/, label: 'Contact', href: `${BASE_URL}/contact` },
 ]
 
+function renderMarkdownLinks(text: string) {
+  const parts = text.split(/(\[[^\]]+\]\([^)]+\))/g)
+  return parts.map((part, i) => {
+    const match = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/)
+    if (match) {
+      return (
+        <a key={i} href={match[2]} target="_blank" rel="noopener noreferrer"
+           style={{ color: '#6366f1', textDecoration: 'underline', fontWeight: 600 }}>
+          {match[1]}
+        </a>
+      )
+    }
+    return part
+  })
+}
+
 function extractButtons(text: string): { label: string; href: string }[] {
   const seen = new Set<string>()
   return PAGE_BUTTONS.filter(({ pattern, href }) => {
@@ -211,7 +227,7 @@ export default function VeraBot() {
                         fontSize: 13.5, lineHeight: 1.6,
                         whiteSpace: 'pre-wrap'
                       }}>
-                        {m.text}
+                        {m.role === 'vera' ? renderMarkdownLinks(m.text) : m.text}
                       </div>
                       {buttons.length > 0 && (
                         <div style={{ marginTop: 6 }}>
