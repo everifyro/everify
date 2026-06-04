@@ -14,6 +14,7 @@ const PAGE_BUTTONS: { pattern: RegExp; label: string; href: string }[] = [
   { pattern: /check-url/i, label: 'Verifică link', href: `${BASE_URL}/check-url` },
   { pattern: /check-iban/i, label: 'Verifică IBAN', href: `${BASE_URL}/check-iban` },
   { pattern: /raporteaz/i, label: 'Raportează scam', href: `${BASE_URL}/raporteaza` },
+  { pattern: /scam.?score/i, label: '🧪 Scam Score →', href: `${BASE_URL}/scam-score` },
   { pattern: /\bContact\b/, label: 'Contact', href: `${BASE_URL}/contact` },
 ]
 
