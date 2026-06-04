@@ -3,6 +3,26 @@ import { useState, useEffect, useRef } from 'react'
 
 type Message = { role: 'user' | 'vera'; text: string }
 
+const MAX_USER_MESSAGES = 10
+const CLOSING_MESSAGE =
+  'Am ajuns la limita conversației noastre 😊 Sper că te-am putut ajuta! Poți verifica orice conținut suspect direct pe eVerify.ro. Pentru alte întrebări: Contact.'
+
+const PAGE_BUTTONS: { pattern: RegExp; label: string; href: string }[] = [
+  { pattern: /\bhomepage\b|\beVerify\.ro\b/i, label: 'Verificare AI', href: '/' },
+  { pattern: /check-url/i, label: 'Verifică link', href: '/check-url' },
+  { pattern: /check-iban/i, label: 'Verifică IBAN', href: '/check-iban' },
+  { pattern: /raporteaz/i, label: 'Raportează scam', href: '/raporteaza' },
+  { pattern: /\bContact\b/, label: 'Contact', href: '/contact' },
+]
+
+function extractButtons(text: string): { label: string; href: string }[] {
+  const seen = new Set<string>()
+  return PAGE_BUTTONS.filter(({ pattern, href }) => {
+    if (!pattern.test(text) || seen.has(href)) return false
+    seen.add(href)
+    return true
+  }).map(({ label, href }) => ({ label, href }))
+}
 
 export default function VeraBot() {
   const [visible, setVisible] = useState(false)
@@ -32,13 +52,26 @@ export default function VeraBot() {
     endRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages, loading])
 
+  const userMsgCount = messages.filter(m => m.role === 'user').length
+  const atLimit = userMsgCount >= MAX_USER_MESSAGES
+
   const send = async () => {
-    if (!input.trim() || loading) return
+    if (!input.trim() || loading || atLimit) return
     const text = input.trim()
     setInput('')
     const updated: Message[] = [...messages, { role: 'user', text }]
     setMessages(updated)
     setLoading(true)
+
+    const isLastMessage = userMsgCount + 1 >= MAX_USER_MESSAGES
+
+    if (isLastMessage) {
+      await new Promise(r => setTimeout(r, 700))
+      setMessages(p => [...p, { role: 'vera', text: CLOSING_MESSAGE }])
+      setLoading(false)
+      return
+    }
+
     try {
       const res = await fetch('/api/vera', {
         method: 'POST',
@@ -84,6 +117,19 @@ export default function VeraBot() {
           0%, 100% { opacity: 0.3; transform: scale(0.85); }
           50%       { opacity: 1;   transform: scale(1.15); }
         }
+        .vera-page-btn {
+          display: inline-block;
+          margin: 4px 4px 0 0;
+          padding: 5px 11px;
+          border-radius: 20px;
+          background: linear-gradient(135deg, #0ea5e9, #6366f1);
+          color: white;
+          font-size: 12px;
+          font-weight: 600;
+          text-decoration: none;
+          transition: opacity 0.15s;
+        }
+        .vera-page-btn:hover { opacity: 0.85; }
       `}</style>
 
       <div style={{
@@ -147,23 +193,36 @@ export default function VeraBot() {
               display: 'flex', flexDirection: 'column', gap: 9,
               minHeight: 0
             }}>
-              {messages.map((m, i) => (
-                <div key={i} style={{ display: 'flex', justifyContent: m.role === 'user' ? 'flex-end' : 'flex-start' }}>
-                  <div style={{
-                    maxWidth: '83%',
-                    padding: '9px 13px',
-                    borderRadius: m.role === 'user' ? '16px 16px 4px 16px' : '4px 16px 16px 16px',
-                    background: m.role === 'user'
-                      ? 'linear-gradient(135deg, #0ea5e9, #6366f1)'
-                      : '#f1f5f9',
-                    color: m.role === 'user' ? 'white' : '#1e293b',
-                    fontSize: 13.5, lineHeight: 1.6,
-                    whiteSpace: 'pre-wrap'
-                  }}>
-                    {m.text}
+              {messages.map((m, i) => {
+                const buttons = m.role === 'vera' ? extractButtons(m.text) : []
+                return (
+                  <div key={i} style={{ display: 'flex', justifyContent: m.role === 'user' ? 'flex-end' : 'flex-start' }}>
+                    <div style={{ maxWidth: '83%' }}>
+                      <div style={{
+                        padding: '9px 13px',
+                        borderRadius: m.role === 'user' ? '16px 16px 4px 16px' : '4px 16px 16px 16px',
+                        background: m.role === 'user'
+                          ? 'linear-gradient(135deg, #0ea5e9, #6366f1)'
+                          : '#f1f5f9',
+                        color: m.role === 'user' ? 'white' : '#1e293b',
+                        fontSize: 13.5, lineHeight: 1.6,
+                        whiteSpace: 'pre-wrap'
+                      }}>
+                        {m.text}
+                      </div>
+                      {buttons.length > 0 && (
+                        <div style={{ marginTop: 6 }}>
+                          {buttons.map(btn => (
+                            <a key={btn.href} href={btn.href} className="vera-page-btn">
+                              {btn.label} →
+                            </a>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))}
+                )
+              })}
               {loading && (
                 <div style={{ display: 'flex', gap: 5, padding: '8px 12px', background: '#f1f5f9', borderRadius: '4px 16px 16px 16px', width: 'fit-content' }}>
                   <div className="vera-dot" />
@@ -181,24 +240,26 @@ export default function VeraBot() {
                 value={input}
                 onChange={e => setInput(e.target.value)}
                 onKeyDown={e => { if (e.key === 'Enter') send() }}
-                placeholder="Scrie un mesaj..."
+                placeholder={atLimit ? 'Conversație încheiată' : 'Scrie un mesaj...'}
+                disabled={atLimit}
                 style={{
-                  flex: 1, background: '#f8fafc',
+                  flex: 1, background: atLimit ? '#f1f5f9' : '#f8fafc',
                   border: '1.5px solid rgba(99,102,241,0.22)', borderRadius: 10,
-                  padding: '9px 12px', fontSize: 13, color: '#1e293b', outline: 'none',
-                  fontFamily: 'inherit'
+                  padding: '9px 12px', fontSize: 13, color: atLimit ? '#94a3b8' : '#1e293b', outline: 'none',
+                  fontFamily: 'inherit',
+                  cursor: atLimit ? 'not-allowed' : 'text'
                 }}
               />
               <button
                 onClick={send}
-                disabled={!input.trim() || loading}
+                disabled={!input.trim() || loading || atLimit}
                 style={{
-                  background: input.trim() && !loading
+                  background: input.trim() && !loading && !atLimit
                     ? 'linear-gradient(135deg, #0ea5e9, #6366f1)'
                     : 'rgba(30,41,59,0.1)',
                   border: 'none', color: 'white',
                   width: 38, height: 38, borderRadius: 10,
-                  cursor: input.trim() && !loading ? 'pointer' : 'default',
+                  cursor: input.trim() && !loading && !atLimit ? 'pointer' : 'default',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   fontSize: 15, flexShrink: 0, transition: 'background 0.2s'
                 }}
