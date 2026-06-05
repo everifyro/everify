@@ -82,7 +82,8 @@ function renderMarkdown(text: string) {
   useEffect(() => {
     if (!loading && messages.length > 0) {
       setTimeout(() => {
-        document.getElementById('result-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        const el = document.getElementById('result-section')
+        if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 100, behavior: 'smooth' })
       }, 100)
     }
   }, [loading])
