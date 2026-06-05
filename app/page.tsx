@@ -49,6 +49,7 @@ function renderMarkdown(text: string) {
   })
 }
   const messagesBoxRef = useRef<HTMLDivElement>(null)
+  const resultRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
 
   // Typewriter effect
@@ -78,6 +79,13 @@ function renderMarkdown(text: string) {
     const box = messagesBoxRef.current
     if (box) box.scrollTop = box.scrollHeight
   }, [messages, loading])
+
+  // Scroll la containerul de rezultat după ce răspunsul AI apare
+  useEffect(() => {
+    if (!loading && messages.length > 0) {
+      resultRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }
+  }, [loading])
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -173,7 +181,7 @@ function renderMarkdown(text: string) {
           Verifică orice mesaj suspect cu AI
         </p>
 
-        <div style={{
+        <div ref={resultRef} style={{
         width: '100%',
         maxWidth: 600,
         background: 'rgba(255,255,255,0.97)',
