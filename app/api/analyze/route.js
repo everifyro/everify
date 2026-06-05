@@ -289,12 +289,27 @@ FORMAT RĂSPUNS (folosește întotdeauna exact acest format):
 
 ⚠️ ATENȚIE: [un sfat important de reținut pentru viitor]`
 
+function looksLikeUrl(text) {
+  const t = text.trim()
+  if (/^https?:\/\//i.test(t)) return true
+  // Token unic fără spații care arată ca un domeniu
+  return !/\s/.test(t) && /^[a-zA-Z0-9][a-zA-Z0-9\-\.]*\.[a-zA-Z]{2,}(\/\S*)?$/.test(t)
+}
+
 export async function POST(request) {
   try {
     const { message, userId } = await request.json()
     if (!message) {
       return Response.json({ error: 'Mesajul lipseste' }, { status: 400 })
     }
+
+    // Detectare URL simplu — redirectare fără a scădea credite
+    if (looksLikeUrl(message)) {
+      return Response.json({
+        reply: 'Acesta pare a fi un link sau site web. Pentru verificarea unui site, folosește pagina dedicată: [/check-url](https://everify.ro/check-url). AI Checker-ul este pentru mesaje text, SMS-uri sau emailuri suspecte.'
+      })
+    }
+
     if (userId) {
       const { data: profile } = await supabase
         .from('profiles')
@@ -305,6 +320,7 @@ export async function POST(request) {
         return Response.json({ error: 'Nu mai ai credite' }, { status: 403 })
       }
     }
+
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
@@ -321,7 +337,14 @@ export async function POST(request) {
     })
     const data = await response.json()
     console.log('Anthropic response:', JSON.stringify(data))
-    const reply = data.content?.map(b => b.text || '').join('\n') || 'Eroare.'
+
+    // Scade credite NUMAI dacă Anthropic a returnat conținut valid
+    if (!data.content || data.content.length === 0) {
+      return Response.json({ reply: 'Eroare la procesarea cererii. Încearcă din nou.' })
+    }
+
+    const reply = data.content.map(b => b.text || '').join('\n')
+
     if (userId) {
       const { data: profile } = await supabase
         .from('profiles')
