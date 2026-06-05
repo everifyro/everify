@@ -49,7 +49,6 @@ function renderMarkdown(text: string) {
   })
 }
   const messagesBoxRef = useRef<HTMLDivElement>(null)
-  const resultRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
 
   // Typewriter effect
@@ -80,10 +79,11 @@ function renderMarkdown(text: string) {
     if (box) box.scrollTop = box.scrollHeight
   }, [messages, loading])
 
-  // Scroll la containerul de rezultat după ce răspunsul AI apare
   useEffect(() => {
     if (!loading && messages.length > 0) {
-      resultRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      setTimeout(() => {
+        document.getElementById('result-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }, 100)
     }
   }, [loading])
 
@@ -181,7 +181,7 @@ function renderMarkdown(text: string) {
           Verifică orice mesaj suspect cu AI
         </p>
 
-        <div ref={resultRef} style={{
+        <div id="result-section" style={{
         width: '100%',
         maxWidth: 600,
         background: 'rgba(255,255,255,0.97)',

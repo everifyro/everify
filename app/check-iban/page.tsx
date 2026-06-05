@@ -117,6 +117,14 @@ export default function CheckIban() {
     setLoading(false)
   }
 
+  useEffect(() => {
+    if (!loading && result) {
+      setTimeout(() => {
+        document.getElementById('result-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }, 100)
+    }
+  }, [loading])
+
   const recoveryColor = (level: string) => {
     if (level === 'green') return '#22c55e'
     if (level === 'yellow') return '#f59e0b'
@@ -220,7 +228,7 @@ export default function CheckIban() {
 
         {/* Result */}
         {result && !result.valid && (
-          <div style={{ background: '#ffffff', border: '1px solid rgba(239,68,68,0.3)', borderRadius: 16, padding: 28, boxShadow: '0 4px 24px rgba(15,23,42,0.06)', marginBottom: 24 }}>
+          <div id="result-section" style={{ background: '#ffffff', border: '1px solid rgba(239,68,68,0.3)', borderRadius: 16, padding: 28, boxShadow: '0 4px 24px rgba(15,23,42,0.06)', marginBottom: 24 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
               <span style={{ fontSize: 28 }}>❌</span>
               <div>
@@ -232,7 +240,7 @@ export default function CheckIban() {
         )}
 
         {result && result.valid && (
-          <div style={{ background: '#ffffff', border: '1px solid rgba(14,165,233,0.2)', borderRadius: 16, padding: 28, boxShadow: '0 4px 24px rgba(15,23,42,0.06)' }}>
+          <div id="result-section" style={{ background: '#ffffff', border: '1px solid rgba(14,165,233,0.2)', borderRadius: 16, padding: 28, boxShadow: '0 4px 24px rgba(15,23,42,0.06)' }}>
 
             {/* Header: IBAN + valid badge */}
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24, flexWrap: 'wrap', gap: 12 }}>
