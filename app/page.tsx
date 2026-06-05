@@ -28,6 +28,26 @@ export default function Home() {
   const [isDeleting, setIsDeleting] = useState(false)
   const [displayText, setDisplayText] = useState('')
   const FREE_LIMIT = 5
+
+function renderMarkdown(text: string) {
+  const parts = text.split(/(\[[^\]]+\]\([^)]+\)|\*\*[^*]+\*\*|\*[^*]+\*)/g)
+  return parts.map((part, i) => {
+    const linkMatch = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/)
+    if (linkMatch) {
+      return (
+        <a key={i} href={linkMatch[2]} target="_blank" rel="noopener noreferrer"
+           style={{ color: '#6366f1', textDecoration: 'underline', fontWeight: 600 }}>
+          {linkMatch[1]}
+        </a>
+      )
+    }
+    const boldMatch = part.match(/^\*\*([^*]+)\*\*$/)
+    if (boldMatch) return <strong key={i}>{boldMatch[1]}</strong>
+    const italicMatch = part.match(/^\*([^*]+)\*$/)
+    if (italicMatch) return <em key={i}>{italicMatch[1]}</em>
+    return part
+  })
+}
   const endRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
 
@@ -176,7 +196,7 @@ export default function Home() {
             {messages.map((m, i) => (
               <div key={i} style={{ display: 'flex', justifyContent: m.role === 'user' ? 'flex-end' : 'flex-start', marginBottom: 12 }}>
                 <div style={{ maxWidth: '80%', padding: '10px 14px', borderRadius: m.role === 'user' ? '16px 16px 4px 16px' : '4px 16px 16px 16px', background: m.role === 'user' ? 'rgba(14,165,233,0.15)' : 'rgba(30,41,59,0.05)', border: '1px solid', borderColor: m.role === 'user' ? 'rgba(14,165,233,0.3)' : 'rgba(30,41,59,0.1)', fontSize: 14, lineHeight: 1.7, whiteSpace: 'pre-wrap' }}>
-                  {m.text}
+                  {m.role === 'ai' ? renderMarkdown(m.text) : m.text}
                 </div>
               </div>
             ))}

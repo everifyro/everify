@@ -12,6 +12,26 @@ const ibanPlaceholders = [
   'ex: DE89 3704 0044 0532 0130 00',
 ]
 
+function renderMarkdown(text: string) {
+  const parts = text.split(/(\[[^\]]+\]\([^)]+\)|\*\*[^*]+\*\*|\*[^*]+\*)/g)
+  return parts.map((part, i) => {
+    const linkMatch = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/)
+    if (linkMatch) {
+      return (
+        <a key={i} href={linkMatch[2]} target="_blank" rel="noopener noreferrer"
+           style={{ color: '#6366f1', textDecoration: 'underline', fontWeight: 600 }}>
+          {linkMatch[1]}
+        </a>
+      )
+    }
+    const boldMatch = part.match(/^\*\*([^*]+)\*\*$/)
+    if (boldMatch) return <strong key={i}>{boldMatch[1]}</strong>
+    const italicMatch = part.match(/^\*([^*]+)\*$/)
+    if (italicMatch) return <em key={i}>{italicMatch[1]}</em>
+    return part
+  })
+}
+
 export default function CheckIban() {
   const [iban, setIban] = useState('')
   const [loading, setLoading] = useState(false)
@@ -205,7 +225,7 @@ export default function CheckIban() {
               <span style={{ fontSize: 28 }}>❌</span>
               <div>
                 <p style={{ fontSize: 16, fontWeight: 700, color: '#ef4444', margin: 0 }}>IBAN invalid</p>
-                <p style={{ fontSize: 13, color: 'rgba(30,41,59,0.7)', margin: '4px 0 0' }}>{result.error}</p>
+                <p style={{ fontSize: 13, color: 'rgba(30,41,59,0.7)', margin: '4px 0 0' }}>{renderMarkdown(result.error)}</p>
               </div>
             </div>
           </div>

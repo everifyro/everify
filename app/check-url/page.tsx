@@ -13,6 +13,26 @@ const urlPlaceholders = [
   'Ai găsit o ofertă prea bună? Verifică autenticitatea site-ului...',
 ]
 
+function renderMarkdown(text: string) {
+  const parts = text.split(/(\[[^\]]+\]\([^)]+\)|\*\*[^*]+\*\*|\*[^*]+\*)/g)
+  return parts.map((part, i) => {
+    const linkMatch = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/)
+    if (linkMatch) {
+      return (
+        <a key={i} href={linkMatch[2]} target="_blank" rel="noopener noreferrer"
+           style={{ color: '#6366f1', textDecoration: 'underline', fontWeight: 600 }}>
+          {linkMatch[1]}
+        </a>
+      )
+    }
+    const boldMatch = part.match(/^\*\*([^*]+)\*\*$/)
+    if (boldMatch) return <strong key={i}>{boldMatch[1]}</strong>
+    const italicMatch = part.match(/^\*([^*]+)\*$/)
+    if (italicMatch) return <em key={i}>{italicMatch[1]}</em>
+    return part
+  })
+}
+
 export default function CheckUrl() {
   const [url, setUrl] = useState('')
   const [loading, setLoading] = useState(false)
@@ -230,7 +250,7 @@ export default function CheckUrl() {
             <div style={{ background: `${getScoreColor(result.trustScore)}15`, border: `1px solid ${getScoreColor(result.trustScore)}44`, borderRadius: 12, padding: '14px 18px', marginBottom: 24, display: 'flex', alignItems: 'center', gap: 12 }}>
               <span style={{ fontSize: 24 }}>{getScoreEmoji(result.trustScore)}</span>
               <p style={{ fontSize: 16, fontWeight: 700, color: getScoreColor(result.trustScore), margin: 0 }}>
-                VERDICT: {result.verdict}
+                VERDICT: {renderMarkdown(result.verdict)}
               </p>
             </div>
 
@@ -282,7 +302,7 @@ export default function CheckUrl() {
                 <p style={{ fontSize: 13, fontWeight: 700, color: '#ef4444', marginBottom: 10 }}>⚠️ Semne de alarmă identificate:</p>
                 {result.warnings.map((w: string, i: number) => (
                   <p key={i} style={{ fontSize: 13, color: 'rgba(30,41,59,0.75)', marginBottom: 4, paddingLeft: 12 }}>
-                    • {w}
+                    • {renderMarkdown(w)}
                   </p>
                 ))}
               </div>
