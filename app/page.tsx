@@ -48,7 +48,7 @@ function renderMarkdown(text: string) {
     return part
   })
 }
-  const endRef = useRef<HTMLDivElement>(null)
+  const messagesBoxRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
 
   // Typewriter effect
@@ -75,7 +75,8 @@ function renderMarkdown(text: string) {
   }, [displayText, isDeleting, placeholderIndex])
 
   useEffect(() => {
-    endRef.current?.scrollIntoView({ behavior: 'smooth' })
+    const box = messagesBoxRef.current
+    if (box) box.scrollTop = box.scrollHeight
   }, [messages, loading])
 
   useEffect(() => {
@@ -192,7 +193,7 @@ function renderMarkdown(text: string) {
         </div>
 
         {(messages.length > 0 || loading) && (
-          <div style={{ maxHeight: 320, overflowY: 'auto', padding: 16, borderBottom: '1px solid rgba(14,165,233,0.1)' }}>
+          <div ref={messagesBoxRef} style={{ maxHeight: 320, overflowY: 'auto', padding: 16, borderBottom: '1px solid rgba(14,165,233,0.1)' }}>
             {messages.map((m, i) => (
               <div key={i} style={{ display: 'flex', justifyContent: m.role === 'user' ? 'flex-end' : 'flex-start', marginBottom: 12 }}>
                 <div style={{ maxWidth: '80%', padding: '10px 14px', borderRadius: m.role === 'user' ? '16px 16px 4px 16px' : '4px 16px 16px 16px', background: m.role === 'user' ? 'rgba(14,165,233,0.15)' : 'rgba(30,41,59,0.05)', border: '1px solid', borderColor: m.role === 'user' ? 'rgba(14,165,233,0.3)' : 'rgba(30,41,59,0.1)', fontSize: 14, lineHeight: 1.7, whiteSpace: 'pre-wrap' }}>
@@ -201,11 +202,11 @@ function renderMarkdown(text: string) {
               </div>
             ))}
             {loading && (
-              <div style={{ display: 'flex', gap: 6, padding: 8 }}>
-                {[0,1,2].map(i => <div key={i} style={{ width: 8, height: 8, borderRadius: '50%', background: '#0ea5e9', animation: 'pulse 1s infinite', animationDelay: `${i*0.2}s` }} />)}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 8px' }}>
+                <div style={{ width: 18, height: 18, border: '3px solid rgba(14,165,233,0.2)', borderTopColor: '#0ea5e9', borderRadius: '50%', animation: 'spin 0.8s linear infinite', flexShrink: 0 }} />
+                <span style={{ fontSize: 13, color: 'rgba(30,41,59,0.6)', fontStyle: 'italic' }}>Se analizează... Vă rugăm așteptați</span>
               </div>
             )}
-            <div ref={endRef} />
           </div>
         )}
 
@@ -222,8 +223,8 @@ function renderMarkdown(text: string) {
             onClick={send}
             disabled={!input.trim() || loading || remaining <= 0}
             className="btn-pulse"
-            style={{ alignSelf: 'stretch', padding: '0 24px', borderRadius: 10, border: 'none', background: 'linear-gradient(135deg,#0ea5e9,#6366f1)', color: 'white', fontSize: 15, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, textAlign: 'center' }}
-          >Verifică <span style={{ fontSize: '1.4em', lineHeight: 1 }}>❯</span></button>
+            style={{ alignSelf: 'stretch', padding: '0 24px', borderRadius: 10, border: 'none', background: 'linear-gradient(135deg,#0ea5e9,#6366f1)', color: 'white', fontSize: 15, fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer', whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, textAlign: 'center', opacity: loading ? 0.7 : 1 }}
+          >{loading ? 'Se procesează...' : <>Verifică <span style={{ fontSize: '1.4em', lineHeight: 1 }}>❯</span></>}</button>
         </div>
       </div>
       </section>
