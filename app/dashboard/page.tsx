@@ -3,6 +3,26 @@ import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
 
+function renderMarkdown(text: string) {
+  const parts = text.split(/(\[[^\]]+\]\([^)]+\)|\*\*[^*]+\*\*|\*[^*]+\*)/g)
+  return parts.map((part, i) => {
+    const linkMatch = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/)
+    if (linkMatch) {
+      return (
+        <a key={i} href={linkMatch[2]} target="_blank" rel="noopener noreferrer"
+           style={{ color: '#6366f1', textDecoration: 'underline', fontWeight: 600 }}>
+          {linkMatch[1]}
+        </a>
+      )
+    }
+    const boldMatch = part.match(/^\*\*([^*]+)\*\*$/)
+    if (boldMatch) return <strong key={i}>{boldMatch[1]}</strong>
+    const italicMatch = part.match(/^\*([^*]+)\*$/)
+    if (italicMatch) return <em key={i}>{italicMatch[1]}</em>
+    return part
+  })
+}
+
 export default function Dashboard() {
   const [profile, setProfile] = useState<any>(null)
   const [analyses, setAnalyses] = useState<any[]>([])
@@ -89,7 +109,7 @@ export default function Dashboard() {
                 {new Date(a.created_at).toLocaleDateString('ro-RO')}
               </p>
               <p style={{ fontSize: 14, color: 'rgba(30,41,59,0.85)', marginBottom: 8 }}><strong>Întrebare:</strong> {a.question}</p>
-              <p style={{ fontSize: 13, color: 'rgba(30,41,59,0.65)', whiteSpace: 'pre-wrap' }}>{a.answer?.slice(0, 200)}...</p>
+              <p style={{ fontSize: 13, color: 'rgba(30,41,59,0.65)', whiteSpace: 'pre-wrap' }}>{renderMarkdown(a.answer?.slice(0, 200) ?? '')}...</p>
             </div>
           ))
         )}
