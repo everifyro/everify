@@ -57,16 +57,23 @@ export default function VeraBot() {
   const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
-    const t = setTimeout(() => setVisible(true), 3000)
-    return () => clearTimeout(t)
+    const tVisible = setTimeout(() => setVisible(true), 3000)
+    const tAuto = setTimeout(() => {
+      if (!sessionStorage.getItem('vera_auto_opened')) {
+        sessionStorage.setItem('vera_auto_opened', 'true')
+        setOpen(true)
+      }
+    }, 5000)
+    return () => { clearTimeout(tVisible); clearTimeout(tAuto) }
   }, [])
 
   useEffect(() => {
     if (open && messages.length === 0) {
-      setMessages([{
-        role: 'vera',
-        text: 'Bună! Sunt Vera, asistenta eVerify 👋 Cu ce te pot ajuta azi? Ai primit un mesaj suspect, un link, un IBAN sau altceva?'
-      }])
+      const isEn = typeof navigator !== 'undefined' && navigator.language.startsWith('en')
+      const greeting = isEn
+        ? "👋 Hi! I'm Vera, the eVerify.ro assistant. I help you stay safe from scams — suspicious messages, SMS, IBANs, fake websites or job offers. What can I help you check today?"
+        : "👋 Salut! Sunt Vera, asistenta eVerify.ro. Te ajut să te protejezi de înșelătorii — mesaje suspecte, SMS-uri, IBAN-uri, site-uri sau oferte de job false. Cu ce te pot ajuta azi?"
+      setMessages([{ role: 'vera', text: greeting }])
     }
     if (open) setTimeout(() => inputRef.current?.focus(), 50)
   }, [open])
