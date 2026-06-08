@@ -3,6 +3,7 @@ import { useState, useRef, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
 import VeraBot from '@/components/VeraBot'
+import { useScrollToResult } from '@/hooks/useScrollToResult'
 
 const placeholders = [
   'Descrie situația suspectă sau introdu adresa site-ului pe care vrei să îl verificăm...',
@@ -49,7 +50,9 @@ function renderMarkdown(text: string) {
   })
 }
   const messagesBoxRef = useRef<HTMLDivElement>(null)
+  const chatCardRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
+  useScrollToResult(chatCardRef, !loading && messages.length > 0)
 
   // Typewriter effect
   useEffect(() => {
@@ -79,14 +82,6 @@ function renderMarkdown(text: string) {
     if (box) box.scrollTop = box.scrollHeight
   }, [messages, loading])
 
-  useEffect(() => {
-    if (!loading && messages.length > 0) {
-      setTimeout(() => {
-        const el = document.getElementById('result-section')
-        if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 100, behavior: 'smooth' })
-      }, 100)
-    }
-  }, [loading])
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -182,7 +177,7 @@ function renderMarkdown(text: string) {
           Verifică orice mesaj suspect cu AI
         </p>
 
-        <div id="result-section" style={{
+        <div id="result-section" ref={chatCardRef} style={{
         width: '100%',
         maxWidth: 600,
         background: 'rgba(255,255,255,0.97)',

@@ -1,8 +1,9 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { supabase } from '@/lib/supabase'
 import { CREDIT_COSTS } from '@/lib/credit-costs'
 import { useRouter } from 'next/navigation'
+import { useScrollToResult } from '@/hooks/useScrollToResult'
 
 const urlPlaceholders = [
   'ex: www.site-suspect.ro sau https://site-suspect.ro',
@@ -43,7 +44,9 @@ export default function CheckUrl() {
   const [placeholderIndex, setPlaceholderIndex] = useState(0)
   const [isDeleting, setIsDeleting] = useState(false)
   const [displayText, setDisplayText] = useState('')
+  const resultRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
+  useScrollToResult(resultRef, !loading && !!result)
 
   useEffect(() => {
     const target = urlPlaceholders[placeholderIndex]
@@ -123,14 +126,6 @@ export default function CheckUrl() {
     setLoading(false)
   }
 
-  useEffect(() => {
-    if (!loading && result) {
-      setTimeout(() => {
-        const el = document.getElementById('result-section')
-        if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 100, behavior: 'smooth' })
-      }, 100)
-    }
-  }, [loading])
 
   const getScoreColor = (score: number) => {
     if (score >= 75) return '#22c55e'
@@ -241,7 +236,7 @@ export default function CheckUrl() {
         </div>
 
         {result && (
-          <div id="result-section" style={{ background: '#ffffff', border: `1px solid ${getScoreColor(result.trustScore)}44`, borderRadius: 16, padding: 28, boxShadow: '0 4px 24px rgba(15,23,42,0.06)' }}>
+          <div id="result-section" ref={resultRef} style={{ background: '#ffffff', border: `1px solid ${getScoreColor(result.trustScore)}44`, borderRadius: 16, padding: 28, boxShadow: '0 4px 24px rgba(15,23,42,0.06)' }}>
 
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24, flexWrap: 'wrap', gap: 16 }}>
               <div>

@@ -6,6 +6,7 @@ export const CREDIT_COSTS = {
   phone: 2, // verificare număr de telefon (planificat)
   iban: 1,  // verificare IBAN — /api/check-iban
   pdf: 5,   // analiză document PDF (planificat)
+  job: 2,   // verificare anunț job — /api/check-job
 } as const
 
 export type CreditService = keyof typeof CREDIT_COSTS

@@ -1,8 +1,9 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { supabase } from '@/lib/supabase'
 import { CREDIT_COSTS } from '@/lib/credit-costs'
 import { useRouter } from 'next/navigation'
+import { useScrollToResult } from '@/hooks/useScrollToResult'
 
 const ibanPlaceholders = [
   'ex: RO49 AAAA 1B31 0075 9384 0000',
@@ -42,7 +43,9 @@ export default function CheckIban() {
   const [placeholderIndex, setPlaceholderIndex] = useState(0)
   const [isDeleting, setIsDeleting] = useState(false)
   const [displayText, setDisplayText] = useState('')
+  const resultRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
+  useScrollToResult(resultRef, !loading && !!result)
 
   useEffect(() => {
     const target = ibanPlaceholders[placeholderIndex]
@@ -117,14 +120,6 @@ export default function CheckIban() {
     setLoading(false)
   }
 
-  useEffect(() => {
-    if (!loading && result) {
-      setTimeout(() => {
-        const el = document.getElementById('result-section')
-        if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 100, behavior: 'smooth' })
-      }, 100)
-    }
-  }, [loading])
 
   const recoveryColor = (level: string) => {
     if (level === 'green') return '#22c55e'
@@ -228,6 +223,7 @@ export default function CheckIban() {
         </div>
 
         {/* Result */}
+        <div ref={resultRef}>
         {result && !result.valid && (
           <div id="result-section" style={{ background: '#ffffff', border: '1px solid rgba(239,68,68,0.3)', borderRadius: 16, padding: 28, boxShadow: '0 4px 24px rgba(15,23,42,0.06)', marginBottom: 24 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
@@ -348,6 +344,7 @@ export default function CheckIban() {
 
           </div>
         )}
+        </div>
 
         {/* Fraudă prin înlocuire IBAN (BEC) — întotdeauna vizibil */}
         <div style={{ background: 'rgba(239,68,68,0.06)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 12, padding: '16px 20px', marginTop: 24, display: 'flex', gap: 14, alignItems: 'flex-start' }}>
