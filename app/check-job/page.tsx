@@ -543,6 +543,57 @@ export default function CheckJob() {
 
       </div>
 
+      {/* Secțiune educațională */}
+      <section style={{ borderTop: '1px solid #e2e8f0', background: '#f8fafc', padding: '3rem 1rem' }}>
+        <div style={{ maxWidth: 860, margin: '0 auto' }}>
+          <h2 style={{ fontSize: 20, fontWeight: 800, color: '#1e293b', marginBottom: 20, textAlign: 'center' }}>
+            Cum recunoști un anunț de angajare fals?
+          </h2>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 16 }}>
+
+            <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 12, padding: '1.25rem' }}>
+              <svg width={24} height={24} viewBox="0 0 24 24" fill="none" stroke="#d97706" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: 10 }}>
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <rect x="7" y="9" width="14" height="10" rx="2"/>
+                <circle cx="14" cy="14" r="2"/>
+                <path d="M17 9v-2a2 2 0 0 0 -2 -2h-10a2 2 0 0 0 -2 2v6a2 2 0 0 0 2 2h2"/>
+              </svg>
+              <p style={{ fontSize: 15, fontWeight: 700, color: '#1e293b', margin: '0 0 6px' }}>Ți se cere o plată</p>
+              <p style={{ fontSize: 13, color: '#64748b', lineHeight: 1.55, margin: 0 }}>
+                Nicio firmă legitimă nu solicită taxe de training, onboarding sau echipament înainte de angajare.{' '}
+                <a href="/check-iban" style={{ color: '#2563eb', fontWeight: 600 }}>Verifică IBAN-ul →</a>
+              </p>
+            </div>
+
+            <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 12, padding: '1.25rem' }}>
+              <svg width={24} height={24} viewBox="0 0 24 24" fill="none" stroke="#6366f1" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: 10 }}>
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M15 10l-4 4l6 6l4 -16l-18 7l4 2l2 6l3 -4"/>
+              </svg>
+              <p style={{ fontSize: 15, fontWeight: 700, color: '#1e293b', margin: '0 0 6px' }}>Recrutare doar pe Telegram/WhatsApp</p>
+              <p style={{ fontSize: 13, color: '#64748b', lineHeight: 1.55, margin: 0 }}>
+                Procesele serioase folosesc email corporativ și interviuri video.{' '}
+                <a href="#result-section" style={{ color: '#2563eb', fontWeight: 600 }}>Verifică anunțul →</a>
+              </p>
+            </div>
+
+            <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 12, padding: '1.25rem' }}>
+              <svg width={24} height={24} viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: 10 }}>
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <polyline points="3 17 9 11 13 15 21 7"/>
+                <polyline points="14 7 21 7 21 14"/>
+              </svg>
+              <p style={{ fontSize: 15, fontWeight: 700, color: '#1e293b', margin: '0 0 6px' }}>Salariu garantat nerealist</p>
+              <p style={{ fontSize: 13, color: '#64748b', lineHeight: 1.55, margin: 0 }}>
+                Ofertele cu câștiguri garantate de 3-5× media pieței fără experiență sunt aproape întotdeauna fraudă.{' '}
+                <a href="/scam-types" style={{ color: '#2563eb', fontWeight: 600 }}>Vezi tipuri de scam →</a>
+              </p>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
       <style>{`
         @keyframes spin { to { transform: rotate(360deg); } }
       `}</style>

@@ -190,6 +190,7 @@ footer::before {
   background: rgba(96,165,250,0.15);
   transform: translateY(-1px);
 }
+
 .ss-card.ss-selected {
   border-color: #60A5FA;
   background: rgba(96,165,250,0.15);

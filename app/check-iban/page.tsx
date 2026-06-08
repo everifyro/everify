@@ -404,6 +404,65 @@ export default function CheckIban() {
         )}
 
       </div>
+
+      {/* Secțiune educațională */}
+      <section style={{ borderTop: '1px solid #e2e8f0', background: '#f8fafc', padding: '3rem 1rem' }}>
+        <div style={{ maxWidth: 860, margin: '0 auto' }}>
+          <h2 style={{ fontSize: 20, fontWeight: 800, color: '#1e293b', marginBottom: 20, textAlign: 'center' }}>
+            Când să verifici un IBAN
+          </h2>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 16 }}>
+
+            <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 12, padding: '1.25rem' }}>
+              <svg width={24} height={24} viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: 10 }}>
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <line x1="3" y1="21" x2="21" y2="21"/>
+                <line x1="3" y1="10" x2="21" y2="10"/>
+                <polyline points="5 6 12 3 19 6"/>
+                <line x1="4" y1="10" x2="4" y2="21"/>
+                <line x1="20" y1="10" x2="20" y2="21"/>
+                <line x1="8" y1="14" x2="8" y2="17"/>
+                <line x1="12" y1="14" x2="12" y2="17"/>
+                <line x1="16" y1="14" x2="16" y2="17"/>
+              </svg>
+              <p style={{ fontSize: 15, fontWeight: 700, color: '#1e293b', margin: '0 0 6px' }}>Înainte de orice plată online</p>
+              <p style={{ fontSize: 13, color: '#64748b', lineHeight: 1.55, margin: 0 }}>
+                Verifică întotdeauna IBAN-ul înainte să trimiți bani unui vânzător necunoscut sau unui proprietar de cazare.
+              </p>
+            </div>
+
+            <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 12, padding: '1.25rem' }}>
+              <svg width={24} height={24} viewBox="0 0 24 24" fill="none" stroke="#d97706" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: 10 }}>
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"/>
+                <path d="M6 21v-2a4 4 0 0 1 4 -4h2.5"/>
+                <path d="M19 22v.01"/>
+                <path d="M19 19a2 2 0 0 0 .914 -3.782a1.98 1.98 0 0 0 -2.414 .483"/>
+              </svg>
+              <p style={{ fontSize: 15, fontWeight: 700, color: '#1e293b', margin: '0 0 6px' }}>Dacă ți s-a cerut de un recruiter</p>
+              <p style={{ fontSize: 13, color: '#64748b', lineHeight: 1.55, margin: 0 }}>
+                Nicio firmă nu solicită IBAN-ul înainte de semnarea contractului. E semn de fraudă financiară.{' '}
+                <a href="/check-job" style={{ color: '#2563eb', fontWeight: 600 }}>Verifică anunț job →</a>
+              </p>
+            </div>
+
+            <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 12, padding: '1.25rem' }}>
+              <svg width={24} height={24} viewBox="0 0 24 24" fill="none" stroke="#dc2626" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: 10 }}>
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <rect x="7" y="4" width="10" height="16" rx="1"/>
+                <line x1="11" y1="5" x2="13" y2="5"/>
+                <line x1="12" y1="17" x2="12" y2="17.01"/>
+              </svg>
+              <p style={{ fontSize: 15, fontWeight: 700, color: '#1e293b', margin: '0 0 6px' }}>Dacă ai primit un SMS cu IBAN</p>
+              <p style={{ fontSize: 13, color: '#64748b', lineHeight: 1.55, margin: 0 }}>
+                Mesajele care cer plăți urgente pe IBAN necunoscut sunt frecvent tentative de phishing.{' '}
+                <a href="/" style={{ color: '#2563eb', fontWeight: 600 }}>Verifică mesajul →</a>
+              </p>
+            </div>
+
+          </div>
+        </div>
+      </section>
     </div>
   )
 }

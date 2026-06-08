@@ -355,6 +355,56 @@ export default function CheckUrl() {
         )}
 
       </div>
+
+      {/* Secțiune educațională */}
+      <section style={{ borderTop: '1px solid #e2e8f0', background: '#f8fafc', padding: '3rem 1rem' }}>
+        <div style={{ maxWidth: 860, margin: '0 auto' }}>
+          <h2 style={{ fontSize: 20, fontWeight: 800, color: '#1e293b', marginBottom: 20, textAlign: 'center' }}>
+            Semne că un site este fals
+          </h2>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 16 }}>
+
+            <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 12, padding: '1.25rem' }}>
+              <svg width={24} height={24} viewBox="0 0 24 24" fill="none" stroke="#d97706" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: 10 }}>
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <circle cx="12" cy="12" r="9"/>
+                <polyline points="12 7 12 12 15 15"/>
+              </svg>
+              <p style={{ fontSize: 15, fontWeight: 700, color: '#1e293b', margin: '0 0 6px' }}>Domeniu creat recent</p>
+              <p style={{ fontSize: 13, color: '#64748b', lineHeight: 1.55, margin: 0 }}>
+                Site-urile frauduloase sunt create cu câteva zile înainte de campania de înșelăciune. eVerify verifică vârsta domeniului automat.
+              </p>
+            </div>
+
+            <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 12, padding: '1.25rem' }}>
+              <svg width={24} height={24} viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: 10 }}>
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <rect x="8" y="8" width="12" height="12" rx="2"/>
+                <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"/>
+              </svg>
+              <p style={{ fontSize: 15, fontWeight: 700, color: '#1e293b', margin: '0 0 6px' }}>Imită branduri cunoscute</p>
+              <p style={{ fontSize: 13, color: '#64748b', lineHeight: 1.55, margin: 0 }}>
+                amazon-oferte.ro, emag-reduceri.net — distanța mică față de un brand real e semn de phishing.{' '}
+                <a href="#result-section" style={{ color: '#2563eb', fontWeight: 600 }}>Verifică site →</a>
+              </p>
+            </div>
+
+            <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 12, padding: '1.25rem' }}>
+              <svg width={24} height={24} viewBox="0 0 24 24" fill="none" stroke="#dc2626" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: 10 }}>
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <rect x="5" y="11" width="14" height="10" rx="2"/>
+                <circle cx="12" cy="16" r="1"/>
+                <path d="M8 11v-5a4 4 0 0 1 8 0v2"/>
+              </svg>
+              <p style={{ fontSize: 15, fontWeight: 700, color: '#1e293b', margin: '0 0 6px' }}>Lipsă HTTPS sau certificat expirat</p>
+              <p style={{ fontSize: 13, color: '#64748b', lineHeight: 1.55, margin: 0 }}>
+                Orice site legitim are SSL valid. Absența lui e semn de alertă imediat.
+              </p>
+            </div>
+
+          </div>
+        </div>
+      </section>
     </div>
   )
 }

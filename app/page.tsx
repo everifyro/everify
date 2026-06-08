@@ -6,6 +6,16 @@ import VeraBot from '@/components/VeraBot'
 import { useScrollToResult } from '@/hooks/useScrollToResult'
 import ImageUpload, { type ExtractedData } from '@/components/ImageUpload'
 
+const SHOW_VACATION_BANNER = true
+
+const TICKER_ITEMS = [
+  '1 din 4 români a primit un mesaj de phishing în 2024',
+  '23.000+ anunțuri false de angajare detectate',
+  '47% din fraude încep cu un link nesolicitat',
+  'Verifică gratuit orice anunț, link sau IBAN pe eVerify.ro',
+]
+
+
 const placeholders = [
   'Descrie situația suspectă sau introdu adresa site-ului pe care vrei să îl verificăm...',
   'Ai primit un mesaj ciudat pe WhatsApp? Descrie-l aici...',
@@ -30,6 +40,8 @@ export default function Home() {
   const [isDeleting, setIsDeleting] = useState(false)
   const [displayText, setDisplayText] = useState('')
   const FREE_LIMIT = 5
+  const month = new Date().getMonth()
+  const showVacation = SHOW_VACATION_BANNER || (month >= 4 && month <= 8)
 
 function renderMarkdown(text: string) {
   const parts = text.split(/(\[[^\]]+\]\([^)]+\)|\*\*[^*]+\*\*|\*[^*]+\*)/g)
@@ -82,7 +94,6 @@ function renderMarkdown(text: string) {
     const box = messagesBoxRef.current
     if (box) box.scrollTop = box.scrollHeight
   }, [messages, loading])
-
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -163,6 +174,24 @@ function renderMarkdown(text: string) {
   return (
     <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'sans-serif', display: 'flex', flexDirection: 'column' }}>
 
+      {/* 4a — Ticker animat */}
+      <div style={{ width: '100%', background: '#e2e8f0', overflow: 'hidden', padding: '10px 0', borderBottom: '1px solid rgba(30,41,59,0.1)' }}>
+        <div
+          style={{ display: 'inline-flex', whiteSpace: 'nowrap', animation: 'marquee 28s linear infinite', animationPlayState: 'running' }}
+          onMouseEnter={e => (e.currentTarget.style.animationPlayState = 'paused')}
+          onMouseLeave={e => (e.currentTarget.style.animationPlayState = 'running')}
+        >
+          {[...TICKER_ITEMS, ...TICKER_ITEMS].map((item, i) => (
+            <span key={i} style={{ fontSize: 13, color: '#475569', fontWeight: 500, paddingRight: 32, display: 'inline-flex', alignItems: 'center', gap: 10 }}>
+              {i % TICKER_ITEMS.length === 3
+                ? <strong style={{ color: '#0ea5e9' }}>{item}</strong>
+                : item}
+              <span style={{ color: '#ef4444', fontSize: 8, lineHeight: 1 }}>●</span>
+            </span>
+          ))}
+        </div>
+      </div>
+
       {/* HERO full-width */}
       <section style={{
         width: '100%',
@@ -241,6 +270,56 @@ function renderMarkdown(text: string) {
         </div>
       </div>
       </section>
+
+      {/* 4b — Cards statistici grid 2×2 */}
+      <div style={{ width: '100%', background: '#ffffff', borderBottom: '1px solid rgba(14,165,233,0.12)', padding: '28px 0' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px', maxWidth: '860px', margin: '0 auto', padding: '0 1.5rem' }}>
+          {[
+            { icon: '⚠️', color: '#dc2626', number: '1 din 4',        desc: 'români a primit phishing în 2024' },
+            { icon: '💼', color: '#d97706', number: '23.000+',        desc: 'anunțuri false de angajare detectate' },
+            { icon: '🔗', color: '#2563eb', number: '47%',            desc: 'din fraude încep cu un link nesolicitat' },
+            { icon: '🛡️', color: '#16a34a', number: 'Verifică gratuit', desc: 'orice anunț, link sau IBAN pe eVerify' },
+          ].map((s, i) => (
+            <div key={i} style={{ background: '#fff', border: '0.5px solid #e2e8f0', borderRadius: '12px', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <span style={{ fontSize: '28px' }}>{s.icon}</span>
+              <span style={{ fontSize: '28px', fontWeight: 700, color: s.color, lineHeight: 1.1 }}>{s.number}</span>
+              <span style={{ fontSize: '14px', color: '#64748b' }}>{s.desc}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* 4c — Banner sezonier vacanță */}
+      {showVacation && (
+        <div style={{ width: '100%', background: 'linear-gradient(135deg, #f59e0b, #f97316)', padding: '20px 20px' }}>
+          <div style={{ maxWidth: 900, margin: '0 auto', display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 16 }}>
+            <div style={{ flex: 1, minWidth: 260 }}>
+              <p style={{ fontSize: 17, fontWeight: 800, color: '#ffffff', margin: '0 0 4px', display: 'flex', alignItems: 'center', gap: 8 }}>
+                <span>✈️</span> Planifici o vacanță? Verifică înainte să plătești!
+              </p>
+              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.88)', margin: 0, lineHeight: 1.5 }}>
+                Evită escrocheriile turistice — cazare falsă, agenții fantomă, IBAN-uri frauduloase
+              </p>
+            </div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, flexShrink: 0 }}>
+              {[
+                { label: 'Verifică link cazare', href: '/check-url' },
+                { label: 'Verifică IBAN', href: '/check-iban' },
+                { label: 'Verifică agenție', href: '/check-url' },
+                { label: 'Ghid complet', href: '/check-url?context=vacanta' },
+              ].map((btn, i) => (
+                <a
+                  key={i}
+                  href={btn.href}
+                  style={{ background: i === 3 ? 'rgba(255,255,255,0.15)' : '#ffffff', color: i === 3 ? '#ffffff' : '#92400e', border: i === 3 ? '1px solid rgba(255,255,255,0.4)' : 'none', padding: '8px 14px', borderRadius: 8, fontSize: 13, fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap', display: 'inline-block' }}
+                >
+                  {btn.label}
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Below-hero content */}
       <div style={{ width: '100%', maxWidth: 1100, margin: '0 auto', padding: '40px 20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -454,6 +533,14 @@ function renderMarkdown(text: string) {
       </div>
 
       <VeraBot />
+
+      <style>{`
+        @keyframes marquee {
+          from { transform: translateX(0); }
+          to   { transform: translateX(-50%); }
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+      `}</style>
     </div>
   )
 }
