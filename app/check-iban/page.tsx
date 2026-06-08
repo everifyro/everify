@@ -4,6 +4,7 @@ import { supabase } from '@/lib/supabase'
 import { CREDIT_COSTS } from '@/lib/credit-costs'
 import { useRouter } from 'next/navigation'
 import { useScrollToResult } from '@/hooks/useScrollToResult'
+import ImageUpload, { type ExtractedData } from '@/components/ImageUpload'
 
 const ibanPlaceholders = [
   'ex: RO49 AAAA 1B31 0075 9384 0000',
@@ -72,6 +73,10 @@ export default function CheckIban() {
       }
     })
   }, [])
+
+  const handleExtracted = (data: ExtractedData) => {
+    if (data.iban) setIban(data.iban)
+  }
 
   const check = async () => {
     if (!iban.trim()) return
@@ -175,23 +180,26 @@ export default function CheckIban() {
             </span>
           </div>
 
-          <div style={{ padding: 12, display: 'flex', gap: 10, alignItems: 'stretch' }}>
-            <textarea
-              value={iban}
-              onChange={e => setIban(e.target.value)}
-              onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); check() } }}
-              placeholder={displayText + '|'}
-              rows={2}
-              style={{ flex: 1, background: 'rgba(255,255,255,0.95)', border: '2px solid rgba(14,165,233,0.4)', borderRadius: 10, padding: '12px 14px', color: '#1e293b', fontSize: 14, outline: 'none', boxSizing: 'border-box', resize: 'none', fontFamily: 'monospace', letterSpacing: 1 }}
-            />
-            <button
-              onClick={check}
-              disabled={loading || !iban.trim()}
-              className="btn-pulse"
-              style={{ alignSelf: 'stretch', background: 'linear-gradient(135deg,#0ea5e9,#6366f1)', border: 'none', color: 'white', padding: '0 24px', borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
-            >
-              {loading ? 'Se verifică...' : <>Verifică IBAN <span style={{ fontSize: '1.4em', lineHeight: 1 }}>❯</span></>}
-            </button>
+          <div style={{ padding: '12px 12px 4px' }}>
+            <div style={{ display: 'flex', gap: 10, alignItems: 'stretch' }}>
+              <textarea
+                value={iban}
+                onChange={e => setIban(e.target.value)}
+                onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); check() } }}
+                placeholder={displayText + '|'}
+                rows={2}
+                style={{ flex: 1, background: 'rgba(255,255,255,0.95)', border: '2px solid rgba(14,165,233,0.4)', borderRadius: 10, padding: '12px 14px', color: '#1e293b', fontSize: 14, outline: 'none', boxSizing: 'border-box', resize: 'none', fontFamily: 'monospace', letterSpacing: 1 }}
+              />
+              <button
+                onClick={check}
+                disabled={loading || !iban.trim()}
+                className="btn-pulse"
+                style={{ alignSelf: 'stretch', background: 'linear-gradient(135deg,#0ea5e9,#6366f1)', border: 'none', color: 'white', padding: '0 24px', borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
+              >
+                {loading ? 'Se verifică...' : <>Verifică IBAN <span style={{ fontSize: '1.4em', lineHeight: 1 }}>❯</span></>}
+              </button>
+            </div>
+            <ImageUpload onExtracted={handleExtracted} context="iban" />
           </div>
 
           {error && (

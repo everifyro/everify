@@ -4,6 +4,7 @@ import { supabase } from '@/lib/supabase'
 import { CREDIT_COSTS } from '@/lib/credit-costs'
 import { useRouter } from 'next/navigation'
 import { useScrollToResult } from '@/hooks/useScrollToResult'
+import ImageUpload, { type ExtractedData } from '@/components/ImageUpload'
 
 const urlPlaceholders = [
   'ex: www.site-suspect.ro sau https://site-suspect.ro',
@@ -79,6 +80,10 @@ export default function CheckUrl() {
       }
     })
   }, [])
+
+  const handleExtracted = (data: ExtractedData) => {
+    if (data.link) setUrl(data.link)
+  }
 
   const check = async () => {
     if (!url.trim()) return
@@ -189,22 +194,25 @@ export default function CheckUrl() {
             </span>
           </div>
 
-          <div style={{ padding: 12, display: 'flex', gap: 10, alignItems: 'stretch' }}>
-            <input
-              value={url}
-              onChange={e => setUrl(e.target.value)}
-              onKeyDown={e => { if (e.key === 'Enter') check() }}
-              placeholder={displayText + '|'}
-              style={{ flex: 1, background: 'rgba(255,255,255,0.95)', border: '2px solid rgba(14,165,233,0.4)', borderRadius: 10, padding: '12px 14px', color: '#1e293b', fontSize: 14, outline: 'none', boxSizing: 'border-box' }}
-            />
-            <button
-              onClick={check}
-              disabled={loading || !url.trim()}
-              className="btn-pulse"
-              style={{ alignSelf: 'stretch', background: 'linear-gradient(135deg,#0ea5e9,#6366f1)', border: 'none', color: 'white', padding: '0 24px', borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, textAlign: 'center' }}
-            >
-              {loading ? 'Se verifică...' : <>Verifică <span style={{ fontSize: '1.4em', lineHeight: 1 }}>❯</span></>}
-            </button>
+          <div style={{ padding: '12px 12px 4px' }}>
+            <div style={{ display: 'flex', gap: 10, alignItems: 'stretch' }}>
+              <input
+                value={url}
+                onChange={e => setUrl(e.target.value)}
+                onKeyDown={e => { if (e.key === 'Enter') check() }}
+                placeholder={displayText + '|'}
+                style={{ flex: 1, background: 'rgba(255,255,255,0.95)', border: '2px solid rgba(14,165,233,0.4)', borderRadius: 10, padding: '12px 14px', color: '#1e293b', fontSize: 14, outline: 'none', boxSizing: 'border-box' }}
+              />
+              <button
+                onClick={check}
+                disabled={loading || !url.trim()}
+                className="btn-pulse"
+                style={{ alignSelf: 'stretch', background: 'linear-gradient(135deg,#0ea5e9,#6366f1)', border: 'none', color: 'white', padding: '0 24px', borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, textAlign: 'center' }}
+              >
+                {loading ? 'Se verifică...' : <>Verifică <span style={{ fontSize: '1.4em', lineHeight: 1 }}>❯</span></>}
+              </button>
+            </div>
+            <ImageUpload onExtracted={handleExtracted} context="url" />
           </div>
 
           {error && (

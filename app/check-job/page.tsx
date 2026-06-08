@@ -4,6 +4,7 @@ import { supabase } from '@/lib/supabase'
 import { CREDIT_COSTS } from '@/lib/credit-costs'
 import { useRouter } from 'next/navigation'
 import { useScrollToResult } from '@/hooks/useScrollToResult'
+import ImageUpload, { type ExtractedData } from '@/components/ImageUpload'
 
 const jobPlaceholders = [
   'Lipiți textul anunțului de job sau mesajul de recrutare primit...',
@@ -71,6 +72,15 @@ export default function CheckJob() {
   const [showModal, setShowModal] = useState(false)
   const [coverageCount, setCoverageCount] = useState(4)
   const resultRef = useRef<HTMLDivElement>(null)
+
+  const handleExtracted = (data: ExtractedData) => {
+    if (data.text) setText(prev => prev ? prev + '\n\n' + data.text : data.text)
+    if (data.email) setRecruiterEmail(data.email)
+    if (data.iban) setIban(data.iban)
+    if (data.link) setLink(data.link)
+    if (data.cui) setCompany(data.cui)
+    if (data.conversatie && !data.text) setText(data.conversatie)
+  }
 
   const router = useRouter()
   useScrollToResult(resultRef, !loading && !!result)
@@ -268,6 +278,8 @@ export default function CheckJob() {
             <p style={{ fontSize: 12, color: 'rgba(30,41,59,0.55)', lineHeight: 1.6, margin: '8px 2px 0', fontStyle: 'italic' }}>
               Pentru un rezultat relevant, includeți: numele firmei sau CUI, site-ul/link-ul anunțului, emailul recruiterului, salariul și poziția, dacă vi s-a cerut o plată sau IBAN, și pe ce canal comunicați.
             </p>
+
+            <ImageUpload onExtracted={handleExtracted} context="job" />
 
             {/* Divider opționale */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, margin: '18px 0 14px' }}>

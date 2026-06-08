@@ -4,6 +4,7 @@ import { supabase } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
 import VeraBot from '@/components/VeraBot'
 import { useScrollToResult } from '@/hooks/useScrollToResult'
+import ImageUpload, { type ExtractedData } from '@/components/ImageUpload'
 
 const placeholders = [
   'Descrie situația suspectă sau introdu adresa site-ului pe care vrei să îl verificăm...',
@@ -102,6 +103,11 @@ function renderMarkdown(text: string) {
   }
 
   const remaining = userId ? (credits ?? 0) : FREE_LIMIT - used
+
+  const handleExtracted = (data: ExtractedData) => {
+    const parts = [data.text, data.conversatie].filter(Boolean).join('\n\n')
+    if (parts) setInput(prev => prev ? prev + '\n\n' + parts : parts)
+  }
 
   const send = async () => {
     if (!input.trim() || loading || remaining <= 0) return
@@ -214,21 +220,24 @@ function renderMarkdown(text: string) {
           </div>
         )}
 
-        <div style={{ padding: 12, display: 'flex', gap: 10, alignItems: 'stretch' }}>
-          <textarea
-            value={input}
-            onChange={e => setInput(e.target.value)}
-            onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send() } }}
-            placeholder={displayText + '|'}
-            rows={2}
-            style={{ flex: 1, background: 'rgba(255,255,255,0.95)', border: '2px solid rgba(14,165,233,0.4)', borderRadius: 10, padding: '12px 14px', color: '#1e293b', fontSize: 14, resize: 'none', outline: 'none', fontFamily: 'sans-serif', boxSizing: 'border-box' }}
-          />
-          <button
-            onClick={send}
-            disabled={!input.trim() || loading || remaining <= 0}
-            className="btn-pulse"
-            style={{ alignSelf: 'stretch', padding: '0 24px', borderRadius: 10, border: 'none', background: 'linear-gradient(135deg,#0ea5e9,#6366f1)', color: 'white', fontSize: 15, fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer', whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, textAlign: 'center', opacity: loading ? 0.7 : 1 }}
-          >{loading ? 'Se procesează...' : <>Verifică <span style={{ fontSize: '1.4em', lineHeight: 1 }}>❯</span></>}</button>
+        <div style={{ padding: '12px 12px 4px' }}>
+          <div style={{ display: 'flex', gap: 10, alignItems: 'stretch' }}>
+            <textarea
+              value={input}
+              onChange={e => setInput(e.target.value)}
+              onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send() } }}
+              placeholder={displayText + '|'}
+              rows={2}
+              style={{ flex: 1, background: 'rgba(255,255,255,0.95)', border: '2px solid rgba(14,165,233,0.4)', borderRadius: 10, padding: '12px 14px', color: '#1e293b', fontSize: 14, resize: 'none', outline: 'none', fontFamily: 'sans-serif', boxSizing: 'border-box' }}
+            />
+            <button
+              onClick={send}
+              disabled={!input.trim() || loading || remaining <= 0}
+              className="btn-pulse"
+              style={{ alignSelf: 'stretch', padding: '0 24px', borderRadius: 10, border: 'none', background: 'linear-gradient(135deg,#0ea5e9,#6366f1)', color: 'white', fontSize: 15, fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer', whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, textAlign: 'center', opacity: loading ? 0.7 : 1 }}
+            >{loading ? 'Se procesează...' : <>Verifică <span style={{ fontSize: '1.4em', lineHeight: 1 }}>❯</span></>}</button>
+          </div>
+          <ImageUpload onExtracted={handleExtracted} context="ai" />
         </div>
       </div>
       </section>
