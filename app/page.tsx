@@ -175,18 +175,18 @@ function renderMarkdown(text: string) {
     <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'sans-serif', display: 'flex', flexDirection: 'column' }}>
 
       {/* 4a — Ticker animat */}
-      <div style={{ width: '100%', background: '#e2e8f0', overflow: 'hidden', padding: '10px 0', borderBottom: '1px solid rgba(30,41,59,0.1)' }}>
+      <div style={{ width: '100%', background: 'rgba(0,0,0,0.15)', backdropFilter: 'blur(4px)', overflow: 'hidden', padding: '10px 0', borderBottom: '0.5px solid rgba(255,255,255,0.1)' }}>
         <div
           style={{ display: 'inline-flex', whiteSpace: 'nowrap', animation: 'marquee 28s linear infinite', animationPlayState: 'running' }}
           onMouseEnter={e => (e.currentTarget.style.animationPlayState = 'paused')}
           onMouseLeave={e => (e.currentTarget.style.animationPlayState = 'running')}
         >
           {[...TICKER_ITEMS, ...TICKER_ITEMS].map((item, i) => (
-            <span key={i} className="ticker-item" style={{ fontSize: 13, color: '#475569', fontWeight: 500, paddingRight: 32, display: 'inline-flex', alignItems: 'center', gap: 10 }}>
+            <span key={i} className="ticker-item" style={{ fontSize: 13, color: 'rgba(255,255,255,0.85)', fontWeight: 500, paddingRight: 32, display: 'inline-flex', alignItems: 'center', gap: 10 }}>
               {i % TICKER_ITEMS.length === 3
                 ? <strong style={{ color: '#0ea5e9' }}>{item}</strong>
                 : item}
-              <span style={{ color: '#ef4444', fontSize: 8, lineHeight: 1 }}>●</span>
+              <span style={{ background: 'rgba(255,255,255,0.5)', fontSize: 8, lineHeight: 1 }}>●</span>
             </span>
           ))}
         </div>

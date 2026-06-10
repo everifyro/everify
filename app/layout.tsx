@@ -5,6 +5,7 @@ import CookieBanner from "@/components/CookieBanner";
 import EmergencyButton from "@/components/EmergencyButton";
 import ReportButton from "@/components/ReportButton";
 import Header from "@/components/Header";
+import NewsletterPopup from "@/components/NewsletterPopup";
 
 const plusJakarta = Plus_Jakarta_Sans({
   variable: "--font-plus-jakarta",
@@ -99,6 +100,7 @@ export default function RootLayout({
         <CookieBanner />
         <EmergencyButton />
         <ReportButton />
+        <NewsletterPopup />
       </body>
     </html>
   );
