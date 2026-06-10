@@ -182,7 +182,7 @@ function renderMarkdown(text: string) {
           onMouseLeave={e => (e.currentTarget.style.animationPlayState = 'running')}
         >
           {[...TICKER_ITEMS, ...TICKER_ITEMS].map((item, i) => (
-            <span key={i} style={{ fontSize: 13, color: '#475569', fontWeight: 500, paddingRight: 32, display: 'inline-flex', alignItems: 'center', gap: 10 }}>
+            <span key={i} className="ticker-item" style={{ fontSize: 13, color: '#475569', fontWeight: 500, paddingRight: 32, display: 'inline-flex', alignItems: 'center', gap: 10 }}>
               {i % TICKER_ITEMS.length === 3
                 ? <strong style={{ color: '#0ea5e9' }}>{item}</strong>
                 : item}
@@ -250,7 +250,7 @@ function renderMarkdown(text: string) {
         )}
 
         <div style={{ padding: '12px 12px 4px' }}>
-          <div style={{ display: 'flex', gap: 10, alignItems: 'stretch' }}>
+          <div className="input-row" style={{ display: 'flex', gap: 10, alignItems: 'stretch' }}>
             <textarea
               value={input}
               onChange={e => setInput(e.target.value)}
@@ -273,7 +273,7 @@ function renderMarkdown(text: string) {
 
       {/* 4b — Cards statistici grid 2×2 */}
       <div style={{ width: '100%', background: '#ffffff', borderBottom: '1px solid rgba(14,165,233,0.12)', padding: '28px 0' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px', maxWidth: '860px', margin: '0 auto', padding: '0 1.5rem' }}>
+        <div className="stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px', maxWidth: '860px', margin: '0 auto', padding: '0 1.5rem' }}>
           {[
             { icon: '⚠️', color: '#dc2626', number: '1 din 4',        desc: 'români a primit phishing în 2024' },
             { icon: '💼', color: '#d97706', number: '23.000+',        desc: 'anunțuri false de angajare detectate' },
@@ -282,7 +282,7 @@ function renderMarkdown(text: string) {
           ].map((s, i) => (
             <div key={i} style={{ background: '#fff', border: '0.5px solid #e2e8f0', borderRadius: '12px', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '8px' }}>
               <span style={{ fontSize: '28px' }}>{s.icon}</span>
-              <span style={{ fontSize: '28px', fontWeight: 700, color: s.color, lineHeight: 1.1 }}>{s.number}</span>
+              <span className="stats-number" style={{ fontSize: '28px', fontWeight: 700, color: s.color, lineHeight: 1.1 }}>{s.number}</span>
               <span style={{ fontSize: '14px', color: '#64748b' }}>{s.desc}</span>
             </div>
           ))}
@@ -540,6 +540,14 @@ function renderMarkdown(text: string) {
           to   { transform: translateX(-50%); }
         }
         @keyframes spin { to { transform: rotate(360deg); } }
+        @media (max-width: 640px) {
+          .ticker-item { font-size: 11px !important; }
+          .input-row { flex-direction: column !important; }
+          .input-row textarea { width: 100%; box-sizing: border-box; }
+          .input-row button { width: 100%; align-self: auto !important; padding: 12px 24px !important; }
+          .stats-grid { padding: 0 0.75rem !important; }
+          .stats-number { font-size: 20px !important; white-space: nowrap; }
+        }
       `}</style>
     </div>
   )

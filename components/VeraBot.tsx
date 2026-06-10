@@ -160,14 +160,18 @@ export default function VeraBot() {
           transition: opacity 0.15s;
         }
         .vera-page-btn:hover { opacity: 0.85; }
+        @media (max-width: 480px) {
+          .vera-wrapper { right: 16px !important; max-width: calc(100vw - 32px) !important; }
+          .vera-panel { width: calc(100vw - 32px) !important; max-width: calc(100vw - 32px) !important; }
+        }
       `}</style>
 
-      <div style={{
+      <div className="vera-wrapper" style={{
         position: 'fixed', bottom: 24, right: 24, zIndex: 9999,
         display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 12
       }}>
         {open && (
-          <div style={{
+          <div className="vera-panel" style={{
             width: 350,
             background: '#ffffff',
             borderRadius: 18,

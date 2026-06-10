@@ -10,7 +10,7 @@ export default function ReportButton() {
 
   return (
     <>
-      <div style={{ position: 'fixed', bottom: 24, left: 24, zIndex: 999, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 4 }}>
+      <div className="raporteaza-btn" style={{ position: 'fixed', bottom: 24, left: 24, zIndex: 999, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 4 }}>
         <button
           onClick={() => setHidden(true)}
           style={{ background: 'rgba(0,0,0,0.5)', border: 'none', color: 'rgba(255,255,255,0.6)', width: 20, height: 20, borderRadius: '50%', cursor: 'pointer', fontSize: 10, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
@@ -22,7 +22,10 @@ export default function ReportButton() {
         >⚠️ Raportează!</button>
       </div>
 
-      <style>{`@keyframes pulse-blue { 0% { box-shadow: 0 0 0 0 rgba(99,102,241,0.7); } 70% { box-shadow: 0 0 0 12px rgba(99,102,241,0); } 100% { box-shadow: 0 0 0 0 rgba(99,102,241,0); } }`}</style>
+      <style>{`
+        @keyframes pulse-blue { 0% { box-shadow: 0 0 0 0 rgba(99,102,241,0.7); } 70% { box-shadow: 0 0 0 12px rgba(99,102,241,0); } 100% { box-shadow: 0 0 0 0 rgba(99,102,241,0); } }
+        body.menu-open .raporteaza-btn { display: none !important; }
+      `}</style>
     </>
   )
 }

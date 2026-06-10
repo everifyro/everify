@@ -119,7 +119,8 @@ export default function ImageUpload({ onExtracted, context }: Props) {
             <span style={{ fontSize: 18 }}>📷</span>
             <div>
               <p style={{ fontSize: 12, fontWeight: 700, color: 'rgba(30,41,59,0.6)', margin: 0 }}>
-                Adaugă imagini — captură ecran, poză anunț, conversație
+                <span className="upload-label-desktop">Adaugă imagini — captură ecran, poză anunț, conversație</span>
+                <span className="upload-label-mobile">Adaugă imagini sau screenshot-uri</span>
               </p>
               <p style={{ fontSize: 11, color: 'rgba(30,41,59,0.4)', margin: '2px 0 0' }}>
                 Click, Ctrl+V sau trage fișiere. Max {MAX_IMAGES} imagini.
@@ -215,6 +216,13 @@ export default function ImageUpload({ onExtracted, context }: Props) {
         </div>
       )}
 
+      <style>{`
+        .upload-label-mobile { display: none; }
+        @media (max-width: 640px) {
+          .upload-label-desktop { display: none; }
+          .upload-label-mobile { display: inline; }
+        }
+      `}</style>
     </div>
   )
 }
