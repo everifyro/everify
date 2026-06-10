@@ -248,9 +248,9 @@ export default function Header() {
               style={{
                 display: 'block',
                 padding: '12px 0',
-                color: '#0ea5e9',
+                color: item.primary ? '#0ea5e9' : navColor,
                 fontSize: 15,
-                fontWeight: 700,
+                fontWeight: item.primary ? 700 : 400,
                 textDecoration: 'none',
                 borderBottom: dark ? '1px solid rgba(255,255,255,0.06)' : '1px solid rgba(15,23,42,0.07)',
               }}
