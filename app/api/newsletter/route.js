@@ -1,6 +1,6 @@
 export async function POST(request) {
   try {
-    const { email } = await request.json()
+    const { email, source } = await request.json()
 
     if (!email || !email.includes('@')) {
       return Response.json({ error: 'Email invalid' }, { status: 400 })
@@ -16,7 +16,7 @@ export async function POST(request) {
       body: JSON.stringify({
         email: email,
         fields: {
-          source: 'everify.ro'
+          source: source || 'everify.ro'
         }
       })
     })

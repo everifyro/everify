@@ -34,6 +34,11 @@ export default function RaporteazaPage() {
   const [sent, setSent] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [iban, setIban] = useState('')
+  const [telefon, setTelefon] = useState('')
+  const [website, setWebsite] = useState('')
+  const [facebook, setFacebook] = useState('')
+  const [emailSuspect, setEmailSuspect] = useState('')
 
   const uploadFiles = async (files: File[]): Promise<string[]> => {
     const urls: string[] = []
@@ -78,6 +83,11 @@ export default function RaporteazaPage() {
           email: mode === 'contact' && email.trim() ? email.trim() : null,
           is_anonymous: mode === 'anonim',
           original_message: messageText || null,
+          iban: iban.trim() || null,
+          telefon: telefon.trim() || null,
+          website: website.trim() || null,
+          facebook: facebook.trim() || null,
+          email_suspect: emailSuspect.trim() || null,
         }),
       })
       if (res.ok) {
@@ -101,6 +111,11 @@ export default function RaporteazaPage() {
     setOriginalMessage('')
     setAttachmentFiles([])
     setScamType(DEFAULT_TYPE)
+    setIban('')
+    setTelefon('')
+    setWebsite('')
+    setFacebook('')
+    setEmailSuspect('')
   }
 
   return (
@@ -188,9 +203,51 @@ export default function RaporteazaPage() {
               />
             </div>
 
+            {/* Câmpuri structurate */}
+            <div style={{ marginBottom: 20, padding: '16px', background: 'rgba(99,102,241,0.03)', border: '1px solid rgba(99,102,241,0.12)', borderRadius: 12 }}>
+              <label style={{ color: 'rgba(30,41,59,0.55)', fontSize: 12, fontWeight: 700, letterSpacing: 1, display: 'block', marginBottom: 12 }}>DATE STRUCTURATE <span style={{ color: 'rgba(30,41,59,0.35)', fontWeight: 400 }}>(opționale — ajută la corelarea raportărilor)</span></label>
+              <div style={{ display: 'grid', gap: 10 }}>
+                <input
+                  type="text"
+                  value={iban}
+                  onChange={e => setIban(e.target.value)}
+                  placeholder="IBAN (ex: RO49AAAA1B31007593840000)"
+                  style={{ width: '100%', padding: '10px 14px', borderRadius: 10, border: '1px solid rgba(30,41,59,0.15)', background: '#fff', fontSize: 14, color: '#1e293b', outline: 'none', boxSizing: 'border-box' }}
+                />
+                <input
+                  type="text"
+                  value={telefon}
+                  onChange={e => setTelefon(e.target.value)}
+                  placeholder="Telefon suspect (ex: 0742123456)"
+                  style={{ width: '100%', padding: '10px 14px', borderRadius: 10, border: '1px solid rgba(30,41,59,0.15)', background: '#fff', fontSize: 14, color: '#1e293b', outline: 'none', boxSizing: 'border-box' }}
+                />
+                <input
+                  type="text"
+                  value={website}
+                  onChange={e => setWebsite(e.target.value)}
+                  placeholder="Website / link suspect (ex: site-fals.ro)"
+                  style={{ width: '100%', padding: '10px 14px', borderRadius: 10, border: '1px solid rgba(30,41,59,0.15)', background: '#fff', fontSize: 14, color: '#1e293b', outline: 'none', boxSizing: 'border-box' }}
+                />
+                <input
+                  type="text"
+                  value={facebook}
+                  onChange={e => setFacebook(e.target.value)}
+                  placeholder="Pagină Facebook suspectă (ex: facebook.com/pagina-scam)"
+                  style={{ width: '100%', padding: '10px 14px', borderRadius: 10, border: '1px solid rgba(30,41,59,0.15)', background: '#fff', fontSize: 14, color: '#1e293b', outline: 'none', boxSizing: 'border-box' }}
+                />
+                <input
+                  type="email"
+                  value={emailSuspect}
+                  onChange={e => setEmailSuspect(e.target.value)}
+                  placeholder="Email suspect (ex: escrocul@domain.com)"
+                  style={{ width: '100%', padding: '10px 14px', borderRadius: 10, border: '1px solid rgba(30,41,59,0.15)', background: '#fff', fontSize: 14, color: '#1e293b', outline: 'none', boxSizing: 'border-box' }}
+                />
+              </div>
+            </div>
+
             {/* Email / telefon / site suspect */}
             <div style={{ marginBottom: 20 }}>
-              <label style={{ color: 'rgba(30,41,59,0.55)', fontSize: 12, fontWeight: 700, letterSpacing: 1, display: 'block', marginBottom: 8 }}>EMAIL / TELEFON / SITE SUSPECT <span style={{ color: 'rgba(30,41,59,0.35)', fontWeight: 400 }}>(opțional)</span></label>
+              <label style={{ color: 'rgba(30,41,59,0.55)', fontSize: 12, fontWeight: 700, letterSpacing: 1, display: 'block', marginBottom: 8 }}>ORICE ALTCEVA RELEVANT <span style={{ color: 'rgba(30,41,59,0.35)', fontWeight: 400 }}>(opțional)</span></label>
               <textarea
                 value={link}
                 onChange={e => setLink(e.target.value)}

@@ -8,13 +8,28 @@ export default function Register() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
+  const [subscribeNewsletter, setSubscribeNewsletter] = useState(true)
 
   const register = async () => {
     setLoading(true)
     setError('')
     const { error } = await supabase.auth.signUp({ email, password })
-    if (error) setError(error.message)
-    else setSuccess(true)
+    if (error) {
+      setError(error.message)
+    } else {
+      if (subscribeNewsletter) {
+        try {
+          await fetch('/api/newsletter', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, source: 'signup' }),
+          })
+        } catch {
+          // abonarea eșuată nu blochează crearea contului
+        }
+      }
+      setSuccess(true)
+    }
     setLoading(false)
   }
 
@@ -33,6 +48,17 @@ export default function Register() {
           <label style={{ color:'rgba(30,41,59,0.65)', fontSize:12, display:'block', marginBottom:6 }}>PAROLA</label>
           <input value={password} onChange={e=>setPassword(e.target.value)} type='password' placeholder='minim 6 caractere' style={{ width:'100%', background:'rgba(30,41,59,0.04)', border:'1px solid rgba(14,165,233,0.2)', borderRadius:10, padding:'11px 14px', color:'#1e293b', fontSize:14, outline:'none', fontFamily:'sans-serif' }} />
         </div>
+        <label style={{ display:'flex', alignItems:'flex-start', gap:10, marginBottom:24, cursor:'pointer' }}>
+          <input
+            type="checkbox"
+            checked={subscribeNewsletter}
+            onChange={e => setSubscribeNewsletter(e.target.checked)}
+            style={{ marginTop:2, accentColor:'#0ea5e9', width:15, height:15, flexShrink:0, cursor:'pointer' }}
+          />
+          <span style={{ color:'rgba(30,41,59,0.7)', fontSize:13, lineHeight:1.5 }}>
+            Vreau să primesc alerte despre cele mai noi fraude <span style={{ color:'rgba(30,41,59,0.45)' }}>(recomandat)</span>
+          </span>
+        </label>
         <button onClick={register} disabled={loading} className="btn-pulse" style={{ width:'100%', padding:'13px', borderRadius:10, border:'none', background:'linear-gradient(135deg,#0ea5e9,#6366f1)', color:'white', fontSize:15, fontWeight:700, cursor:'pointer', fontFamily:'sans-serif', marginBottom:16, display:'inline-flex', alignItems:'center', justifyContent:'center', gap:8, textAlign:'center' }}>
           {loading ? 'Se incarca...' : <>Creeaza cont gratuit <span style={{ fontSize:'1.4em', lineHeight:1 }}>❯</span></>}
         </button>
