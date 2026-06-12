@@ -294,7 +294,7 @@ export default function CheckUrl() {
               <div style={{ background: 'rgba(30,41,59,0.04)', border: '1px solid rgba(30,41,59,0.1)', borderRadius: 10, padding: '14px 16px' }}>
                 <p style={{ fontSize: 11, color: 'rgba(30,41,59,0.6)', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 1 }}>Reputație domeniu</p>
                 <p style={{ fontSize: 15, fontWeight: 700, color: result.checks.urlhausDomain?.safe === false ? '#ef4444' : '#22c55e', margin: 0 }}>
-                  {result.checks.urlhausDomain?.error ? '⚠️ Indisponibil' : result.checks.urlhausDomain?.safe === false ? `🔴 ${result.checks.urlhausDomain?.urlsCount} URL-uri malițioase` : '✅ Fără istoric negativ'}
+                  {result.checks.urlhausDomain?.error ? '⚠️ Indisponibil' : result.checks.urlhausDomain?.safe === false ? `🔴 ${result.checks.urlhausDomain?.activeCount} URL-uri active malițioase` : '✅ Nicio raportare activă'}
                 </p>
                 <p style={{ fontSize: 10, color: 'rgba(30,41,59,0.5)', margin: '4px 0 0', lineHeight: 1.4 }}>Istoric domeniu</p>
               </div>
@@ -305,6 +305,30 @@ export default function CheckUrl() {
                   {result.checks.domain?.ageMonths ? `${result.checks.domain.ageMonths} luni` : '⚠️ Necunoscut'}
                 </p>
                 <p style={{ fontSize: 10, color: 'rgba(30,41,59,0.5)', margin: '4px 0 0', lineHeight: 1.4 }}>Sub 3 luni = risc ridicat</p>
+              </div>
+
+              <div style={{ background: 'rgba(30,41,59,0.04)', border: '1px solid rgba(30,41,59,0.1)', borderRadius: 10, padding: '14px 16px' }}>
+                <p style={{ fontSize: 11, color: 'rgba(30,41,59,0.6)', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 1 }}>VirusTotal</p>
+                <p style={{ fontSize: 15, fontWeight: 700, color: result.checks.virusTotal?.error || result.checks.virusTotal?.available === false ? '#94a3b8' : result.checks.virusTotal?.malicious > 0 ? '#ef4444' : result.checks.virusTotal?.suspicious > 0 ? '#f97316' : '#22c55e', margin: 0 }}>
+                  {result.checks.virusTotal?.error || result.checks.virusTotal?.available === false ? '⚠️ Indisponibil' : result.checks.virusTotal?.malicious > 0 ? `🔴 ${result.checks.virusTotal.malicious} motoare detectează pericol` : result.checks.virusTotal?.suspicious > 0 ? `🟠 ${result.checks.virusTotal.suspicious} motoare suspicioase` : '✅ Nicio amenințare'}
+                </p>
+                <p style={{ fontSize: 10, color: 'rgba(30,41,59,0.5)', margin: '4px 0 0', lineHeight: 1.4 }}>Analiză cu 70+ motoare antivirus</p>
+              </div>
+
+              <div style={{ background: 'rgba(30,41,59,0.04)', border: '1px solid rgba(30,41,59,0.1)', borderRadius: 10, padding: '14px 16px' }}>
+                <p style={{ fontSize: 11, color: 'rgba(30,41,59,0.6)', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 1 }}>OpenPhish Community</p>
+                <p style={{ fontSize: 15, fontWeight: 700, color: result.checks.openPhish?.error ? '#94a3b8' : result.checks.openPhish?.found ? '#ef4444' : '#22c55e', margin: 0 }}>
+                  {result.checks.openPhish?.error ? '⚠️ Indisponibil' : result.checks.openPhish?.found ? '🔴 Phishing confirmat' : '✅ Nelistat în feed phishing'}
+                </p>
+                <p style={{ fontSize: 10, color: 'rgba(30,41,59,0.5)', margin: '4px 0 0', lineHeight: 1.4 }}>Feed phishing actualizat în timp real</p>
+              </div>
+
+              <div style={{ background: 'rgba(30,41,59,0.04)', border: '1px solid rgba(30,41,59,0.1)', borderRadius: 10, padding: '14px 16px' }}>
+                <p style={{ fontSize: 11, color: 'rgba(30,41,59,0.6)', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 1 }}>Certificat SSL (crt.sh)</p>
+                <p style={{ fontSize: 15, fontWeight: 700, color: result.checks.certTransparency?.error || result.checks.certTransparency?.unknown ? '#94a3b8' : result.checks.certTransparency?.noCerts ? '#f59e0b' : result.checks.certTransparency?.isNewCert ? '#ef4444' : '#22c55e', margin: 0 }}>
+                  {result.checks.certTransparency?.error || result.checks.certTransparency?.unknown ? '⚠️ Necunoscut' : result.checks.certTransparency?.noCerts ? '⚠️ Fără certificate SSL' : result.checks.certTransparency?.isNewCert ? `🔴 Emis acum ${result.checks.certTransparency.ageDays} zile — risc ridicat` : `✅ ${result.checks.certTransparency?.ageDays} zile — ${result.checks.certTransparency?.totalCerts} cert.`}
+                </p>
+                <p style={{ fontSize: 10, color: 'rgba(30,41,59,0.5)', margin: '4px 0 0', lineHeight: 1.4 }}>Transparență certificate — primul cert emis</p>
               </div>
 
             </div>
@@ -323,7 +347,7 @@ export default function CheckUrl() {
             <div style={{ background: 'rgba(14,165,233,0.05)', border: '1px solid rgba(14,165,233,0.1)', borderRadius: 10, padding: '12px 16px', marginBottom: 16 }}>
               <p style={{ fontSize: 11, color: 'rgba(30,41,59,0.6)', margin: '0 0 6px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1 }}>Surse de verificare utilizate</p>
               <p style={{ fontSize: 11, color: 'rgba(30,41,59,0.55)', margin: 0, lineHeight: 1.8 }}>
-                🔵 Google Safe Browsing &nbsp;|&nbsp; 🔵 URLhaus — abuse.ch (partener Interpol/Europol) &nbsp;|&nbsp; 🔵 Analiză pattern URL &nbsp;|&nbsp; 🔵 Detectare typosquatting
+                🔵 Google Safe Browsing &nbsp;|&nbsp; 🔵 URLhaus — abuse.ch (partener Interpol/Europol) &nbsp;|&nbsp; 🔵 VirusTotal &nbsp;|&nbsp; 🔵 OpenPhish Community Feed &nbsp;|&nbsp; 🔵 crt.sh Certificate Transparency &nbsp;|&nbsp; 🔵 Analiză pattern URL &nbsp;|&nbsp; 🔵 Detectare typosquatting
               </p>
             </div>
 

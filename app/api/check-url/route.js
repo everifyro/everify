@@ -6,6 +6,8 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_KEY
 )
 
+let openphishCache = { urls: null, fetchedAt: 0 }
+
 export async function POST(request) {
   try {
     const { url, userId } = await request.json()
@@ -164,9 +166,17 @@ export async function POST(request) {
         body: `host=${encodeURIComponent(domain)}`
       })
       const domainhausData = await domainhausResponse.json()
+      let domainSafe = true
+      let activeCount = 0
+      if (domainhausData.query_status === 'is_host') {
+        const hostUrls = Array.isArray(domainhausData.urls) ? domainhausData.urls : []
+        activeCount = hostUrls.filter(u => u.url_status === 'online').length
+        domainSafe = activeCount === 0
+      }
       results.checks.urlhausDomain = {
-        safe: domainhausData.query_status === 'no_results',
+        safe: domainSafe,
         urlsCount: domainhausData.urls_count || 0,
+        activeCount,
         source: 'URLhaus Domain Check'
       }
     } catch (e) {
@@ -190,6 +200,68 @@ export async function POST(request) {
     } catch (e) {
       results.checks.domain = { name: domain, createdDate: null, registrar: null }
     }
+
+    // 8. VirusTotal + OpenPhish + crt.sh (paralel)
+    const [vtCheck, openphishCheck, crtCheck] = await Promise.allSettled([
+      (async () => {
+        const vtKey = process.env.VIRUSTOTAL_API_KEY
+        if (!vtKey) return { available: false, source: 'VirusTotal' }
+        const submitRes = await fetch('https://www.virustotal.com/api/v3/urls', {
+          method: 'POST',
+          headers: { 'x-apikey': vtKey, 'Content-Type': 'application/x-www-form-urlencoded' },
+          signal: AbortSignal.timeout(10000),
+          body: `url=${encodeURIComponent(normalizedUrl)}`
+        })
+        const submitData = await submitRes.json()
+        const analysisId = submitData.data?.id
+        if (!analysisId) return { available: false, source: 'VirusTotal' }
+        await new Promise(r => setTimeout(r, 3000))
+        const resultRes = await fetch(`https://www.virustotal.com/api/v3/analyses/${analysisId}`, {
+          headers: { 'x-apikey': vtKey },
+          signal: AbortSignal.timeout(8000)
+        })
+        const resultData = await resultRes.json()
+        const stats = resultData.data?.attributes?.stats || {}
+        return {
+          malicious: stats.malicious || 0,
+          suspicious: stats.suspicious || 0,
+          harmless: stats.harmless || 0,
+          safe: (stats.malicious || 0) === 0,
+          source: 'VirusTotal'
+        }
+      })(),
+      (async () => {
+        const now = Date.now()
+        const TWELVE_HOURS = 12 * 60 * 60 * 1000
+        if (!openphishCache.urls || (now - openphishCache.fetchedAt) > TWELVE_HOURS) {
+          const res = await fetch('https://raw.githubusercontent.com/openphish/public_feed/refs/heads/main/feed.txt', { signal: AbortSignal.timeout(10000) })
+          const text = await res.text()
+          openphishCache.urls = new Set(text.split('\n').map(l => l.trim()).filter(Boolean))
+          openphishCache.fetchedAt = now
+        }
+        const normalized = normalizedUrl.replace(/\/$/, '')
+        const found = openphishCache.urls.has(normalized) ||
+          openphishCache.urls.has(normalized + '/') ||
+          openphishCache.urls.has(normalized.replace(/^https?:\/\//, 'http://')) ||
+          openphishCache.urls.has(normalized.replace(/^https?:\/\//, 'https://'))
+        return { found, safe: !found, source: 'OpenPhish Community Feed' }
+      })(),
+      (async () => {
+        const res = await fetch(`https://crt.sh/?q=${encodeURIComponent(domain)}&output=json`, {
+          signal: AbortSignal.timeout(5000),
+          headers: { 'User-Agent': 'eVerify/1.0' }
+        })
+        const certs = await res.json()
+        if (!Array.isArray(certs) || certs.length === 0) return { noCerts: true, totalCerts: 0, source: 'crt.sh' }
+        const sorted = [...certs].sort((a, b) => new Date(a.not_before) - new Date(b.not_before))
+        const oldest = sorted[0]
+        const ageDays = Math.floor((Date.now() - new Date(oldest.not_before).getTime()) / 86400000)
+        return { firstIssuedDate: oldest.not_before, ageDays, isNewCert: ageDays < 7, totalCerts: certs.length, safe: ageDays >= 7, source: 'crt.sh' }
+      })()
+    ])
+    results.checks.virusTotal = vtCheck.status === 'fulfilled' ? vtCheck.value : { error: true, source: 'VirusTotal' }
+    results.checks.openPhish = openphishCheck.status === 'fulfilled' ? openphishCheck.value : { error: true, source: 'OpenPhish Community Feed' }
+    results.checks.certTransparency = crtCheck.status === 'fulfilled' ? crtCheck.value : { unknown: true, source: 'crt.sh' }
 
     // 6. Pattern analysis
     const knownSafeDomains = ['google.com', 'microsoft.com', 'apple.com', 'amazon.com', 'paypal.com', 'facebook.com', 'instagram.com', 'tiktok.com', 'youtube.com', 'linkedin.com', 'netflix.com', 'spotify.com', 'dnsc.ro', 'politiaromana.ro', 'anpc.ro', 'anaf.ro', 'bnr.ro', 'bcr.ro', 'brd.ro', 'ingbank.ro', 'raiffeisen.ro', 'bancatransilvania.ro', 'revolut.com', 'digi24.ro', 'protv.ro', 'antena3.ro', 'g4media.ro', 'hotnews.ro', 'emag.ro', 'olx.ro', 'altex.ro']
@@ -256,6 +328,12 @@ export async function POST(request) {
       else if (ageMonths < 12) score -= 10
       results.checks.domain.ageMonths = Math.round(ageMonths)
     }
+
+    // Penalizări surse noi de threat intelligence
+    if (results.checks.virusTotal?.malicious > 0) score -= 40
+    if (results.checks.virusTotal?.suspicious > 0) score -= 20
+    if (results.checks.openPhish?.found) { score -= 50; score = Math.min(score, 20) }
+    if (results.checks.certTransparency?.isNewCert) score -= 30
 
     if (score < 0) score = 0
 
