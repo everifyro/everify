@@ -119,6 +119,7 @@ export async function POST(request) {
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
+          signal: AbortSignal.timeout(5000),
           body: JSON.stringify({
             client: { clientId: 'everify', clientVersion: '1.0' },
             threatInfo: {
@@ -145,6 +146,7 @@ export async function POST(request) {
       const urlhausResponse = await fetch('https://urlhaus-api.abuse.ch/v1/url/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        signal: AbortSignal.timeout(5000),
         body: `url=${encodeURIComponent(normalizedUrl)}`
       })
       const urlhausData = await urlhausResponse.json()
@@ -171,6 +173,7 @@ export async function POST(request) {
       const domainhausResponse = await fetch('https://urlhaus-api.abuse.ch/v1/host/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        signal: AbortSignal.timeout(5000),
         body: `host=${domain}`
       })
       const domainhausData = await domainhausResponse.json()
@@ -192,7 +195,7 @@ export async function POST(request) {
         }
       }
     } catch (e) {
-      results.checks.urlhausDomain = { safe: true, urlsCount: 0, activeCount: 0, error: true, source: 'URLhaus Domain Check' }
+      results.checks.urlhausDomain = { safe: null, urlsCount: 0, activeCount: 0, error: true, source: 'URLhaus Domain Check' }
     }
 
     // 4. HTTPS check
@@ -202,7 +205,7 @@ export async function POST(request) {
 
     // 5. Whois / Domain age
     try {
-      const whoisResponse = await fetch(`https://api.whoisfreaks.com/v1.0/whois?apiKey=free&whois=live&domainName=${domain}`)
+      const whoisResponse = await fetch(`https://api.whoisfreaks.com/v1.0/whois?apiKey=free&whois=live&domainName=${domain}`, { signal: AbortSignal.timeout(5000) })
       const whoisData = await whoisResponse.json()
       results.checks.domain = {
         name: domain,
@@ -290,14 +293,22 @@ export async function POST(request) {
     ]
 
     // Typosquatting detection pentru branduri românești și internaționale
-    const knownBrands = ['paypal', 'google', 'microsoft', 'apple', 'amazon', 'facebook', 'instagram', 'netflix', 'olx', 'emag', 'bcr', 'brd', 'raiffeisen', 'revolut']
+    const knownBrands = [
+      'paypal', 'google', 'microsoft', 'apple', 'amazon', 'facebook', 'instagram', 'netflix',
+      'revolut', 'emag', 'anaf', 'ing', 'bcr', 'brd', 'raiffeisen', 'cec', 'trezorerie',
+      'politia', 'digi', 'orange', 'vodafone', 'enel', 'electrica', 'engie', 'dedeman',
+      'kaufland', 'lidl', 'altex', 'flanco', 'olx', 'autovit', 'imobiliare',
+    ]
     const typosquattingWarnings = []
 
     if (!isKnownSafe) {
       knownBrands.forEach(brand => {
-        // Verifica daca domeniul contine brand-ul dar nu e domeniul oficial
         if (domain.includes(brand) && !knownSafeDomains.some(d => domain === d || domain.endsWith('.' + d))) {
-          typosquattingWarnings.push(`Posibil site fals care imită "${brand}" (typosquatting)`)
+          if (bareDomain.startsWith(brand + '-')) {
+            typosquattingWarnings.push(`Posibil site fals care imită "${brand}" (pattern brand-cuvant.tld)`)
+          } else {
+            typosquattingWarnings.push(`Posibil site fals care imită "${brand}" (typosquatting)`)
+          }
         }
       })
     }
@@ -346,6 +357,27 @@ export async function POST(request) {
     if (results.checks.virusTotal?.suspicious > 0) score -= 20
     if (results.checks.openPhish?.found) { score -= 50; score = Math.min(score, 20) }
     if (results.checks.certTransparency?.isNewCert) score -= 30
+
+    // Fix 2 — Penalizare domeniu prea puțin verificat
+    const unknownSourcesCount = [
+      results.checks.safeBrowsing?.safe === null,
+      results.checks.urlhaus?.safe === null,
+      results.checks.urlhausDomain?.safe === null,
+      results.checks.virusTotal?.available === false || results.checks.virusTotal?.error === true,
+      results.checks.openPhish?.error === true,
+      results.checks.certTransparency?.unknown === true,
+      !results.checks.domain?.createdDate,
+    ].filter(Boolean).length
+    if (unknownSourcesCount >= 4) {
+      allWarnings.push('⚠️ Domeniu necunoscut — verificat în prea puține surse pentru un verdict sigur')
+      score -= 10
+    }
+
+    // Fix 1 — Cap scor typosquatting
+    if (typosquattingWarnings.length > 0) score = Math.min(score, 25)
+
+    // Fix 4 — Cap scor Google Safe Browsing confirmat periculos
+    if (results.checks.safeBrowsing?.safe === false) score = Math.min(score, 15)
 
     if (score < 0) score = 0
 
