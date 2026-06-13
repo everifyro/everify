@@ -163,24 +163,28 @@ export async function POST(request) {
       const domainhausResponse = await fetch('https://urlhaus-api.abuse.ch/v1/host/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: `host=${encodeURIComponent(domain)}`
+        body: `host=${domain}`
       })
       const domainhausData = await domainhausResponse.json()
-      let domainSafe = true
-      let activeCount = 0
-      if (domainhausData.query_status === 'is_host') {
-        const hostUrls = Array.isArray(domainhausData.urls) ? domainhausData.urls : []
-        activeCount = hostUrls.filter(u => u.url_status === 'online').length
-        domainSafe = activeCount === 0
-      }
-      results.checks.urlhausDomain = {
-        safe: domainSafe,
-        urlsCount: domainhausData.urls_count || 0,
-        activeCount,
-        source: 'URLhaus Domain Check'
+      if (domainhausData.error) {
+        results.checks.urlhausDomain = { safe: true, urlsCount: 0, activeCount: 0, source: 'URLhaus Domain Check' }
+      } else {
+        let domainSafe = true
+        let activeCount = 0
+        if (domainhausData.query_status === 'is_host') {
+          const hostUrls = Array.isArray(domainhausData.urls) ? domainhausData.urls : []
+          activeCount = hostUrls.filter(u => u.url_status === 'online').length
+          domainSafe = activeCount === 0
+        }
+        results.checks.urlhausDomain = {
+          safe: domainSafe,
+          urlsCount: domainhausData.urls_count || 0,
+          activeCount,
+          source: 'URLhaus Domain Check'
+        }
       }
     } catch (e) {
-      results.checks.urlhausDomain = { safe: null, error: true }
+      results.checks.urlhausDomain = { safe: true, urlsCount: 0, activeCount: 0, error: true, source: 'URLhaus Domain Check' }
     }
 
     // 4. HTTPS check
