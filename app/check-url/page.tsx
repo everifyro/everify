@@ -286,7 +286,7 @@ export default function CheckUrl() {
               <div style={{ background: 'rgba(30,41,59,0.04)', border: '1px solid rgba(30,41,59,0.1)', borderRadius: 10, padding: '14px 16px' }}>
                 <p style={{ fontSize: 11, color: 'rgba(30,41,59,0.6)', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 1 }}>URLhaus — abuse.ch</p>
                 <p style={{ fontSize: 15, fontWeight: 700, color: result.checks.urlhaus?.safe === false ? '#ef4444' : result.checks.urlhaus?.safe === null ? '#f59e0b' : '#22c55e', margin: 0 }}>
-                  {result.checks.urlhaus?.error ? '⚠️ Indisponibil' : result.checks.urlhaus?.safe === false ? '🔴 Periculos' : '✅ Sigur'}
+                  {result.checks.urlhaus?.error ? '⚠️ Indisponibil' : result.checks.urlhaus?.safe === false ? '🔴 Periculos' : '✅ Nicio amenințare activă'}
                 </p>
                 <p style={{ fontSize: 10, color: 'rgba(30,41,59,0.5)', margin: '4px 0 0', lineHeight: 1.4 }}>Partener Interpol/Europol</p>
               </div>
@@ -294,7 +294,7 @@ export default function CheckUrl() {
               <div style={{ background: 'rgba(30,41,59,0.04)', border: '1px solid rgba(30,41,59,0.1)', borderRadius: 10, padding: '14px 16px' }}>
                 <p style={{ fontSize: 11, color: 'rgba(30,41,59,0.6)', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 1 }}>Reputație domeniu</p>
                 <p style={{ fontSize: 15, fontWeight: 700, color: result.checks.urlhausDomain?.safe === false ? '#ef4444' : '#22c55e', margin: 0 }}>
-                  {result.checks.urlhausDomain?.error ? '⚠️ Indisponibil' : result.checks.urlhausDomain?.safe === false ? `🔴 ${result.checks.urlhausDomain?.activeCount} URL-uri active malițioase` : '✅ Nicio raportare activă'}
+                  {result.checks.urlhausDomain?.error ? '⚠️ Indisponibil' : result.checks.urlhausDomain?.safe === false ? `🔴 ${result.checks.urlhausDomain?.activeCount} URL-uri active malițioase` : '✅ Nicio amenințare activă'}
                 </p>
                 <p style={{ fontSize: 10, color: 'rgba(30,41,59,0.5)', margin: '4px 0 0', lineHeight: 1.4 }}>Istoric domeniu</p>
               </div>

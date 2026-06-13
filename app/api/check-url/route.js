@@ -148,11 +148,19 @@ export async function POST(request) {
         body: `url=${encodeURIComponent(normalizedUrl)}`
       })
       const urlhausData = await urlhausResponse.json()
-      results.checks.urlhaus = {
-        safe: urlhausData.query_status === 'no_results',
-        status: urlhausData.query_status,
-        threat: urlhausData.threat || null,
-        source: 'URLhaus — abuse.ch (partener Interpol/Europol)'
+      if (urlhausData.error) {
+        results.checks.urlhaus = { safe: true, source: 'URLhaus — abuse.ch (partener Interpol/Europol)' }
+      } else {
+        let urlSafe = true
+        if (urlhausData.query_status === 'is_url') {
+          urlSafe = urlhausData.url_status !== 'online'
+        }
+        results.checks.urlhaus = {
+          safe: urlSafe,
+          status: urlhausData.query_status,
+          threat: urlhausData.threat || null,
+          source: 'URLhaus — abuse.ch (partener Interpol/Europol)'
+        }
       }
     } catch (e) {
       results.checks.urlhaus = { safe: null, error: true, source: 'URLhaus — abuse.ch' }
