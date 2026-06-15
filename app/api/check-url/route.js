@@ -44,32 +44,29 @@ const PROTECTED_BRANDS = [
   'xiaomi','zalando','zara','zoom','zurich'
 ]
 
-const OFFICIAL_DOMAINS_WHITELIST = new Set([
-  'airbnb.com','amazon.com','anaf.ro','apple.com','bancatransilvania.ro','bitdefender.com',
-  'booking.com','chatgpt.com','cnair.ro','dacia.ro','dedeman.ro','digi.ro','dnsc.ro',
-  'emag.ro','facebook.com','ghiseul.ro','google.com','instagram.com','mastercard.com',
-  'meta.com','microsoft.com','netflix.com','openai.com','paypal.com','posta-romana.ro',
-  'revolut.com','spotify.com','uipath.com','visa.com','whatsapp.com',
-  'bcr.ro','brd.ro','ing.ro','raiffeisen.ro','cecbank.ro','unicredit.ro',
-  'gov.ro','politiaromana.ro','anpc.ro','cnas.ro','cnp.ro',
-  'orange.ro','vodafone.ro','telekom.ro',
-  'olx.ro','autovit.ro','imobiliare.ro','altex.ro','flanco.ro',
-  'wise.com','wise.ro','btleasing.ro','btdirect.ro','btassetmanagement.ro',
-  'btpensii.ro','btmic.ro','btcodecrafters.ro','bancatransilvania.it',
-  'ing.com','bcr.com','brd.com','salt.bank','victoriabank.md',
-  'transferwise.com','n26.com','monzo.com',
-])
-
 const HIGH_RISK_PHISHING_COUNTRIES = new Set([
   'CN', 'RU', 'NG', 'KP', 'IR', 'PK', 'BD', 'VN', 'ID', 'UA'
 ])
 
-// Short brands (≤4 chars): only detect typosquatting via hyphen-separated segments, not substring
-const SHORT_BRANDS = new Set([
-  'ing', 'bcr', 'brd', 'cec', 'mol', 'omv', 'axa', 'ibm', 'ups', 'dhl',
-  'sky', 'eon', 'sap', 'bnp', 'rwe', 'edf', 'wise', 'kia', 'bmw', 'gap',
-  'obi', 'msi', 'tui', 'arm', 'amd'
-])
+// TLD-uri considerate oficiale pentru Pattern 2
+const OFFICIAL_TLDS = new Set(['com', 'ro', 'eu', 'org', 'net'])
+
+function levenshtein(a, b) {
+  if (Math.abs(a.length - b.length) > 1) return 2
+  const m = a.length, n = b.length
+  let prev = Array.from({ length: n + 1 }, (_, i) => i)
+  for (let i = 1; i <= m; i++) {
+    const curr = new Array(n + 1)
+    curr[0] = i
+    for (let j = 1; j <= n; j++) {
+      curr[j] = a[i - 1] === b[j - 1]
+        ? prev[j - 1]
+        : 1 + Math.min(prev[j], curr[j - 1], prev[j - 1])
+    }
+    prev = curr
+  }
+  return prev[n]
+}
 
 function wrapResult(settled, fallback) {
   if (settled.status === 'fulfilled') return settled.value
@@ -468,29 +465,35 @@ export async function POST(request) {
     ]
 
     const typosquattingWarnings = []
-    if (!isKnownSafe && !OFFICIAL_DOMAINS_WHITELIST.has(bareDomain)) {
-      const isKnownSafeMatch = (d) => knownSafeDomains.some(sd => d === sd || d.endsWith('.' + sd))
-      // Extract the SLD label (everything before first dot) for segment-based matching
-      const sldLabel = bareDomain.split('.')[0]
-      const sldSegments = sldLabel.split('-')
+    {
+      const domainParts = bareDomain.split('.')
+      const sld = domainParts[0]
+      const tldLabel = domainParts[domainParts.length - 1]
+      const sldSegments = sld.split('-')
 
-      PROTECTED_BRANDS.forEach(brand => {
-        if (isKnownSafeMatch(domain)) return
-        let matches = false
-        if (SHORT_BRANDS.has(brand)) {
-          // Short brands: only flag if brand is an exact hyphen-separated word in the SLD
-          matches = sldSegments.includes(brand)
-        } else {
-          matches = domain.includes(brand)
+      for (const brand of PROTECTED_BRANDS) {
+        // Pattern 1: brand ca segment exact separat prin - (necesită 2+ segmente)
+        if (sldSegments.length > 1 && sldSegments.includes(brand)) {
+          typosquattingWarnings.push(`Posibil site fals care imită „${brand}" — brand ca segment separat`)
+          continue
         }
-        if (matches) {
-          if (bareDomain.startsWith(brand + '-')) {
-            typosquattingWarnings.push(`Posibil site fals care imită "${brand}" (pattern brand-cuvant.tld)`)
-          } else {
-            typosquattingWarnings.push(`Posibil site fals care imită "${brand}" (typosquatting)`)
+        // Pattern 2: SLD e exact brandul + TLD neoficial
+        if (sld === brand && !OFFICIAL_TLDS.has(tldLabel)) {
+          typosquattingWarnings.push(`Posibil site fals care imită „${brand}" — brand cu TLD neoficial`)
+          continue
+        }
+        // Pattern 3: distanță Levenshtein exact 1 față de brand (doar branduri ≥5 caractere)
+        if (brand.length >= 5 && levenshtein(sld, brand) === 1) {
+          typosquattingWarnings.push(`Posibil site fals care imită „${brand}" — typo în domeniu`)
+          continue
+        }
+        // Pattern 4: brand ca prefix sau suffix fără separator (doar branduri ≥6 caractere)
+        if (brand.length >= 6 && sld.length > brand.length) {
+          if (sld.startsWith(brand) || sld.endsWith(brand)) {
+            typosquattingWarnings.push(`Posibil site fals care imită „${brand}" — brand concatenat în domeniu`)
           }
         }
-      })
+      }
     }
 
     const warnings = []
@@ -552,12 +555,12 @@ export async function POST(request) {
       score -= 10
     }
 
-    if (!checks.domain?.createdDate && !OFFICIAL_DOMAINS_WHITELIST.has(bareDomain)) {
+    if (!checks.domain?.createdDate && !isKnownSafe) {
       allWarnings.push('⚠️ Vârstă domeniu necunoscută — imposibil de verificat')
       score -= 5
     }
 
-    if (typosquattingWarnings.length > 0 && !OFFICIAL_DOMAINS_WHITELIST.has(bareDomain)) score = Math.min(score, 25)
+    if (typosquattingWarnings.length > 0) score = Math.min(score, 25)
     if (checks.safeBrowsing?.safe === false) score = Math.min(score, 15)
 
     if (score < 0) score = 0
