@@ -8,6 +8,91 @@ const supabase = createClient(
 
 let openphishCache = { urls: null, fetchedAt: 0 }
 
+const PROTECTED_BRANDS = [
+  '2performant','7up','abbott','abbvie','absolut','accor','acer','actimel','action','activia',
+  'activision','adeplast','adidas','adobe','adyen','aeg','aegean','aegon','afm','agoda',
+  'agricola','aig','airbnb','albalact','aldi','alibaba','aliexpress','allianz','alpha','altex',
+  'amazon','american','amgen','anaf','ancom','anpc','answear','antena','apple','auchan',
+  'axa','bacardi','banca','bancatransilvania','barclays','bauhaus','bayer','bcr','beko',
+  'bergenbier','bershka','bestjobs','betano','binance','bioclinica','bitdefender','bitstamp',
+  'blablacar','bloomberg','bolt','booking','boromir','borsec','bosch','brd','brico','bringo',
+  'burger','cadbury','carrefour','cargus','carlsberg','caroli','carturesti','catena',
+  'cec','cel','cez','cfr','chanel','chase','chatgpt','citibank','cisco','cloudflare','cnas',
+  'cnp','cocacola','coinbase','colgate','cora','coursera','crypto','dacia','danone','decathlon',
+  'dedeman','dell','digi','digi24','disney','distrigaz','dhl','dnsc','domo','dona','dorna',
+  'dpd','drmax','dropbox','drpciv','duolingo','dyson','easyjet','ebay','ejobs','electrica',
+  'electrolux','elefant','emag','emirates','endava','enel','engie','eon','etoro','etsy',
+  'euroins','facebook','fan','farmacia','farmec','fashiondays','fedex','ferrero','fifa',
+  'figma','flanco','forbes','generali','george','ghiseul','github','gitlab','glovo','gls',
+  'google','grab','grawe','groupama','gucci','hbo','heineken','help','hermes','hidroelectrica',
+  'hilton','hipo','hornbach','hsbc','huawei','hyatt','ibm','ikea','ing','instagram','intel',
+  'interpol','jbl','jira','johnson','jumbo','jysk','kaufland','kfc','kinder','klarna','klm',
+  'knorr','lacoste','lavazza','lenovo','leroy','lidl','linkedin','logitech','lufthansa','lukoil',
+  'mac','maersk','makita','mango','mapfre','marks','marriott','mars','mastercard','maybelline',
+  'mcdonalds','medicover','medlife','meta','metro','microsoft','miele','milka','mobexpert',
+  'mol','moneygram','monza','motorola','netflix','netopia','nike','nintendo','nivea','nokia',
+  'noriel','notino','novartis','nvidia','obi','okazii','olx','omv','openai','orange','oracle',
+  'pandora','paralela','payoneer','paypal','paysafe','penny','pepco','pepsi','petrom','pfizer',
+  'philips','pinterest','politia','primark','profi','puma','raiffeisen','rakuten',
+  'reddit','regina','revolut','riot','roblox','roche','rolex','romgaz','rossmann','rovinieta',
+  'ryanair','salesforce','sameday','samsung','sanador','sanofi','santander','sap',
+  'selgros','sensiblu','sephora','shell','siemens','signal','skrill','sky','slack','snapchat',
+  'sony','spotify','starbucks','steam','stripe','subway','superbet','tarom','tazz','tefal',
+  'telecom','telegram','telekom','temu','tesco','tesla','tiktok','tim','totalenergies',
+  'tripadvisor','trivago','tui','uber','uipath','unicredit','ups','urgent','ursus','valentino',
+  'visa','vodafone','vola','walmart','whatsapp','whirlpool','wise','wizz','wordpress','xbox',
+  'xiaomi','zalando','zara','zoom','zurich'
+]
+
+const OFFICIAL_DOMAINS_WHITELIST = new Set([
+  'airbnb.com','amazon.com','anaf.ro','apple.com','bancatransilvania.ro','bitdefender.com',
+  'booking.com','chatgpt.com','cnair.ro','dacia.ro','dedeman.ro','digi.ro','dnsc.ro',
+  'emag.ro','facebook.com','ghiseul.ro','google.com','instagram.com','mastercard.com',
+  'meta.com','microsoft.com','netflix.com','openai.com','paypal.com','posta-romana.ro',
+  'revolut.com','spotify.com','uipath.com','visa.com','whatsapp.com',
+  'bcr.ro','brd.ro','ing.ro','raiffeisen.ro','cecbank.ro','unicredit.ro',
+  'gov.ro','politiaromana.ro','anpc.ro','cnas.ro','cnp.ro',
+  'orange.ro','vodafone.ro','telekom.ro',
+  'olx.ro','autovit.ro','imobiliare.ro','altex.ro','flanco.ro',
+  'wise.com','wise.ro','btleasing.ro','btdirect.ro','btassetmanagement.ro',
+  'btpensii.ro','btmic.ro','btcodecrafters.ro','bancatransilvania.it',
+  'ing.com','bcr.com','brd.com','salt.bank','victoriabank.md',
+  'transferwise.com','n26.com','monzo.com',
+])
+
+const HIGH_RISK_PHISHING_COUNTRIES = new Set([
+  'CN', 'RU', 'NG', 'KP', 'IR', 'PK', 'BD', 'VN', 'ID', 'UA'
+])
+
+// Short brands (≤4 chars): only detect typosquatting via hyphen-separated segments, not substring
+const SHORT_BRANDS = new Set([
+  'ing', 'bcr', 'brd', 'cec', 'mol', 'omv', 'axa', 'ibm', 'ups', 'dhl',
+  'sky', 'eon', 'sap', 'bnp', 'rwe', 'edf', 'wise', 'kia', 'bmw', 'gap',
+  'obi', 'msi', 'tui', 'arm', 'amd'
+])
+
+function wrapResult(settled, fallback) {
+  if (settled.status === 'fulfilled') return settled.value
+  const reason = settled.reason
+  const isTimeout = reason?.name === 'TimeoutError' || reason?.cause?.name === 'TimeoutError'
+  return { ...fallback, error: true, timeout: isTimeout }
+}
+
+async function resolveIp(domain) {
+  try {
+    const res = await fetch(
+      `https://dns.google/resolve?name=${encodeURIComponent(domain)}&type=A`,
+      { signal: AbortSignal.timeout(4000) }
+    )
+    if (!res.ok) return null
+    const data = await res.json()
+    const answer = Array.isArray(data.Answer) ? data.Answer.find(r => r.type === 1) : null
+    return answer?.data || null
+  } catch {
+    return null
+  }
+}
+
 export async function POST(request) {
   try {
     const { url, userId } = await request.json()
@@ -16,7 +101,6 @@ export async function POST(request) {
       return Response.json({ error: 'URL lipsește' }, { status: 400 })
     }
 
-    // Verificare sold ÎNAINTE de a rula serviciul
     let userCredits = null
     if (userId) {
       const { data: profile } = await supabase
@@ -30,7 +114,6 @@ export async function POST(request) {
       userCredits = profile.credits
     }
 
-    // Scade costul și atașează soldul rămas la răspuns (doar pe succes)
     const charge = async (payload) => {
       if (userId) {
         const newCredits = Math.max(0, (userCredits ?? 0) - CREDIT_COSTS.url)
@@ -43,29 +126,20 @@ export async function POST(request) {
       return Response.json(payload)
     }
 
-    // Normalizare URL
     let normalizedUrl = url.trim()
     if (!normalizedUrl.startsWith('http://') && !normalizedUrl.startsWith('https://')) {
       normalizedUrl = 'https://' + normalizedUrl
     }
 
-    const results = {
-      url: normalizedUrl,
-      checks: {}
-    }
-
-    // Extragere domeniu
     let domain = ''
     try {
       domain = new URL(normalizedUrl).hostname
-    } catch (e) {
+    } catch {
       return Response.json({ error: 'URL invalid' }, { status: 400 })
     }
 
-    // 0. WHITELIST domenii sigure verificate manual
     const bareDomain = domain.replace(/^www\./, '')
 
-    // eVerify — site oficial, verdict special
     if (bareDomain === 'everify.ro') {
       return charge({
         url: normalizedUrl,
@@ -83,144 +157,96 @@ export async function POST(request) {
       })
     }
 
-    const trustedDomains = [
-      // Instituții publice
-      'dnsc.ro', 'politiaromana.ro', 'anpc.ro', 'anaf.ro', 'bnr.ro',
-      // Bănci
-      'bcr.ro', 'brd.ro', 'ingbank.ro', 'raiffeisen.ro', 'bancatransilvania.ro', 'revolut.com',
-      // Presă
-      'digi24.ro', 'protv.ro', 'antena3.ro', 'g4media.ro', 'hotnews.ro',
-      // Comerț
-      'emag.ro', 'olx.ro', 'altex.ro', 'mediasmart.ro',
-    ]
-    const isWhitelisted = trustedDomains.some(d => bareDomain === d || bareDomain.endsWith('.' + d))
+    // Resolve IP once — shared by IPInfo, AbuseIPDB, Shodan
+    const ip = await resolveIp(domain)
 
-    if (isWhitelisted) {
-      return charge({
-        url: normalizedUrl,
-        domain,
-        trustScore: 100,
-        verdict: 'PROBABIL SIGUR',
-        checks: {
-          https: { secure: normalizedUrl.startsWith('https://') },
-          whitelist: { trusted: true, source: 'eVerify Whitelist — domeniu oficial verificat' },
-          patterns: { warnings: [] },
-        },
-        warnings: [],
-        isKnownSafe: true,
-        isWhitelisted: true,
-      })
-    }
-
-    // 1. Google Safe Browsing
-    try {
-      const safeBrowsingResponse = await fetch(
-        `https://safebrowsing.googleapis.com/v4/threatMatches:find?key=${process.env.GOOGLE_SAFE_BROWSING_API_KEY}`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          signal: AbortSignal.timeout(5000),
-          body: JSON.stringify({
-            client: { clientId: 'everify', clientVersion: '1.0' },
-            threatInfo: {
-              threatTypes: ['MALWARE', 'SOCIAL_ENGINEERING', 'UNWANTED_SOFTWARE', 'POTENTIALLY_HARMFUL_APPLICATION'],
-              platformTypes: ['ANY_PLATFORM'],
-              threatEntryTypes: ['URL'],
-              threatEntries: [{ url: normalizedUrl }]
-            }
-          })
-        }
-      )
-      const safeBrowsingData = await safeBrowsingResponse.json()
-      results.checks.safeBrowsing = {
-        safe: !safeBrowsingData.matches || safeBrowsingData.matches.length === 0,
-        threats: safeBrowsingData.matches || [],
-        source: 'Google Safe Browsing'
-      }
-    } catch (e) {
-      results.checks.safeBrowsing = { safe: null, error: true, source: 'Google Safe Browsing' }
-    }
-
-    // 2. URLhaus (abuse.ch) - partener Interpol/Europol
-    try {
-      const urlhausResponse = await fetch('https://urlhaus-api.abuse.ch/v1/url/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        signal: AbortSignal.timeout(5000),
-        body: `url=${encodeURIComponent(normalizedUrl)}`
-      })
-      const urlhausData = await urlhausResponse.json()
-      if (urlhausData.error) {
-        results.checks.urlhaus = { safe: true, source: 'URLhaus — abuse.ch (partener Interpol/Europol)' }
-      } else {
-        let urlSafe = true
-        if (urlhausData.query_status === 'is_url') {
-          urlSafe = urlhausData.url_status !== 'online'
-        }
-        results.checks.urlhaus = {
-          safe: urlSafe,
-          status: urlhausData.query_status,
-          threat: urlhausData.threat || null,
-          source: 'URLhaus — abuse.ch (partener Interpol/Europol)'
-        }
-      }
-    } catch (e) {
-      results.checks.urlhaus = { safe: null, error: true, source: 'URLhaus — abuse.ch' }
-    }
-
-    // 3. URLhaus Domain check
-    try {
-      const domainhausResponse = await fetch('https://urlhaus-api.abuse.ch/v1/host/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        signal: AbortSignal.timeout(5000),
-        body: `host=${domain}`
-      })
-      const domainhausData = await domainhausResponse.json()
-      if (domainhausData.error) {
-        results.checks.urlhausDomain = { safe: true, urlsCount: 0, activeCount: 0, source: 'URLhaus Domain Check' }
-      } else {
-        let domainSafe = true
-        let activeCount = 0
-        if (domainhausData.query_status === 'is_host') {
-          const hostUrls = Array.isArray(domainhausData.urls) ? domainhausData.urls : []
-          activeCount = hostUrls.filter(u => u.url_status === 'online').length
-          domainSafe = activeCount === 0
-        }
-        results.checks.urlhausDomain = {
-          safe: domainSafe,
-          urlsCount: domainhausData.urls_count || 0,
-          activeCount,
-          source: 'URLhaus Domain Check'
-        }
-      }
-    } catch (e) {
-      results.checks.urlhausDomain = { safe: null, urlsCount: 0, activeCount: 0, error: true, source: 'URLhaus Domain Check' }
-    }
-
-    // 4. HTTPS check
-    results.checks.https = {
-      secure: normalizedUrl.startsWith('https://')
-    }
-
-    // 5. Whois / Domain age
-    try {
-      const whoisResponse = await fetch(`https://api.whoisfreaks.com/v1.0/whois?apiKey=free&whois=live&domainName=${domain}`, { signal: AbortSignal.timeout(5000) })
-      const whoisData = await whoisResponse.json()
-      results.checks.domain = {
-        name: domain,
-        createdDate: whoisData.create_date || null,
-        registrar: whoisData.domain_registrar?.registrar_name || null,
-      }
-    } catch (e) {
-      results.checks.domain = { name: domain, createdDate: null, registrar: null }
-    }
-
-    // 8. VirusTotal + OpenPhish + crt.sh (paralel)
-    const [vtCheck, openphishCheck, crtCheck] = await Promise.allSettled([
+    const settled = await Promise.allSettled([
+      // 1. Google Safe Browsing
       (async () => {
+        const t0 = performance.now()
+        const res = await fetch(
+          `https://safebrowsing.googleapis.com/v4/threatMatches:find?key=${process.env.GOOGLE_SAFE_BROWSING_API_KEY}`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            signal: AbortSignal.timeout(5000),
+            body: JSON.stringify({
+              client: { clientId: 'everify', clientVersion: '1.0' },
+              threatInfo: {
+                threatTypes: ['MALWARE', 'SOCIAL_ENGINEERING', 'UNWANTED_SOFTWARE', 'POTENTIALLY_HARMFUL_APPLICATION'],
+                platformTypes: ['ANY_PLATFORM'],
+                threatEntryTypes: ['URL'],
+                threatEntries: [{ url: normalizedUrl }]
+              }
+            })
+          }
+        )
+        const data = await res.json()
+        return {
+          safe: !data.matches?.length,
+          threats: data.matches || [],
+          source: 'Google Safe Browsing',
+          duration_ms: Math.round(performance.now() - t0)
+        }
+      })(),
+
+      // 2. URLhaus URL check
+      (async () => {
+        const t0 = performance.now()
+        const res = await fetch('https://urlhaus-api.abuse.ch/v1/url/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          signal: AbortSignal.timeout(5000),
+          body: `url=${encodeURIComponent(normalizedUrl)}`
+        })
+        const data = await res.json()
+        if (data.error) {
+          return { safe: true, source: 'URLhaus — abuse.ch', duration_ms: Math.round(performance.now() - t0) }
+        }
+        let safe = true
+        if (data.query_status === 'is_url') safe = data.url_status !== 'online'
+        return {
+          safe,
+          status: data.query_status,
+          threat: data.threat || null,
+          source: 'URLhaus — abuse.ch',
+          duration_ms: Math.round(performance.now() - t0)
+        }
+      })(),
+
+      // 3. URLhaus Domain check
+      (async () => {
+        const t0 = performance.now()
+        const res = await fetch('https://urlhaus-api.abuse.ch/v1/host/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          signal: AbortSignal.timeout(5000),
+          body: `host=${domain}`
+        })
+        const data = await res.json()
+        if (data.error) {
+          return { safe: true, urlsCount: 0, activeCount: 0, source: 'URLhaus Domain Check', duration_ms: Math.round(performance.now() - t0) }
+        }
+        let safe = true, activeCount = 0
+        if (data.query_status === 'is_host') {
+          const hostUrls = Array.isArray(data.urls) ? data.urls : []
+          activeCount = hostUrls.filter(u => u.url_status === 'online').length
+          safe = activeCount === 0
+        }
+        return {
+          safe,
+          urlsCount: data.urls_count || 0,
+          activeCount,
+          source: 'URLhaus Domain Check',
+          duration_ms: Math.round(performance.now() - t0)
+        }
+      })(),
+
+      // 4. VirusTotal
+      (async () => {
+        const t0 = performance.now()
         const vtKey = process.env.VIRUSTOTAL_API_KEY
-        if (!vtKey) return { available: false, source: 'VirusTotal' }
+        if (!vtKey) return { available: false, source: 'VirusTotal', duration_ms: 0 }
         const submitRes = await fetch('https://www.virustotal.com/api/v3/urls', {
           method: 'POST',
           headers: { 'x-apikey': vtKey, 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -229,7 +255,7 @@ export async function POST(request) {
         })
         const submitData = await submitRes.json()
         const analysisId = submitData.data?.id
-        if (!analysisId) return { available: false, source: 'VirusTotal' }
+        if (!analysisId) return { available: false, source: 'VirusTotal', duration_ms: Math.round(performance.now() - t0) }
         await new Promise(r => setTimeout(r, 3000))
         const resultRes = await fetch(`https://www.virustotal.com/api/v3/analyses/${analysisId}`, {
           headers: { 'x-apikey': vtKey },
@@ -242,49 +268,198 @@ export async function POST(request) {
           suspicious: stats.suspicious || 0,
           harmless: stats.harmless || 0,
           safe: (stats.malicious || 0) === 0,
-          source: 'VirusTotal'
+          source: 'VirusTotal',
+          duration_ms: Math.round(performance.now() - t0)
         }
       })(),
+
+      // 5. OpenPhish
       (async () => {
+        const t0 = performance.now()
         const now = Date.now()
-        const TWELVE_HOURS = 12 * 60 * 60 * 1000
-        if (!openphishCache.urls || (now - openphishCache.fetchedAt) > TWELVE_HOURS) {
-          const res = await fetch('https://raw.githubusercontent.com/openphish/public_feed/refs/heads/main/feed.txt', { signal: AbortSignal.timeout(10000) })
+        if (!openphishCache.urls || (now - openphishCache.fetchedAt) > 12 * 60 * 60 * 1000) {
+          const res = await fetch(
+            'https://raw.githubusercontent.com/openphish/public_feed/refs/heads/main/feed.txt',
+            { signal: AbortSignal.timeout(10000) }
+          )
           const text = await res.text()
           openphishCache.urls = new Set(text.split('\n').map(l => l.trim()).filter(Boolean))
           openphishCache.fetchedAt = now
         }
-        const normalized = normalizedUrl.replace(/\/$/, '')
-        const found = openphishCache.urls.has(normalized) ||
-          openphishCache.urls.has(normalized + '/') ||
-          openphishCache.urls.has(normalized.replace(/^https?:\/\//, 'http://')) ||
-          openphishCache.urls.has(normalized.replace(/^https?:\/\//, 'https://'))
-        return { found, safe: !found, source: 'OpenPhish Community Feed' }
+        const norm = normalizedUrl.replace(/\/$/, '')
+        const found = openphishCache.urls.has(norm) ||
+          openphishCache.urls.has(norm + '/') ||
+          openphishCache.urls.has(norm.replace(/^https?:\/\//, 'http://')) ||
+          openphishCache.urls.has(norm.replace(/^https?:\/\//, 'https://'))
+        return { found, safe: !found, source: 'OpenPhish Community Feed', duration_ms: Math.round(performance.now() - t0) }
       })(),
+
+      // 6. crt.sh
       (async () => {
+        const t0 = performance.now()
         const res = await fetch(`https://crt.sh/?q=${encodeURIComponent(domain)}&output=json`, {
           signal: AbortSignal.timeout(5000),
           headers: { 'User-Agent': 'eVerify/1.0' }
         })
         const certs = await res.json()
-        if (!Array.isArray(certs) || certs.length === 0) return { noCerts: true, totalCerts: 0, source: 'crt.sh' }
+        if (!Array.isArray(certs) || certs.length === 0) {
+          return { noCerts: true, totalCerts: 0, source: 'crt.sh', duration_ms: Math.round(performance.now() - t0) }
+        }
         const sorted = [...certs].sort((a, b) => new Date(a.not_before) - new Date(b.not_before))
         const oldest = sorted[0]
         const ageDays = Math.floor((Date.now() - new Date(oldest.not_before).getTime()) / 86400000)
-        return { firstIssuedDate: oldest.not_before, ageDays, isNewCert: ageDays < 7, totalCerts: certs.length, safe: ageDays >= 7, source: 'crt.sh' }
-      })()
-    ])
-    results.checks.virusTotal = vtCheck.status === 'fulfilled' ? vtCheck.value : { error: true, source: 'VirusTotal' }
-    results.checks.openPhish = openphishCheck.status === 'fulfilled' ? openphishCheck.value : { error: true, source: 'OpenPhish Community Feed' }
-    results.checks.certTransparency = crtCheck.status === 'fulfilled' ? crtCheck.value : { unknown: true, source: 'crt.sh' }
+        return {
+          firstIssuedDate: oldest.not_before,
+          ageDays,
+          isNewCert: ageDays < 7,
+          totalCerts: certs.length,
+          safe: ageDays >= 7,
+          source: 'crt.sh',
+          duration_ms: Math.round(performance.now() - t0)
+        }
+      })(),
 
-    // 6. Pattern analysis
-    const knownSafeDomains = ['google.com', 'microsoft.com', 'apple.com', 'amazon.com', 'paypal.com', 'facebook.com', 'instagram.com', 'tiktok.com', 'youtube.com', 'linkedin.com', 'netflix.com', 'spotify.com', 'dnsc.ro', 'politiaromana.ro', 'anpc.ro', 'anaf.ro', 'bnr.ro', 'bcr.ro', 'brd.ro', 'ingbank.ro', 'raiffeisen.ro', 'bancatransilvania.ro', 'revolut.com', 'digi24.ro', 'protv.ro', 'antena3.ro', 'g4media.ro', 'hotnews.ro', 'emag.ro', 'olx.ro', 'altex.ro']
+      // 7. RDAP (înlocuiește WHOIS)
+      (async () => {
+        const t0 = performance.now()
+        const isRo = bareDomain.endsWith('.ro')
+        const rdapUrl = isRo
+          ? `https://rdap.rotld.ro/domain/${encodeURIComponent(bareDomain)}`
+          : `https://rdap.org/domain/${encodeURIComponent(bareDomain)}`
+        const res = await fetch(rdapUrl, {
+          signal: AbortSignal.timeout(8000),
+          headers: { 'Accept': 'application/rdap+json, application/json' }
+        })
+        if (!res.ok) {
+          return {
+            name: domain, createdDate: null, registrar: null, nameservers: [],
+            source: isRo ? 'RDAP — Registru oficial .ro' : 'RDAP — Registru oficial domenii',
+            duration_ms: Math.round(performance.now() - t0)
+          }
+        }
+        const data = await res.json()
+        const events = Array.isArray(data.events) ? data.events : []
+        const regEvent = events.find(e => e.eventAction === 'registration')
+        const createdDate = regEvent?.eventDate || null
+        const nameservers = (Array.isArray(data.nameservers) ? data.nameservers : [])
+          .map(ns => ns.ldhName).filter(Boolean)
+        const entities = Array.isArray(data.entities) ? data.entities : []
+        const registrarEntity = entities.find(e => Array.isArray(e.roles) && e.roles.includes('registrar'))
+        const registrar = registrarEntity?.vcardArray?.[1]?.find?.(v => v[0] === 'fn')?.[3] ||
+          registrarEntity?.handle || null
+        return {
+          name: domain, createdDate, registrar, nameservers,
+          source: isRo ? 'RDAP — Registru oficial .ro' : 'RDAP — Registru oficial domenii',
+          duration_ms: Math.round(performance.now() - t0)
+        }
+      })(),
+
+      // 8. IPInfo
+      (async () => {
+        const t0 = performance.now()
+        if (!ip) return { available: false, source: 'IPInfo', duration_ms: 0 }
+        const key = process.env.IPINFO_API_KEY
+        if (!key) return { available: false, source: 'IPInfo', duration_ms: 0 }
+        const res = await fetch(`https://ipinfo.io/${ip}?token=${key}`, {
+          signal: AbortSignal.timeout(5000)
+        })
+        if (!res.ok) return { available: false, source: 'IPInfo', duration_ms: Math.round(performance.now() - t0) }
+        const data = await res.json()
+        return {
+          ip,
+          country: data.country,
+          org: data.org,
+          hostname: data.hostname,
+          isHighRisk: HIGH_RISK_PHISHING_COUNTRIES.has(data.country || ''),
+          source: 'IPInfo',
+          duration_ms: Math.round(performance.now() - t0)
+        }
+      })(),
+
+      // 9. AbuseIPDB
+      (async () => {
+        const t0 = performance.now()
+        if (!ip) return { available: false, source: 'AbuseIPDB', duration_ms: 0 }
+        const key = process.env.ABUSEIPDB_API_KEY
+        if (!key) return { available: false, source: 'AbuseIPDB', duration_ms: 0 }
+        const res = await fetch(
+          `https://api.abuseipdb.com/api/v2/check?ipAddress=${ip}&maxAgeInDays=90`,
+          {
+            signal: AbortSignal.timeout(5000),
+            headers: { 'Key': key, 'Accept': 'application/json' }
+          }
+        )
+        if (!res.ok) return { available: false, source: 'AbuseIPDB', duration_ms: Math.round(performance.now() - t0) }
+        const data = await res.json()
+        const d = data.data || {}
+        return {
+          ip,
+          abuseConfidenceScore: d.abuseConfidenceScore ?? 0,
+          totalReports: d.totalReports ?? 0,
+          source: 'AbuseIPDB',
+          duration_ms: Math.round(performance.now() - t0)
+        }
+      })(),
+
+      // 10. Shodan
+      (async () => {
+        const t0 = performance.now()
+        if (!ip) return { available: false, source: 'Shodan', duration_ms: 0 }
+        const key = process.env.SHODAN_API_KEY
+        if (!key) return { available: false, source: 'Shodan', duration_ms: 0 }
+        const res = await fetch(`https://api.shodan.io/shodan/host/${ip}?key=${key}`, {
+          signal: AbortSignal.timeout(8000)
+        })
+        if (!res.ok) return {
+          available: false,
+          notIndexed: res.status === 404 || res.status === 403,
+          source: 'Shodan',
+          duration_ms: Math.round(performance.now() - t0)
+        }
+        const data = await res.json()
+        const hostnames = Array.isArray(data.hostnames) ? data.hostnames : []
+        return {
+          ip,
+          org: data.org,
+          country_name: data.country_name,
+          ports: data.ports,
+          hostnameCount: hostnames.length,
+          source: 'Shodan',
+          duration_ms: Math.round(performance.now() - t0)
+        }
+      })(),
+    ])
+
+    const [sb, uh, uhd, vt, op, crt, rdap, ipinfo, abuseipdb, shodan] = settled
+
+    const checks = {
+      https: { secure: normalizedUrl.startsWith('https://') },
+      safeBrowsing: wrapResult(sb, { safe: null, source: 'Google Safe Browsing' }),
+      urlhaus: wrapResult(uh, { safe: null, source: 'URLhaus — abuse.ch' }),
+      urlhausDomain: wrapResult(uhd, { safe: null, urlsCount: 0, activeCount: 0, source: 'URLhaus Domain Check' }),
+      virusTotal: wrapResult(vt, { source: 'VirusTotal' }),
+      openPhish: wrapResult(op, { source: 'OpenPhish Community Feed' }),
+      certTransparency: wrapResult(crt, { unknown: true, source: 'crt.sh' }),
+      domain: wrapResult(rdap, { name: domain, createdDate: null, registrar: null, nameservers: [] }),
+      ipInfo: wrapResult(ipinfo, { source: 'IPInfo' }),
+      abuseIPDB: wrapResult(abuseipdb, { source: 'AbuseIPDB' }),
+      shodan: wrapResult(shodan, { source: 'Shodan' }),
+    }
+
+    // Pattern analysis
+    const knownSafeDomains = [
+      'google.com', 'microsoft.com', 'apple.com', 'amazon.com', 'paypal.com', 'facebook.com',
+      'instagram.com', 'tiktok.com', 'youtube.com', 'linkedin.com', 'netflix.com', 'spotify.com',
+      'dnsc.ro', 'politiaromana.ro', 'anpc.ro', 'anaf.ro', 'bnr.ro', 'bcr.ro', 'brd.ro',
+      'ingbank.ro', 'raiffeisen.ro', 'bancatransilvania.ro', 'revolut.com',
+      'digi24.ro', 'protv.ro', 'antena3.ro', 'g4media.ro', 'hotnews.ro',
+      'emag.ro', 'olx.ro', 'altex.ro'
+    ]
     const isKnownSafe = knownSafeDomains.some(d => domain === d || domain.endsWith('.' + d))
 
     const suspiciousPatterns = [
       { pattern: /(\d{1,3}\.){3}\d{1,3}/, reason: 'Adresă IP în loc de domeniu' },
-      { pattern: /[а-яА-Я\u0400-\u04FF]/, reason: 'Caractere chirilice sau Unicode suspect în URL (posibil atac homograph)' },
+      { pattern: /[а-яА-ЯЀ-ӿ]/, reason: 'Caractere chirilice sau Unicode suspect în URL (posibil atac homograph)' },
       { pattern: /(secure|login|verify|update|confirm|account|banking|paypal|apple|google|microsoft|amazon|signin|webscr)/i, reason: 'Cuvânt cheie suspect în URL', skipIfKnownSafe: true },
       { pattern: /\.(tk|ml|ga|cf|gq|xyz|top|click|link|online|site|web|info|buzz|rest|zip|mov)$/i, reason: 'Extensie de domeniu frecvent asociată cu fraude online' },
       { pattern: /-{2,}/, reason: 'Multiple cratime în domeniu (pattern suspect)' },
@@ -292,18 +467,23 @@ export async function POST(request) {
       { pattern: /(.)\1{4,}/, reason: 'Caractere repetate suspect în domeniu' },
     ]
 
-    // Typosquatting detection pentru branduri românești și internaționale
-    const knownBrands = [
-      'paypal', 'google', 'microsoft', 'apple', 'amazon', 'facebook', 'instagram', 'netflix',
-      'revolut', 'emag', 'anaf', 'ing', 'bcr', 'brd', 'raiffeisen', 'cec', 'trezorerie',
-      'politia', 'digi', 'orange', 'vodafone', 'enel', 'electrica', 'engie', 'dedeman',
-      'kaufland', 'lidl', 'altex', 'flanco', 'olx', 'autovit', 'imobiliare',
-    ]
     const typosquattingWarnings = []
+    if (!isKnownSafe && !OFFICIAL_DOMAINS_WHITELIST.has(bareDomain)) {
+      const isKnownSafeMatch = (d) => knownSafeDomains.some(sd => d === sd || d.endsWith('.' + sd))
+      // Extract the SLD label (everything before first dot) for segment-based matching
+      const sldLabel = bareDomain.split('.')[0]
+      const sldSegments = sldLabel.split('-')
 
-    if (!isKnownSafe) {
-      knownBrands.forEach(brand => {
-        if (domain.includes(brand) && !knownSafeDomains.some(d => domain === d || domain.endsWith('.' + d))) {
+      PROTECTED_BRANDS.forEach(brand => {
+        if (isKnownSafeMatch(domain)) return
+        let matches = false
+        if (SHORT_BRANDS.has(brand)) {
+          // Short brands: only flag if brand is an exact hyphen-separated word in the SLD
+          matches = sldSegments.includes(brand)
+        } else {
+          matches = domain.includes(brand)
+        }
+        if (matches) {
           if (bareDomain.startsWith(brand + '-')) {
             typosquattingWarnings.push(`Posibil site fals care imită "${brand}" (pattern brand-cuvant.tld)`)
           } else {
@@ -316,68 +496,69 @@ export async function POST(request) {
     const warnings = []
     suspiciousPatterns.forEach(({ pattern, reason, skipIfKnownSafe }) => {
       if (skipIfKnownSafe && isKnownSafe) return
-      if (pattern.test(domain)) {
-        warnings.push(reason)
-      }
+      if (pattern.test(domain)) warnings.push(reason)
     })
 
     const allWarnings = [...warnings, ...typosquattingWarnings]
-    results.checks.patterns = { warnings: allWarnings }
+    checks.patterns = { warnings: allWarnings }
 
-    // 7. Calculare Trust Score
+    // Trust Score
     let score = 100
 
-    // Penalizari blacklist-uri
-    if (results.checks.safeBrowsing?.safe === false) score -= 60
-    if (results.checks.urlhaus?.safe === false) score -= 50
-    if (results.checks.urlhausDomain?.safe === false) score -= 30
+    if (checks.safeBrowsing?.safe === false) score -= 60
+    if (checks.urlhaus?.safe === false) score -= 50
+    if (checks.urlhausDomain?.safe === false) score -= 30
+    if (!checks.https.secure) score -= 30
 
-    // Penalizare HTTPS
-    if (!results.checks.https.secure) score -= 30
-
-    // Penalizari pattern-uri suspecte
     if (allWarnings.length >= 3) score -= allWarnings.length * 20
     else if (allWarnings.length === 2) score -= allWarnings.length * 15
     else if (allWarnings.length === 1) score -= 15
 
-    // Bonus domenii cunoscute sigure
     if (isKnownSafe) score = Math.max(score, 90)
 
-    // Verificare varsta domeniu
-    if (results.checks.domain?.createdDate) {
-      const created = new Date(results.checks.domain.createdDate)
+    if (checks.domain?.createdDate) {
+      const created = new Date(checks.domain.createdDate)
       const ageMonths = (Date.now() - created.getTime()) / (1000 * 60 * 60 * 24 * 30)
       if (ageMonths < 3) score -= 25
       else if (ageMonths < 12) score -= 10
-      results.checks.domain.ageMonths = Math.round(ageMonths)
+      checks.domain.ageMonths = Math.round(ageMonths)
     }
 
-    // Penalizări surse noi de threat intelligence
-    if (results.checks.virusTotal?.malicious > 0) score -= 40
-    if (results.checks.virusTotal?.suspicious > 0) score -= 20
-    if (results.checks.openPhish?.found) { score -= 50; score = Math.min(score, 20) }
-    if (results.checks.certTransparency?.isNewCert) score -= 30
+    if (checks.virusTotal?.malicious > 0) score -= 40
+    if (checks.virusTotal?.suspicious > 0) score -= 20
+    if (checks.openPhish?.found) { score -= 50; score = Math.min(score, 20) }
+    if (checks.certTransparency?.isNewCert) score -= 30
 
-    // Fix 2 — Penalizare domeniu prea puțin verificat
+    // New source penalties
+    if (checks.ipInfo?.country && HIGH_RISK_PHISHING_COUNTRIES.has(checks.ipInfo.country)) score -= 15
+    if (checks.abuseIPDB?.abuseConfidenceScore > 50) score -= 50
+    else if (checks.abuseIPDB?.abuseConfidenceScore > 25) score -= 30
+    if (checks.shodan?.hostnameCount >= 20) score -= 15
+
     const unknownSourcesCount = [
-      results.checks.safeBrowsing?.safe === null,
-      results.checks.urlhaus?.safe === null,
-      results.checks.urlhausDomain?.safe === null,
-      results.checks.virusTotal?.available === false || results.checks.virusTotal?.error === true,
-      results.checks.openPhish?.error === true,
-      results.checks.certTransparency?.unknown === true,
-      !results.checks.domain?.createdDate,
+      checks.safeBrowsing?.safe === null,
+      checks.urlhaus?.safe === null,
+      checks.urlhausDomain?.safe === null,
+      checks.virusTotal?.available === false || checks.virusTotal?.error === true,
+      checks.openPhish?.error === true,
+      checks.certTransparency?.unknown === true,
+      !checks.domain?.createdDate,
+      checks.ipInfo?.error === true || checks.ipInfo?.available === false,
+      checks.abuseIPDB?.error === true || checks.abuseIPDB?.available === false,
+      checks.shodan?.error === true || checks.shodan?.available === false,
     ].filter(Boolean).length
-    if (unknownSourcesCount >= 4) {
+    if (unknownSourcesCount >= 5) {
       allWarnings.push('⚠️ Domeniu necunoscut — verificat în prea puține surse pentru un verdict sigur')
       score -= 10
     }
 
-    // Fix 1 — Cap scor typosquatting
-    if (typosquattingWarnings.length > 0) score = Math.min(score, 25)
+    if (!checks.domain?.createdDate && !OFFICIAL_DOMAINS_WHITELIST.has(bareDomain)) {
+      allWarnings.push('⚠️ Vârstă domeniu necunoscută — imposibil de verificat')
+      score -= 5
+    }
 
-    // Fix 4 — Cap scor Google Safe Browsing confirmat periculos
-    if (results.checks.safeBrowsing?.safe === false) score = Math.min(score, 15)
+    if (typosquattingWarnings.length > 0 && !OFFICIAL_DOMAINS_WHITELIST.has(bareDomain)) score = Math.min(score, 25)
+    if (checks.safeBrowsing?.safe === false) score = Math.min(score, 15)
 
     if (score < 0) score = 0
 
@@ -392,7 +573,7 @@ export async function POST(request) {
       domain,
       trustScore: score,
       verdict,
-      checks: results.checks,
+      checks,
       warnings: allWarnings,
       isKnownSafe
     })

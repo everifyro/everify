@@ -35,6 +35,22 @@ function renderMarkdown(text: string) {
   })
 }
 
+function cardLabel(text: string) {
+  return (
+    <p style={{ fontSize: 11, color: 'rgba(30,41,59,0.6)', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 1 }}>
+      {text}
+    </p>
+  )
+}
+
+function unavailableStatus(timeout?: boolean) {
+  return (
+    <p style={{ fontSize: 15, fontWeight: 700, color: '#94a3b8', margin: 0 }}>
+      {timeout ? '⏱️ Timeout' : '⚠️ Indisponibil temporar'}
+    </p>
+  )
+}
+
 export default function CheckUrl() {
   const [url, setUrl] = useState('')
   const [loading, setLoading] = useState(false)
@@ -121,7 +137,6 @@ export default function CheckUrl() {
         setError(data.error)
       } else {
         setResult(data)
-        // Soldul este scăzut server-side; folosim valoarea returnată de API
         if (typeof data.credits === 'number') setCredits(data.credits)
       }
     } catch {
@@ -145,6 +160,8 @@ export default function CheckUrl() {
     if (score >= 25) return '🔶'
     return '🔴'
   }
+
+  const cardStyle = { background: 'rgba(30,41,59,0.04)', border: '1px solid rgba(30,41,59,0.1)', borderRadius: 10, padding: '14px 16px' }
 
   return (
     <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'sans-serif', display: 'flex', flexDirection: 'column' }}>
@@ -229,10 +246,10 @@ export default function CheckUrl() {
         {/* Beneficii */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16, marginBottom: 40 }}>
           {[
-            { icon: '🛡️', title: '3 surse independente de verificare' },
+            { icon: '🛡️', title: '10 surse independente de verificare' },
             { icon: '🔍', title: 'Detectare typosquatting' },
             { icon: '📅', title: 'Verificare vârstă domeniu' },
-            { icon: '⚡', title: 'Rezultat în 3-5 secunde' },
+            { icon: '⚡', title: 'Rezultat în 5-10 secunde' },
             { icon: '🆓', title: 'Primul credit gratuit' },
             { icon: '🏆', title: 'Singurul serviciu specializat pentru România' },
           ].map((b, i) => (
@@ -268,67 +285,171 @@ export default function CheckUrl() {
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 12, marginBottom: 24 }}>
 
-              <div style={{ background: 'rgba(30,41,59,0.04)', border: '1px solid rgba(30,41,59,0.1)', borderRadius: 10, padding: '14px 16px' }}>
-                <p style={{ fontSize: 11, color: 'rgba(30,41,59,0.6)', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 1 }}>Conexiune securizată</p>
+              {/* HTTPS */}
+              <div style={cardStyle}>
+                {cardLabel('Conexiune securizată')}
                 <p style={{ fontSize: 15, fontWeight: 700, color: result.checks.https.secure ? '#22c55e' : '#ef4444', margin: 0 }}>
                   {result.checks.https.secure ? '✅ HTTPS Activ' : '❌ HTTP Nesecurizat'}
                 </p>
               </div>
 
-              <div style={{ background: 'rgba(30,41,59,0.04)', border: '1px solid rgba(30,41,59,0.1)', borderRadius: 10, padding: '14px 16px' }}>
-                <p style={{ fontSize: 11, color: 'rgba(30,41,59,0.6)', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 1 }}>Google Safe Browsing</p>
-                <p style={{ fontSize: 15, fontWeight: 700, color: result.checks.safeBrowsing?.safe === false ? '#ef4444' : '#22c55e', margin: 0 }}>
-                  {result.checks.safeBrowsing?.safe === null ? '⚠️ Indisponibil' : result.checks.safeBrowsing?.safe === false ? '🔴 Periculos' : '✅ Sigur'}
-                </p>
-                <p style={{ fontSize: 10, color: 'rgba(30,41,59,0.5)', margin: '4px 0 0', lineHeight: 1.4 }}>Baza de date Google</p>
+              {/* Google Safe Browsing */}
+              <div style={cardStyle}>
+                {cardLabel('Bază de date globală anti-phishing')}
+                {(result.checks.safeBrowsing?.error || result.checks.safeBrowsing?.safe === null)
+                  ? unavailableStatus(result.checks.safeBrowsing?.timeout)
+                  : <p style={{ fontSize: 15, fontWeight: 700, color: result.checks.safeBrowsing?.safe === false ? '#ef4444' : '#22c55e', margin: 0 }}>
+                      {result.checks.safeBrowsing?.safe === false ? '🔴 Periculos' : '✅ Verificat'}
+                    </p>
+                }
               </div>
 
-              <div style={{ background: 'rgba(30,41,59,0.04)', border: '1px solid rgba(30,41,59,0.1)', borderRadius: 10, padding: '14px 16px' }}>
-                <p style={{ fontSize: 11, color: 'rgba(30,41,59,0.6)', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 1 }}>URLhaus — abuse.ch</p>
-                <p style={{ fontSize: 15, fontWeight: 700, color: result.checks.urlhaus?.safe === false ? '#ef4444' : result.checks.urlhaus?.safe === null ? '#f59e0b' : '#22c55e', margin: 0 }}>
-                  {result.checks.urlhaus?.error ? '⚠️ Indisponibil' : result.checks.urlhaus?.safe === false ? '🔴 Periculos' : '✅ Nicio amenințare activă'}
-                </p>
-                <p style={{ fontSize: 10, color: 'rgba(30,41,59,0.5)', margin: '4px 0 0', lineHeight: 1.4 }}>Partener Interpol/Europol</p>
+              {/* URLhaus URL */}
+              <div style={cardStyle}>
+                {cardLabel('Partener Interpol/Europol')}
+                {result.checks.urlhaus?.error
+                  ? unavailableStatus(result.checks.urlhaus?.timeout)
+                  : <p style={{ fontSize: 15, fontWeight: 700, color: result.checks.urlhaus?.safe === false ? '#ef4444' : '#22c55e', margin: 0 }}>
+                      {result.checks.urlhaus?.safe === false ? '🔴 Periculos' : '✅ Nicio amenințare activă'}
+                    </p>
+                }
               </div>
 
-              <div style={{ background: 'rgba(30,41,59,0.04)', border: '1px solid rgba(30,41,59,0.1)', borderRadius: 10, padding: '14px 16px' }}>
-                <p style={{ fontSize: 11, color: 'rgba(30,41,59,0.6)', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 1 }}>Reputație domeniu</p>
-                <p style={{ fontSize: 15, fontWeight: 700, color: result.checks.urlhausDomain?.safe === false ? '#ef4444' : '#22c55e', margin: 0 }}>
-                  {result.checks.urlhausDomain?.error ? '⚠️ Indisponibil' : result.checks.urlhausDomain?.safe === false ? `🔴 ${result.checks.urlhausDomain?.activeCount} URL-uri active malițioase` : '✅ Nicio amenințare activă'}
-                </p>
-                <p style={{ fontSize: 10, color: 'rgba(30,41,59,0.5)', margin: '4px 0 0', lineHeight: 1.4 }}>Istoric domeniu</p>
+              {/* URLhaus Domain */}
+              <div style={cardStyle}>
+                {cardLabel('Reputație domeniu')}
+                {result.checks.urlhausDomain?.error
+                  ? unavailableStatus(result.checks.urlhausDomain?.timeout)
+                  : <p style={{ fontSize: 15, fontWeight: 700, color: result.checks.urlhausDomain?.safe === false ? '#ef4444' : '#22c55e', margin: 0 }}>
+                      {result.checks.urlhausDomain?.safe === false
+                        ? `🔴 ${result.checks.urlhausDomain?.activeCount} URL-uri active malițioase`
+                        : '✅ Nicio amenințare activă'}
+                    </p>
+                }
               </div>
 
-              <div style={{ background: 'rgba(30,41,59,0.04)', border: '1px solid rgba(30,41,59,0.1)', borderRadius: 10, padding: '14px 16px' }}>
-                <p style={{ fontSize: 11, color: 'rgba(30,41,59,0.6)', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 1 }}>Vârstă domeniu</p>
-                <p style={{ fontSize: 15, fontWeight: 700, color: result.checks.domain?.ageMonths >= 12 ? '#22c55e' : result.checks.domain?.ageMonths >= 3 ? '#f59e0b' : '#ef4444', margin: 0 }}>
-                  {result.checks.domain?.ageMonths ? `${result.checks.domain.ageMonths} luni` : '⚠️ Necunoscut'}
-                </p>
-                <p style={{ fontSize: 10, color: 'rgba(30,41,59,0.5)', margin: '4px 0 0', lineHeight: 1.4 }}>Sub 3 luni = risc ridicat</p>
+              {/* RDAP — Domain age */}
+              <div style={cardStyle}>
+                {cardLabel(result.domain?.endsWith?.('.ro') ? 'Registru oficial .ro' : 'Registru oficial domenii')}
+                {result.checks.domain?.ageMonths != null
+                  ? <p style={{ fontSize: 15, fontWeight: 700, color: result.checks.domain.ageMonths >= 12 ? '#22c55e' : result.checks.domain.ageMonths >= 3 ? '#f59e0b' : '#ef4444', margin: 0 }}>
+                      {result.checks.domain.ageMonths} luni
+                    </p>
+                  : <p style={{ fontSize: 15, fontWeight: 700, color: '#94a3b8', margin: 0 }}>⚪ Date indisponibile momentan</p>
+                }
+                {result.checks.domain?.ageMonths != null && (
+                  <p style={{ fontSize: 10, color: 'rgba(30,41,59,0.5)', margin: '4px 0 0', lineHeight: 1.4 }}>
+                    {result.checks.domain?.registrar
+                      ? `Registrar: ${result.checks.domain.registrar}`
+                      : 'Sub 3 luni = risc ridicat'}
+                  </p>
+                )}
               </div>
 
-              <div style={{ background: 'rgba(30,41,59,0.04)', border: '1px solid rgba(30,41,59,0.1)', borderRadius: 10, padding: '14px 16px' }}>
-                <p style={{ fontSize: 11, color: 'rgba(30,41,59,0.6)', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 1 }}>VirusTotal</p>
-                <p style={{ fontSize: 15, fontWeight: 700, color: result.checks.virusTotal?.error || result.checks.virusTotal?.available === false ? '#94a3b8' : result.checks.virusTotal?.malicious > 0 ? '#ef4444' : result.checks.virusTotal?.suspicious > 0 ? '#f97316' : '#22c55e', margin: 0 }}>
-                  {result.checks.virusTotal?.error || result.checks.virusTotal?.available === false ? '⚠️ Indisponibil' : result.checks.virusTotal?.malicious > 0 ? `🔴 ${result.checks.virusTotal.malicious} motoare detectează pericol` : result.checks.virusTotal?.suspicious > 0 ? `🟠 ${result.checks.virusTotal.suspicious} motoare suspicioase` : '✅ Nicio amenințare'}
-                </p>
-                <p style={{ fontSize: 10, color: 'rgba(30,41,59,0.5)', margin: '4px 0 0', lineHeight: 1.4 }}>Analiză cu 70+ motoare antivirus</p>
+              {/* VirusTotal */}
+              <div style={cardStyle}>
+                {cardLabel('Analiză cu 70+ motoare antivirus')}
+                {(result.checks.virusTotal?.error || result.checks.virusTotal?.available === false)
+                  ? unavailableStatus(result.checks.virusTotal?.timeout)
+                  : <p style={{ fontSize: 15, fontWeight: 700, color: result.checks.virusTotal?.malicious > 0 ? '#ef4444' : result.checks.virusTotal?.suspicious > 0 ? '#f97316' : '#22c55e', margin: 0 }}>
+                      {result.checks.virusTotal?.malicious > 0
+                        ? `🔴 ${result.checks.virusTotal.malicious} motoare detectează pericol`
+                        : result.checks.virusTotal?.suspicious > 0
+                          ? `🟠 ${result.checks.virusTotal.suspicious} motoare suspicioase`
+                          : '✅ Nicio amenințare'}
+                    </p>
+                }
               </div>
 
-              <div style={{ background: 'rgba(30,41,59,0.04)', border: '1px solid rgba(30,41,59,0.1)', borderRadius: 10, padding: '14px 16px' }}>
-                <p style={{ fontSize: 11, color: 'rgba(30,41,59,0.6)', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 1 }}>OpenPhish Community</p>
-                <p style={{ fontSize: 15, fontWeight: 700, color: result.checks.openPhish?.error ? '#94a3b8' : result.checks.openPhish?.found ? '#ef4444' : '#22c55e', margin: 0 }}>
-                  {result.checks.openPhish?.error ? '⚠️ Indisponibil' : result.checks.openPhish?.found ? '🔴 Phishing confirmat' : '✅ Nelistat în feed phishing'}
-                </p>
-                <p style={{ fontSize: 10, color: 'rgba(30,41,59,0.5)', margin: '4px 0 0', lineHeight: 1.4 }}>Feed phishing actualizat în timp real</p>
+              {/* OpenPhish */}
+              <div style={cardStyle}>
+                {cardLabel('Feed phishing actualizat în timp real')}
+                {result.checks.openPhish?.error
+                  ? unavailableStatus(result.checks.openPhish?.timeout)
+                  : <p style={{ fontSize: 15, fontWeight: 700, color: result.checks.openPhish?.found ? '#ef4444' : '#22c55e', margin: 0 }}>
+                      {result.checks.openPhish?.found ? '🔴 Phishing confirmat' : '✅ Nelistat în feed phishing'}
+                    </p>
+                }
               </div>
 
-              <div style={{ background: 'rgba(30,41,59,0.04)', border: '1px solid rgba(30,41,59,0.1)', borderRadius: 10, padding: '14px 16px' }}>
-                <p style={{ fontSize: 11, color: 'rgba(30,41,59,0.6)', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 1 }}>Certificat SSL (crt.sh)</p>
-                <p style={{ fontSize: 15, fontWeight: 700, color: result.checks.certTransparency?.error || result.checks.certTransparency?.unknown ? '#94a3b8' : result.checks.certTransparency?.noCerts ? '#f59e0b' : result.checks.certTransparency?.isNewCert ? '#ef4444' : '#22c55e', margin: 0 }}>
-                  {result.checks.certTransparency?.error || result.checks.certTransparency?.unknown ? '⚠️ Necunoscut' : result.checks.certTransparency?.noCerts ? '⚠️ Fără certificate SSL' : result.checks.certTransparency?.isNewCert ? `🔴 Emis acum ${result.checks.certTransparency.ageDays} zile — risc ridicat` : `✅ ${result.checks.certTransparency?.ageDays} zile — ${result.checks.certTransparency?.totalCerts} cert.`}
-                </p>
-                <p style={{ fontSize: 10, color: 'rgba(30,41,59,0.5)', margin: '4px 0 0', lineHeight: 1.4 }}>Transparență certificate — primul cert emis</p>
+              {/* crt.sh */}
+              <div style={cardStyle}>
+                {cardLabel('Transparență certificate SSL')}
+                {(result.checks.certTransparency?.error || result.checks.certTransparency?.unknown)
+                  ? unavailableStatus(result.checks.certTransparency?.timeout)
+                  : <p style={{ fontSize: 15, fontWeight: 700, color: result.checks.certTransparency?.noCerts ? '#f59e0b' : result.checks.certTransparency?.isNewCert ? '#ef4444' : '#22c55e', margin: 0 }}>
+                      {result.checks.certTransparency?.noCerts
+                        ? '⚠️ Fără certificate SSL'
+                        : result.checks.certTransparency?.isNewCert
+                          ? `🔴 Emis acum ${result.checks.certTransparency.ageDays} zile — risc ridicat`
+                          : `✅ ${result.checks.certTransparency?.ageDays} zile — ${result.checks.certTransparency?.totalCerts} cert.`}
+                    </p>
+                }
+              </div>
+
+              {/* IPInfo */}
+              <div style={cardStyle}>
+                {cardLabel('Localizare și identificare infrastructură server')}
+                {(result.checks.ipInfo?.error || result.checks.ipInfo?.available === false)
+                  ? unavailableStatus(result.checks.ipInfo?.timeout)
+                  : <p style={{ fontSize: 15, fontWeight: 700, color: result.checks.ipInfo?.isHighRisk ? '#f97316' : '#22c55e', margin: 0 }}>
+                      {result.checks.ipInfo?.isHighRisk
+                        ? `⚠️ Server în țară cu risc (${result.checks.ipInfo.country})`
+                        : `✅ ${result.checks.ipInfo?.country || '—'}`}
+                    </p>
+                }
+                {result.checks.ipInfo?.org && (
+                  <p style={{ fontSize: 10, color: 'rgba(30,41,59,0.5)', margin: '4px 0 0', lineHeight: 1.4 }}>
+                    {result.checks.ipInfo.org}
+                  </p>
+                )}
+              </div>
+
+              {/* AbuseIPDB */}
+              <div style={cardStyle}>
+                {cardLabel('Rețea globală de raportare abuzuri IP')}
+                {(result.checks.abuseIPDB?.error || result.checks.abuseIPDB?.available === false)
+                  ? unavailableStatus(result.checks.abuseIPDB?.timeout)
+                  : (() => {
+                      const score = result.checks.abuseIPDB?.abuseConfidenceScore ?? 0
+                      const color = score > 50 ? '#ef4444' : score > 25 ? '#f97316' : score > 0 ? '#f59e0b' : '#22c55e'
+                      const label = score > 50
+                        ? `🔴 Scor abuz ridicat (${score}%)`
+                        : score > 25
+                          ? `🟠 Scor abuz moderat (${score}%)`
+                          : score > 0
+                            ? `🟡 Scor abuz redus (${score}%)`
+                            : '✅ Nicio raportare abuzuri'
+                      return <p style={{ fontSize: 15, fontWeight: 700, color, margin: 0 }}>{label}</p>
+                    })()
+                }
+                {result.checks.abuseIPDB?.totalReports != null && (
+                  <p style={{ fontSize: 10, color: 'rgba(30,41,59,0.5)', margin: '4px 0 0', lineHeight: 1.4 }}>
+                    {result.checks.abuseIPDB.totalReports} raportări în 90 zile
+                  </p>
+                )}
+              </div>
+
+              {/* Shodan */}
+              <div style={cardStyle}>
+                {cardLabel('Scanare infrastructură internet')}
+                {result.checks.shodan?.error
+                  ? unavailableStatus(result.checks.shodan?.timeout)
+                  : result.checks.shodan?.available === false
+                    ? result.checks.shodan?.notIndexed
+                      ? <p style={{ fontSize: 15, fontWeight: 700, color: '#94a3b8', margin: 0 }}>⚪ Fără date disponibile</p>
+                      : unavailableStatus()
+                    : <p style={{ fontSize: 15, fontWeight: 700, color: result.checks.shodan?.hostnameCount >= 20 ? '#f97316' : '#22c55e', margin: 0 }}>
+                        {result.checks.shodan?.hostnameCount >= 20
+                          ? `⚠️ ${result.checks.shodan.hostnameCount} domenii pe același IP`
+                          : '✅ Infrastructură normală'}
+                      </p>
+                }
+                {result.checks.shodan?.org && (
+                  <p style={{ fontSize: 10, color: 'rgba(30,41,59,0.5)', margin: '4px 0 0', lineHeight: 1.4 }}>
+                    {result.checks.shodan.org}
+                  </p>
+                )}
               </div>
 
             </div>
@@ -347,7 +468,7 @@ export default function CheckUrl() {
             <div style={{ background: 'rgba(14,165,233,0.05)', border: '1px solid rgba(14,165,233,0.1)', borderRadius: 10, padding: '12px 16px', marginBottom: 16 }}>
               <p style={{ fontSize: 11, color: 'rgba(30,41,59,0.6)', margin: '0 0 6px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1 }}>Surse de verificare utilizate</p>
               <p style={{ fontSize: 11, color: 'rgba(30,41,59,0.55)', margin: 0, lineHeight: 1.8 }}>
-                🔵 Google Safe Browsing &nbsp;|&nbsp; 🔵 URLhaus — abuse.ch (partener Interpol/Europol) &nbsp;|&nbsp; 🔵 VirusTotal &nbsp;|&nbsp; 🔵 OpenPhish Community Feed &nbsp;|&nbsp; 🔵 crt.sh Certificate Transparency &nbsp;|&nbsp; 🔵 Analiză pattern URL &nbsp;|&nbsp; 🔵 Detectare typosquatting
+                🔵 Google Safe Browsing &nbsp;|&nbsp; 🔵 URLhaus — abuse.ch (partener Interpol/Europol) &nbsp;|&nbsp; 🔵 VirusTotal &nbsp;|&nbsp; 🔵 OpenPhish Community Feed &nbsp;|&nbsp; 🔵 crt.sh Certificate Transparency &nbsp;|&nbsp; 🔵 RDAP &nbsp;|&nbsp; 🔵 IPInfo &nbsp;|&nbsp; 🔵 AbuseIPDB &nbsp;|&nbsp; 🔵 Shodan &nbsp;|&nbsp; 🔵 Analiză pattern URL &nbsp;|&nbsp; 🔵 Detectare typosquatting
               </p>
             </div>
 
@@ -363,10 +484,10 @@ export default function CheckUrl() {
         {!result && (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 16, marginTop: 8 }}>
             {[
-              { icon: '🛡️', title: 'Google Safe Browsing', desc: 'Verificare în baza de date Google cu miliarde de site-uri analizate' },
-              { icon: '🌐', title: 'URLhaus — abuse.ch', desc: 'Partener oficial Interpol/Europol — bază de date cu URL-uri malițioase active' },
+              { icon: '🛡️', title: 'Bază de date globală anti-phishing', desc: 'Verificare în baza de date Google cu miliarde de site-uri analizate' },
+              { icon: '🌐', title: 'Partener Interpol/Europol', desc: 'URLhaus — abuse.ch: bază de date cu URL-uri malițioase active' },
               { icon: '🔒', title: 'Verificare HTTPS', desc: 'Confirmă dacă site-ul folosește o conexiune securizată și criptată' },
-              { icon: '📅', title: 'Vârstă domeniu', desc: 'Site-urile noi (sub 3 luni) sunt frecvent asociate cu fraude online' },
+              { icon: '📅', title: 'Registru oficial domenii', desc: 'Date RDAP: vârsta domeniului, registrar și servere de nume' },
               { icon: '🔍', title: 'Analiză URL', desc: 'Detectează pattern-uri suspecte și tentative de typosquatting' },
             ].map((item, i) => (
               <div key={i} style={{ background: '#ffffff', border: '1px solid rgba(14,165,233,0.1)', borderRadius: 12, padding: '16px 18px', boxShadow: '0 4px 24px rgba(15,23,42,0.06)' }}>
