@@ -104,7 +104,7 @@ footer::before {
 }
 
 .btn-pulse {
-  animation: pulse-blue 2.4s infinite;
+  animation: pulse-blue 3.5s infinite;
   transition: transform 0.15s ease;
 }
 

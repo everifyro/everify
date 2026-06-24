@@ -17,7 +17,7 @@ export default function ReportButton() {
         >X</button>
         <button
           onClick={() => router.push('/raporteaza')}
-          style={{ background: 'linear-gradient(135deg, #3b82f6, #6366f1)', color: 'white', border: 'none', borderRadius: 32, padding: '0 16px', height: 48, fontSize: 13, fontWeight: 800, cursor: 'pointer', animation: 'pulse-blue 2s infinite', display: 'flex', alignItems: 'center', gap: 6, boxShadow: '0 4px 20px rgba(99,102,241,0.4)', whiteSpace: 'nowrap' }}
+          style={{ background: 'linear-gradient(135deg, #3b82f6, #6366f1)', color: 'white', border: 'none', borderRadius: 32, padding: '0 16px', height: 48, fontSize: 13, fontWeight: 800, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6, boxShadow: '0 4px 20px rgba(99,102,241,0.4)', whiteSpace: 'nowrap' }}
           title="Raportează un scam"
         >⚠️ Raportează!</button>
       </div>

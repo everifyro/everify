@@ -223,8 +223,7 @@ export default function CheckUrl() {
               <button
                 onClick={check}
                 disabled={loading || !url.trim()}
-                className="btn-pulse"
-                style={{ alignSelf: 'stretch', background: 'linear-gradient(135deg,#0ea5e9,#6366f1)', border: 'none', color: 'white', padding: '0 24px', borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, textAlign: 'center' }}
+                style={{ alignSelf: 'stretch', background: !url.trim() ? '#94a3b8' : 'linear-gradient(135deg,#0ea5e9,#6366f1)', border: 'none', color: 'white', padding: '0 24px', borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: !url.trim() || loading ? 'not-allowed' : 'pointer', whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, textAlign: 'center', opacity: !url.trim() ? 0.5 : loading ? 0.7 : 1, transition: 'background 0.2s, opacity 0.2s' }}
               >
                 {loading ? 'Se verifică...' : <>Verifică <span style={{ fontSize: '1.4em', lineHeight: 1 }}>❯</span></>}
               </button>
@@ -253,7 +252,7 @@ export default function CheckUrl() {
             { icon: '🆓', title: 'Primul credit gratuit' },
             { icon: '🏆', title: 'Singurul serviciu specializat pentru România' },
           ].map((b, i) => (
-            <div key={i} style={{ background: '#ffffff', border: '1px solid rgba(14,165,233,0.15)', borderRadius: 12, padding: '18px 20px', display: 'flex', alignItems: 'center', gap: 14, boxShadow: '0 4px 24px rgba(15,23,42,0.06)' }}>
+            <div key={i} style={{ background: '#ffffff', border: '1px solid rgba(14,165,233,0.15)', borderRadius: 12, padding: '18px 20px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: 10, boxShadow: '0 4px 24px rgba(15,23,42,0.06)' }}>
               <span style={{ fontSize: 28 }}>{b.icon}</span>
               <span style={{ fontSize: 14, fontWeight: 700, color: '#1e293b' }}>{b.title}</span>
             </div>

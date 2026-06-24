@@ -13,7 +13,7 @@ export default function Header() {
   const pathname = usePathname()
 
   const dark = pathname === '/scam-score'
-  const headerBg = dark ? '#0F172A' : 'rgba(15,23,42,0.10)'
+  const headerBg = dark ? '#0F172A' : '#ffffff'
   const headerBorder = dark ? '1px solid rgba(255,255,255,0.10)' : '1px solid rgba(15,23,42,0.08)'
   const logoColor = dark ? '#ffffff' : '#1e293b'
   const navColor = dark ? 'rgba(255,255,255,0.85)' : 'rgba(30,41,59,0.85)'
@@ -85,8 +85,8 @@ export default function Header() {
         position: 'sticky',
         top: 0,
         zIndex: 100,
-        backdropFilter: 'blur(24px) saturate(180%)',
-        WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+        backdropFilter: dark ? 'blur(24px) saturate(180%)' : 'none',
+        WebkitBackdropFilter: dark ? 'blur(24px) saturate(180%)' : 'none',
         boxShadow: '0 8px 32px -16px rgba(15,23,42,0.18)',
         boxSizing: 'border-box',
       }}>

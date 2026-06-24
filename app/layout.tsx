@@ -6,6 +6,7 @@ import EmergencyButton from "@/components/EmergencyButton";
 import ReportButton from "@/components/ReportButton";
 import Header from "@/components/Header";
 import NewsletterPopup from "@/components/NewsletterPopup";
+import ShellGuard from "@/components/ShellGuard";
 
 const plusJakarta = Plus_Jakarta_Sans({
   variable: "--font-plus-jakarta",
@@ -35,11 +36,11 @@ export default function RootLayout({
   return (
     <html lang="ro" className={`${plusJakarta.variable} h-full`}>
       <body className="min-h-full flex flex-col" style={{ fontFamily: 'var(--font-plus-jakarta), sans-serif', background: '#f8fafc', color: '#1e293b' }}>
-        <Header />
+        <ShellGuard><Header /></ShellGuard>
         {children}
 
         {/* Footer */}
-        <footer style={{
+        <ShellGuard><footer style={{
           background: '#1e293b',
           padding: '24px 24px',
           marginTop: 'auto',
@@ -66,7 +67,7 @@ export default function RootLayout({
                 '🇷🇴 Made in Romania',
                 '🚫 Nu vindem date personale',
                 '🌍 Date stocate în UE',
-                '💯 200+ tipuri de fraude documentate',
+                '💯 200+ de tipuri diferite de fraude documentate',
                 '⚡ Verdict în sub 5 secunde',
                 '🏆 Cea mai completă bază de date anti-scam din România',
               ].map((b, i) => (
@@ -95,12 +96,14 @@ export default function RootLayout({
               <strong style={{ color: 'rgba(255,255,255,0.45)' }}>Disclaimer:</strong> Conținutul generat de platforma eVerify are caracter exclusiv informativ și este produs cu ajutorul inteligenței artificiale. Acesta nu constituie consultanță juridică, tehnică sau financiară și nu poate fi utilizat ca probă sau mijloc de dovadă în niciun proces juridic, administrativ sau de altă natură. eVerify nu garantează acuratețea absolută a rezultatelor. În cazul unor prejudicii financiare, contactați autoritățile competente: Poliția Română (112), DNSC (1911), ANPC (021.9551).
             </p>
           </div>
-        </footer>
+        </footer></ShellGuard>
 
-        <CookieBanner />
-        <EmergencyButton />
-        <ReportButton />
-        <NewsletterPopup />
+        <ShellGuard>
+          <CookieBanner />
+          <EmergencyButton />
+          <ReportButton />
+          <NewsletterPopup />
+        </ShellGuard>
       </body>
     </html>
   );

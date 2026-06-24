@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import VeraBot from '@/components/VeraBot'
 import { useScrollToResult } from '@/hooks/useScrollToResult'
 import ImageUpload, { type ExtractedData } from '@/components/ImageUpload'
+import { COMING_SOON } from '@/lib/config'
 
 const SHOW_VACATION_BANNER = true
 
@@ -171,6 +172,14 @@ function renderMarkdown(text: string) {
     }
   }
 
+  if (COMING_SOON) {
+    return (
+      <div style={{ minHeight: '100vh', background: '#f0f2f5', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <p style={{ fontSize: 22, color: '#64748b', fontWeight: 500, margin: 0 }}>În curând</p>
+      </div>
+    )
+  }
+
   return (
     <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'sans-serif', display: 'flex', flexDirection: 'column' }}>
 
@@ -262,8 +271,7 @@ function renderMarkdown(text: string) {
             <button
               onClick={send}
               disabled={!input.trim() || loading || remaining <= 0}
-              className="btn-pulse"
-              style={{ alignSelf: 'stretch', padding: '0 24px', borderRadius: 10, border: 'none', background: 'linear-gradient(135deg,#0ea5e9,#6366f1)', color: 'white', fontSize: 15, fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer', whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, textAlign: 'center', opacity: loading ? 0.7 : 1 }}
+              style={{ alignSelf: 'stretch', padding: '0 24px', borderRadius: 10, border: 'none', background: !input.trim() || remaining <= 0 ? '#94a3b8' : 'linear-gradient(135deg,#0ea5e9,#6366f1)', color: 'white', fontSize: 15, fontWeight: 700, cursor: !input.trim() || loading || remaining <= 0 ? 'not-allowed' : 'pointer', whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, textAlign: 'center', opacity: loading ? 0.7 : !input.trim() || remaining <= 0 ? 0.5 : 1, transition: 'background 0.2s, opacity 0.2s' }}
             >{loading ? 'Se procesează...' : <>Verifică <span style={{ fontSize: '1.4em', lineHeight: 1 }}>❯</span></>}</button>
           </div>
           <ImageUpload onExtracted={handleExtracted} context="ai" />
@@ -280,7 +288,7 @@ function renderMarkdown(text: string) {
             { icon: '🔗', color: '#2563eb', number: '47%',            desc: 'din fraude încep cu un link nesolicitat' },
             { icon: '🛡️', color: '#16a34a', number: 'Verifică gratuit', desc: 'orice anunț, link sau IBAN pe eVerify' },
           ].map((s, i) => (
-            <div key={i} style={{ background: '#fff', border: '0.5px solid #e2e8f0', borderRadius: '12px', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div key={i} style={{ background: '#fff', border: `2px solid ${s.color}30`, borderRadius: '12px', padding: '1.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: '8px' }}>
               <span style={{ fontSize: '28px' }}>{s.icon}</span>
               <span className="stats-number" style={{ fontSize: '28px', fontWeight: 700, color: s.color, lineHeight: 1.1 }}>{s.number}</span>
               <span style={{ fontSize: '14px', color: '#64748b' }}>{s.desc}</span>
@@ -306,7 +314,7 @@ function renderMarkdown(text: string) {
                 { label: 'Verifică link cazare', href: '/check-url' },
                 { label: 'Verifică IBAN', href: '/check-iban' },
                 { label: 'Verifică agenție', href: '/check-url' },
-                { label: 'Ghid complet', href: '/check-url?context=vacanta' },
+                { label: 'Ghid complet', href: '/scam-types' },
               ].map((btn, i) => (
                 <a
                   key={i}
@@ -328,13 +336,13 @@ function renderMarkdown(text: string) {
       <div style={{ width: '100%', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16, marginBottom: 40 }}>
         {[
           { icon: '⚡', title: 'Verdict în sub 5 secunde' },
-          { icon: '🧠', title: '200+ tipuri de fraude documentate' },
+          { icon: '🛡️', title: '200+ de tipuri diferite de fraude documentate' },
           { icon: '🇷🇴', title: 'Specializat pentru România' },
           { icon: '🔒', title: '100% confidențial' },
           { icon: '🆓', title: '5 credite gratuite' },
           { icon: '🤖', title: 'AI de ultimă generație' },
         ].map((b, i) => (
-          <div key={i} style={{ background: '#ffffff', border: '1px solid rgba(14,165,233,0.15)', borderRadius: 12, padding: '18px 20px', display: 'flex', alignItems: 'center', gap: 14, boxShadow: '0 4px 24px rgba(15,23,42,0.06)' }}>
+          <div key={i} style={{ background: '#ffffff', border: '1px solid rgba(14,165,233,0.15)', borderRadius: 12, padding: '18px 20px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: 10, boxShadow: '0 4px 24px rgba(15,23,42,0.06)' }}>
             <span style={{ fontSize: 28 }}>{b.icon}</span>
             <span style={{ fontSize: 14, fontWeight: 700, color: '#1e293b' }}>{b.title}</span>
           </div>
@@ -382,7 +390,7 @@ function renderMarkdown(text: string) {
             </div>
           </div>
 
-          <a href="/scam-score" className="btn-pulse" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 6, background: 'linear-gradient(135deg,#0ea5e9,#6366f1)', color: 'white', padding: '8px 18px', borderRadius: 10, fontSize: '0.8rem', fontWeight: 700, textDecoration: 'none' }}>
+          <a href="/scam-score" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 6, background: 'linear-gradient(135deg,#0ea5e9,#6366f1)', color: 'white', padding: '8px 18px', borderRadius: 10, fontSize: '0.8rem', fontWeight: 700, textDecoration: 'none' }}>
             Începe testul gratuit <span style={{ fontSize: '1.2em', lineHeight: 1 }}>❯</span>
           </a>
         </div>
@@ -513,7 +521,6 @@ function renderMarkdown(text: string) {
             <button
               onClick={subscribeNewsletter}
               disabled={newsletterStatus === 'loading' || !newsletterEmail.trim()}
-              className="btn-pulse"
               style={{ background: 'linear-gradient(135deg,#0ea5e9,#6366f1)', border: 'none', color: 'white', padding: '10px 20px', borderRadius: 10, fontSize: 14, fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, textAlign: 'center' }}
             >
               {newsletterStatus === 'loading' ? 'Se procesează...' : <>Abonați-vă <span style={{ fontSize: '1.4em', lineHeight: 1 }}>❯</span></>}

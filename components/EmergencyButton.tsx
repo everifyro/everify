@@ -52,7 +52,7 @@ export default function EmergencyButton() {
       {!hidden && (
         <div style={{ position: 'fixed', top: 24, right: 24, zIndex: 999, display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 4 }}>
           <button onClick={() => setHidden(true)} style={{ background: 'rgba(0,0,0,0.5)', border: 'none', color: 'rgba(255,255,255,0.6)', width: 20, height: 20, borderRadius: '50%', cursor: 'pointer', fontSize: 10, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>X</button>
-          <button onClick={() => setOpen(true)} style={{ background: 'linear-gradient(135deg, #dc2626, #ef4444)', color: 'white', border: 'none', borderRadius: 50, width: 64, height: 64, fontSize: 28, cursor: 'pointer', animation: 'pulse-red 2s infinite', display: 'flex', alignItems: 'center', justifyContent: 'center' }} title="Numere de urgenta">🆘</button>
+          <button onClick={() => setOpen(true)} style={{ background: 'linear-gradient(135deg, #dc2626, #ef4444)', color: 'white', border: 'none', borderRadius: 50, width: 64, height: 64, fontSize: 28, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 16px rgba(220,38,38,0.4)' }} title="Numere de urgenta">🆘</button>
         </div>
       )}
 

@@ -378,7 +378,7 @@ export default function CheckJob() {
             <button
               onClick={handleVerify}
               disabled={loading || !text.trim()}
-              style={{ marginTop: 14, width: '100%', background: loading ? 'rgba(14,165,233,0.5)' : 'linear-gradient(135deg,#0ea5e9,#6366f1)', border: 'none', color: 'white', padding: '14px 0', borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: loading || !text.trim() ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
+              style={{ marginTop: 14, width: '100%', background: !text.trim() ? '#94a3b8' : loading ? 'rgba(14,165,233,0.5)' : 'linear-gradient(135deg,#0ea5e9,#6366f1)', border: 'none', color: 'white', padding: '14px 0', borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: loading || !text.trim() ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, opacity: !text.trim() ? 0.5 : 1, transition: 'background 0.2s, opacity 0.2s' }}
             >
               {loading ? (
                 <>
@@ -516,7 +516,7 @@ export default function CheckJob() {
                 { icon: '🤖', title: 'Analiză AI a textului anunțului' },
                 { icon: '🏆', title: 'Bază de date cu joburi false raportate' },
               ].map((b, i) => (
-                <div key={i} style={{ background: '#ffffff', border: '1px solid rgba(14,165,233,0.15)', borderRadius: 12, padding: '18px 20px', display: 'flex', alignItems: 'center', gap: 14, boxShadow: '0 4px 24px rgba(15,23,42,0.06)' }}>
+                <div key={i} style={{ background: '#ffffff', border: '1px solid rgba(14,165,233,0.15)', borderRadius: 12, padding: '18px 20px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: 10, boxShadow: '0 4px 24px rgba(15,23,42,0.06)' }}>
                   <span style={{ fontSize: 28 }}>{b.icon}</span>
                   <span style={{ fontSize: 14, fontWeight: 700, color: '#1e293b' }}>{b.title}</span>
                 </div>
