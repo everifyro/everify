@@ -377,8 +377,9 @@ export default function CheckJob() {
             {/* Buton verificare */}
             <button
               onClick={handleVerify}
-              disabled={loading || !text.trim()}
-              style={{ marginTop: 14, width: '100%', background: !text.trim() ? '#94a3b8' : loading ? 'rgba(14,165,233,0.5)' : 'linear-gradient(135deg,#0ea5e9,#6366f1)', border: 'none', color: 'white', padding: '14px 0', borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: loading || !text.trim() ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, opacity: !text.trim() ? 0.5 : 1, transition: 'background 0.2s, opacity 0.2s' }}
+              disabled={loading}
+              className="btn-pulse"
+              style={{ marginTop: 14, width: '100%', background: loading ? 'rgba(14,165,233,0.5)' : 'linear-gradient(135deg,#0ea5e9,#6366f1)', border: 'none', color: 'white', padding: '14px 0', borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, opacity: loading ? 0.7 : 1 }}
             >
               {loading ? (
                 <>

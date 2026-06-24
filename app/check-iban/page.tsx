@@ -192,8 +192,9 @@ export default function CheckIban() {
               />
               <button
                 onClick={check}
-                disabled={loading || !iban.trim()}
-                style={{ alignSelf: 'stretch', background: !iban.trim() ? '#94a3b8' : 'linear-gradient(135deg,#0ea5e9,#6366f1)', border: 'none', color: 'white', padding: '0 24px', borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: !iban.trim() || loading ? 'not-allowed' : 'pointer', whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, opacity: !iban.trim() ? 0.5 : loading ? 0.7 : 1, transition: 'background 0.2s, opacity 0.2s' }}
+                disabled={loading}
+                className="btn-pulse"
+                style={{ alignSelf: 'stretch', background: 'linear-gradient(135deg,#0ea5e9,#6366f1)', border: 'none', color: 'white', padding: '0 24px', borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer', whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, opacity: loading ? 0.7 : 1 }}
               >
                 {loading ? 'Se verifică...' : <>Verifică IBAN <span style={{ fontSize: '1.4em', lineHeight: 1 }}>❯</span></>}
               </button>
@@ -455,7 +456,7 @@ export default function CheckIban() {
               <p style={{ fontSize: 15, fontWeight: 700, color: '#1e293b', margin: '0 0 6px' }}>Dacă ai primit un SMS cu IBAN</p>
               <p style={{ fontSize: 13, color: '#64748b', lineHeight: 1.55, margin: 0 }}>
                 Mesajele care cer plăți urgente pe IBAN necunoscut sunt frecvent tentative de phishing.{' '}
-                <a href="/" style={{ color: '#2563eb', fontWeight: 600 }}>Verifică mesajul →</a>
+                <a href="/check-ai" style={{ color: '#2563eb', fontWeight: 600 }}>Verifică mesajul →</a>
               </p>
             </div>
 

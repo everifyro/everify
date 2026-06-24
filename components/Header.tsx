@@ -98,7 +98,7 @@ export default function Header() {
 
         {/* Desktop nav */}
         <nav style={{ display: 'flex', alignItems: 'center', gap: 20 }} className="header-desktop-nav">
-          <a href="/" style={primaryLinkStyle}>Verificare AI</a>
+          <a href="/check-ai" style={primaryLinkStyle}>Verificare AI</a>
           <a href="/check-url" style={primaryLinkStyle}>Verificare Site</a>
           <a href="/check-iban" style={primaryLinkStyle}>Verificare IBAN</a>
           <a href="/check-job" style={primaryLinkStyle}>Verificare Job</a>
@@ -235,7 +235,7 @@ export default function Header() {
           }}
         >
           {[
-            { href: '/', label: 'Verificare AI', primary: true },
+            { href: '/check-ai', label: 'Verificare AI', primary: true },
             { href: '/check-url', label: 'Verificare Site', primary: true },
             { href: '/check-iban', label: 'Verificare IBAN', primary: true },
             { href: '/check-job', label: 'Verificare Job', primary: true },
