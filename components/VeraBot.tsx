@@ -61,7 +61,9 @@ export default function VeraBot() {
     const tAuto = setTimeout(() => {
       if (!sessionStorage.getItem('vera_auto_opened')) {
         sessionStorage.setItem('vera_auto_opened', 'true')
-        setOpen(true)
+        if (typeof window !== 'undefined' && window.innerWidth > 768) {
+          setOpen(true)
+        }
       }
     }, 5000)
     return () => { clearTimeout(tVisible); clearTimeout(tAuto) }
@@ -160,9 +162,13 @@ export default function VeraBot() {
           transition: opacity 0.15s;
         }
         .vera-page-btn:hover { opacity: 0.85; }
-        @media (max-width: 480px) {
-          .vera-wrapper { right: 16px !important; max-width: calc(100vw - 32px) !important; }
-          .vera-panel { width: calc(100vw - 32px) !important; max-width: calc(100vw - 32px) !important; }
+        @media (max-width: 768px) {
+          .vera-wrapper { right: 16px !important; bottom: 16px !important; }
+          .vera-panel {
+            width: calc(100vw - 32px) !important;
+            max-width: calc(100vw - 32px) !important;
+            max-height: calc(100dvh - 180px) !important;
+          }
         }
       `}</style>
 

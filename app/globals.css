@@ -49,11 +49,10 @@ header nav a:hover::after {
   width: 100%;
 }
 
-/* Header fix */
-header {
-  will-change: auto;
-  transform: translateZ(0);
-  -webkit-transform: translateZ(0);
+/* Header responsive */
+@media (max-width: 768px) {
+  .header-desktop-nav { display: none !important; }
+  .header-hamburger { display: flex !important; }
 }
 
 /* Soft 3D fade below the header so it lifts off the page */

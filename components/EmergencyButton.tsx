@@ -52,7 +52,7 @@ export default function EmergencyButton() {
       {!hidden && (
         <div className="sos-btn" style={{ position: 'fixed', top: 24, right: 24, zIndex: 98, display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 4 }}>
           <button onClick={() => setHidden(true)} style={{ background: 'rgba(0,0,0,0.5)', border: 'none', color: 'rgba(255,255,255,0.6)', width: 20, height: 20, borderRadius: '50%', cursor: 'pointer', fontSize: 10, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>X</button>
-          <button onClick={() => setOpen(true)} style={{ background: 'linear-gradient(135deg, #dc2626, #ef4444)', color: 'white', border: 'none', borderRadius: 50, width: 64, height: 64, fontSize: 28, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 16px rgba(220,38,38,0.4)' }} title="Numere de urgenta">🆘</button>
+          <button onClick={() => { console.log('SOS clicked'); alert('SOS clicked'); setOpen(true) }} style={{ background: 'linear-gradient(135deg, #dc2626, #ef4444)', color: 'white', border: 'none', borderRadius: 50, width: 64, height: 64, fontSize: 28, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 16px rgba(220,38,38,0.4)' }} title="Numere de urgenta">🆘</button>
         </div>
       )}
 
@@ -88,7 +88,7 @@ export default function EmergencyButton() {
       <style>{`
         @keyframes pulse-red { 0% { box-shadow: 0 0 0 0 rgba(220,38,38,0.7); } 70% { box-shadow: 0 0 0 12px rgba(220,38,38,0); } 100% { box-shadow: 0 0 0 0 rgba(220,38,38,0); } }
         @media (max-width: 768px) {
-          .sos-btn { top: 76px !important; }
+          .sos-btn { top: calc(68px + env(safe-area-inset-top, 0px)) !important; right: 12px !important; }
         }
       `}</style>
     </>

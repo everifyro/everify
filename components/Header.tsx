@@ -197,7 +197,7 @@ export default function Header() {
         {/* Hamburger button (mobile only) */}
         <button
           className="header-hamburger"
-          onClick={() => setMobileOpen(o => !o)}
+          onClick={() => { console.log('hamburger clicked'); alert('hamburger clicked'); setMobileOpen(o => !o) }}
           aria-label="Meniu"
           style={{
             display: 'none',
@@ -280,12 +280,6 @@ export default function Header() {
         </div>
       )}
 
-      <style>{`
-        @media (max-width: 768px) {
-          .header-desktop-nav { display: none !important; }
-          .header-hamburger { display: flex !important; }
-        }
-      `}</style>
     </>
   )
 }

@@ -8,6 +8,7 @@ import Header from "@/components/Header";
 import NewsletterPopup from "@/components/NewsletterPopup";
 import ShellGuard from "@/components/ShellGuard";
 
+
 const plusJakarta = Plus_Jakarta_Sans({
   variable: "--font-plus-jakarta",
   subsets: ["latin"],

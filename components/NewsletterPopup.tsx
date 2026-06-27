@@ -13,6 +13,8 @@ export default function NewsletterPopup() {
   const pathname = usePathname()
 
   useEffect(() => {
+    setVisible(false)
+
     if (EXCLUDED_PATHS.some(p => pathname.startsWith(p))) return
     if (sessionStorage.getItem('newsletter_shown')) return
 
@@ -56,17 +58,17 @@ export default function NewsletterPopup() {
 
   return (
     <div
+      onClick={() => setVisible(false)}
       style={{
-        position: 'fixed', inset: 0, background: 'transparent',
+        position: 'fixed', inset: 0, background: 'rgba(15,23,42,0.45)',
         zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center',
-        pointerEvents: 'none',
       }}
     >
       <div
+        onClick={e => e.stopPropagation()}
         style={{
           background: '#fff', borderRadius: 16, padding: '36px 32px', maxWidth: 420, width: '90%',
           position: 'relative', boxShadow: '0 24px 80px rgba(0,0,0,0.18)',
-          pointerEvents: 'auto',
         }}
       >
         <button
