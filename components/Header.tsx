@@ -218,7 +218,7 @@ export default function Header() {
       {/* Mobile menu */}
       {mobileOpen && (
         <div
-          className="header-mobile-menu"
+          className="header-mobile-menu debug-overlay"
           style={{
             position: 'fixed',
             top: 60,

@@ -172,7 +172,7 @@ export default function VeraBot() {
         }
       `}</style>
 
-      <div className="vera-wrapper" style={{
+      <div className="vera-wrapper debug-overlay" style={{
         position: 'fixed', bottom: 24, right: 24, zIndex: 9999,
         display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 12
       }}>

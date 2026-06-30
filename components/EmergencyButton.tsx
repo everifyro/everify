@@ -57,7 +57,7 @@ export default function EmergencyButton() {
       )}
 
       {open && (
-        <div onClick={() => setOpen(false)} style={{ position: 'fixed', inset: 0, zIndex: 1000, background: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20, backdropFilter: 'blur(4px)' }}>
+        <div onClick={() => setOpen(false)} className="debug-overlay" style={{ position: 'fixed', inset: 0, zIndex: 1000, background: 'rgba(255,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20, backdropFilter: 'blur(4px)' }}>
           <div onClick={e => e.stopPropagation()} style={{ background: '#ffffff', border: '1px solid rgba(220,38,38,0.3)', borderRadius: 20, padding: 28, width: '100%', maxWidth: 520, maxHeight: '85vh', overflowY: 'auto', boxShadow: '0 12px 40px rgba(15,23,42,0.18)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
               <h2 style={{ color: '#1e293b', fontSize: 20, fontWeight: 800, margin: 0 }}>🆘 Numere de urgenta</h2>
