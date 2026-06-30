@@ -195,3 +195,14 @@ footer::before {
   background: rgba(96,165,250,0.15);
   box-shadow: inset 0 0 0 1px #60A5FA;
 }
+
+/* Footer 3 coloane — responsive */
+.footer-cols {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+  margin-bottom: 28px;
+}
+@media (max-width: 640px) {
+  .footer-cols { grid-template-columns: 1fr !important; gap: 24px; }
+}
