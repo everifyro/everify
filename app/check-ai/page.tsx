@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation'
 import VeraBot from '@/components/VeraBot'
 import { useScrollToResult } from '@/hooks/useScrollToResult'
 import ImageUpload, { type ExtractedData } from '@/components/ImageUpload'
-import { COMING_SOON } from '@/lib/config'
 const SHOW_VACATION_BANNER = true
 
 const TICKER_ITEMS = [
@@ -217,14 +216,6 @@ export default function CheckAI() {
       setNewsletterStatus('error')
       setNewsletterMessage('Eroare de conexiune.')
     }
-  }
-
-  if (COMING_SOON) {
-    return (
-      <div style={{ minHeight: '100vh', background: '#f0f2f5', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <p style={{ fontSize: 22, color: '#64748b', fontWeight: 500, margin: 0 }}>În curând</p>
-      </div>
-    )
   }
 
   return (
