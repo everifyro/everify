@@ -23,93 +23,6 @@ const placeholders = [
   'Produsul pare prea ieftin? Verifică dacă e real site-ul de pe care cumperi...',
 ]
 
-const NAV_CARDS = [
-  {
-    href: '/check-url',
-    title: 'Verificare Site Web',
-    desc: 'Verificați dacă un site web este sigur înainte de a introduce date personale sau de a efectua o plată',
-    badge: '10 surse',
-    color: '#0ea5e9',
-    icon: (
-      <svg width={26} height={26} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="12" r="10"/>
-        <line x1="2" y1="12" x2="22" y2="12"/>
-        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
-      </svg>
-    ),
-  },
-  {
-    href: '/check-iban',
-    title: 'Verificare IBAN',
-    desc: 'Verificați autenticitatea unui IBAN înainte de orice transfer bancar. Validare MOD97, identificare bancă, alertă BEC',
-    badge: '1 credit',
-    color: '#6366f1',
-    icon: (
-      <svg width={26} height={26} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-        <line x1="3" y1="21" x2="21" y2="21"/>
-        <line x1="3" y1="10" x2="21" y2="10"/>
-        <polyline points="5 6 12 3 19 6"/>
-        <line x1="4" y1="10" x2="4" y2="21"/>
-        <line x1="20" y1="10" x2="20" y2="21"/>
-        <line x1="8" y1="14" x2="8" y2="17"/>
-        <line x1="12" y1="14" x2="12" y2="17"/>
-        <line x1="16" y1="14" x2="16" y2="17"/>
-      </svg>
-    ),
-  },
-  {
-    href: '/check-job',
-    title: 'Verificare Anunț Job',
-    desc: 'Detectăm joburi false, scheme MLM și fraude de recrutare înainte să vă pierdeți timpul sau banii',
-    badge: '7 module',
-    color: '#0ea5e9',
-    icon: (
-      <svg width={26} height={26} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-        <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
-        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
-      </svg>
-    ),
-  },
-  {
-    href: '/scam-types',
-    title: 'Tipuri de Fraude Documentate',
-    desc: 'Baza de date eVerify conține peste 210 tipuri de fraude și escrocherii documentate în România',
-    badge: '210+ tipuri',
-    color: '#dc2626',
-    icon: (
-      <svg width={26} height={26} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-      </svg>
-    ),
-  },
-  {
-    href: '/raporteaza',
-    title: 'Raportați un Scam sau o Fraudă',
-    desc: 'Raportările dumneavoastră ne ajută să protejăm și alți utilizatori. Fiecare sesizare este analizată de echipa noastră',
-    badge: 'Gratuit',
-    color: '#f59e0b',
-    icon: (
-      <svg width={26} height={26} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-        <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/>
-        <line x1="4" y1="22" x2="4" y2="15"/>
-      </svg>
-    ),
-  },
-  {
-    href: '/prices',
-    title: 'Prețuri',
-    desc: 'Protejează-te de scam-uri online! Fără abonament lunar, plătești doar ce folosești. De la 0.14€ per verificare',
-    badge: 'de la 5€',
-    color: '#16a34a',
-    icon: (
-      <svg width={26} height={26} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-        <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
-        <line x1="7" y1="7" x2="7.01" y2="7"/>
-      </svg>
-    ),
-  },
-]
-
 const RESOURCES = [
   {
     id: 'check-url',
@@ -451,41 +364,6 @@ export default function CheckAI() {
         </div>
       )}
 
-      {/* GRID CARDURI — 6 instrumente, cu iconiță SVG */}
-      <section style={{ background: '#ffffff', borderBottom: '1px solid rgba(14,165,233,0.1)' }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto', padding: '56px 20px' }}>
-          <h2 style={{ fontSize: 30, fontWeight: 800, textAlign: 'center', marginBottom: 8, color: '#1e293b' }}>
-            Instrumente de <span style={{ color: '#0ea5e9' }}>verificare</span>
-          </h2>
-          <p style={{ textAlign: 'center', fontSize: 15, color: 'rgba(30,41,59,0.6)', marginBottom: 40 }}>
-            Protejați-vă cu toate instrumentele disponibile pe eVerify
-          </p>
-          <div className="nav-cards-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20 }}>
-            {NAV_CARDS.map((card, i) => (
-              <a
-                key={i}
-                href={card.href}
-                style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', background: '#ffffff', border: '1.5px solid rgba(30,41,59,0.1)', borderRadius: 14, padding: '24px 22px', gap: 14, boxShadow: '0 2px 12px rgba(15,23,42,0.05)', cursor: 'pointer', transition: 'border-color 0.15s, transform 0.15s, box-shadow 0.15s' }}
-                onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = card.color; el.style.transform = 'translateY(-3px)'; el.style.boxShadow = '0 8px 28px rgba(15,23,42,0.12)' }}
-                onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = 'rgba(30,41,59,0.1)'; el.style.transform = 'none'; el.style.boxShadow = '0 2px 12px rgba(15,23,42,0.05)' }}
-              >
-                <div style={{ width: 52, height: 52, background: `${card.color}18`, borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', color: card.color, flexShrink: 0 }}>
-                  {card.icon}
-                </div>
-                <div style={{ flex: 1 }}>
-                  <h3 style={{ fontSize: 16, fontWeight: 700, color: '#1e293b', margin: '0 0 8px', lineHeight: 1.3 }}>{card.title}</h3>
-                  <p style={{ fontSize: 13, color: 'rgba(30,41,59,0.65)', lineHeight: 1.6, margin: 0 }}>{card.desc}</p>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ fontSize: 11, fontWeight: 700, color: card.color, background: `${card.color}18`, borderRadius: 6, padding: '3px 9px', letterSpacing: 0.3 }}>{card.badge}</span>
-                  <span style={{ fontSize: 16, color: card.color, fontWeight: 700 }}>→</span>
-                </div>
-              </a>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* RESURSE — sidebar vertical + panou mare dreapta */}
       <section style={{ background: '#f8fafc', borderBottom: '1px solid rgba(14,165,233,0.1)', padding: '56px 20px' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto' }}>
@@ -767,7 +645,6 @@ export default function CheckAI() {
         @keyframes spin { to { transform: rotate(360deg); } }
 
         @media (max-width: 1024px) {
-          .nav-cards-grid { grid-template-columns: repeat(2, 1fr) !important; }
           .stats-big-grid { grid-template-columns: repeat(2, 1fr) !important; }
         }
         @media (max-width: 768px) {
@@ -782,7 +659,6 @@ export default function CheckAI() {
           .input-row button { width: 100%; align-self: auto !important; padding: 12px 24px !important; }
           .stats-grid { padding: 0 0.75rem !important; }
           .stats-number { font-size: 20px !important; white-space: nowrap; }
-          .nav-cards-grid { grid-template-columns: 1fr !important; }
           .stats-big-grid { grid-template-columns: repeat(2, 1fr) !important; }
         }
       `}</style>
