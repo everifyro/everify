@@ -392,6 +392,7 @@ export default function CheckAI() {
                     transition: 'all 0.15s',
                     fontFamily: 'inherit',
                     lineHeight: 1.4,
+                    touchAction: 'manipulation',
                   }}
                 >
                   {r.label}
